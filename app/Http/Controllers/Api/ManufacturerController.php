@@ -8,7 +8,9 @@ use App\Http\Requests\ManufacturerUpdateRequest;
 use App\Http\Resources\ManufacturerCollection;
 use App\Http\Resources\ManufacturerResource;
 use App\Models\Manufacturer;
+use App\Models\ProductStock;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ManufacturerController extends Controller
 {
@@ -66,5 +68,26 @@ class ManufacturerController extends Controller
         $manufacturer->delete();
 
         return response()->noContent();
+    }
+
+    public function find(Request $request) {
+        if($request->has('products_id')) {
+            $ids = ProductStock::query()->where('products_id', $request->get('products_id'))->pluck('manufacturers_id')->take(10)->toArray();
+            $manufacturers = Manufacturer::query()->whereIn('id', $ids)->get();
+
+            return response()->json([
+                'data' => $manufacturers
+            ]);
+        }
+
+        if($request->has('name')) {
+            $searchName = $request->input('name');
+            $manufacturers = Manufacturer::query()->where('name', 'like', $searchName . "%")->get();
+            return response()->json([
+                'data' => $manufacturers
+            ]);
+        }
+
+        return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

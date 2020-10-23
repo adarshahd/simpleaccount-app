@@ -8,7 +8,9 @@ use App\Http\Requests\CustomerUpdateRequest;
 use App\Http\Resources\CustomerCollection;
 use App\Http\Resources\CustomerResource;
 use App\Models\Customer;
+use App\Models\Sale;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CustomerController extends Controller
 {
@@ -29,7 +31,11 @@ class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request)
     {
-        $customer = Customer::create($request->validated());
+        $customer = Customer::query()->create($request->validated());
+
+        if($request->hasFile('image')) {
+            $customer->addMediaFromRequest('image')->toMediaCollection('avatars');
+        }
 
         return new CustomerResource($customer);
     }
@@ -53,6 +59,14 @@ class CustomerController extends Controller
     {
         $customer->update($request->validated());
 
+        if($request->hasFile('image')) {
+            $avatar = $customer->getFirstMedia('avatars');
+            if($avatar) {
+                $avatar->delete();
+            }
+            $customer->addMediaFromRequest('image')->toMediaCollection('avatars');
+        }
+
         return new CustomerResource($customer);
     }
 
@@ -66,5 +80,46 @@ class CustomerController extends Controller
         $customer->delete();
 
         return response()->noContent();
+    }
+
+    public function details(Request $request, Customer $customer) {
+        $recentSales = Sale::query()->where('customers_id', $customer->id)->latest()->take(4)->get();
+        $recentSaleDetails = collect();
+        foreach ($recentSales as $sale) {
+            $saleDetails = new \stdClass();
+            $saleDetails->id = $sale->id;
+            $saleDetails->bill_number = $sale->bill_number;
+            $saleDetails->total = $sale->total;
+            $saleDetails->items = $sale->sale_items->count();
+            $saleDetails->bill_date = $sale->bill_date;
+
+            $recentSaleDetails->push($saleDetails);
+        }
+        $saleQuery = Sale::query()->where('customers_id', $customer->id);
+        $totalSales = $saleQuery->count();
+        $totalSaleAmount = $saleQuery->sum('total');
+        $amountPaid = $customer->receipts()->sum('total');
+        $balance = $totalSaleAmount - $amountPaid;
+
+        return response()->json([
+            'data' => [
+                'total_sales' => $totalSales,
+                'recent_sales' => $recentSaleDetails,
+                'total_sale_amount' => $totalSaleAmount,
+                'amount_paid' => $amountPaid,
+                'balance' => $balance
+            ]
+        ]);
+    }
+
+    public function find(Request $request) {
+        if(!$request->has('name')) {
+            return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $customers = Customer::where('company_name', 'like', $request->get('name') . "%")->take(10)->get();
+        return response()->json([
+            'data' => $customers
+        ]);
     }
 }
