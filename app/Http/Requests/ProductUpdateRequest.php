@@ -28,6 +28,7 @@ class ProductUpdateRequest extends FormRequest
             'description' => [''],
             'tax_id' => ['required', 'integer', 'exists:taxes,id'],
             'product_type_id' => ['required', 'integer', 'exists:product_types,id'],
+            'images' => ['nullable', 'image']
         ];
     }
 }

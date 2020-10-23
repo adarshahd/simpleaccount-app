@@ -7,8 +7,11 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
+use App\Http\Resources\ProductStockCollection;
 use App\Models\Product;
+use App\Models\ProductStock;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ProductController extends Controller
 {
@@ -29,7 +32,11 @@ class ProductController extends Controller
      */
     public function store(ProductStoreRequest $request)
     {
-        $product = Product::create($request->validated());
+        $product = Product::query()->create($request->validated());
+
+        if($request->hasFile('images')) {
+            $product->addMediaFromRequest('images')->toMediaCollection('products');
+        }
 
         return new ProductResource($product);
     }
@@ -53,6 +60,10 @@ class ProductController extends Controller
     {
         $product->update($request->validated());
 
+        if($request->hasFile('images')) {
+            $product->addMediaFromRequest('images')->toMediaCollection('products');
+        }
+
         return new ProductResource($product);
     }
 
@@ -63,8 +74,34 @@ class ProductController extends Controller
      */
     public function destroy(Request $request, Product $product)
     {
+        foreach($product->getMedia('products') as $media) {
+            $media->delete();
+        }
+
         $product->delete();
 
         return response()->noContent();
+    }
+
+    public function find(Request $request) {
+        if(!$request->has('name')) {
+            return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $products = Product::query()->where('name', 'like', $request->input('name') . "%")->take(10)->get();
+        return new ProductCollection($products);
+    }
+
+    public function stock(Request $request, Product $product) {
+        $stockQuery = ProductStock::query()->where('product_id', $product->id)
+            ->where('stock', '>', 0);
+
+        if($request->has('manufacturer_id')) {
+            $stockQuery = $stockQuery->where('manufacturer_id', $request->input('manufacturer_id'));
+        }
+
+        $stocks = $stockQuery->paginate();
+
+        return new ProductStockCollection($stocks);
     }
 }
