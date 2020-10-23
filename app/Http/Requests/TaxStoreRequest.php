@@ -24,6 +24,7 @@ class TaxStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'name' => ['required', 'string'],
             'tax' => ['required', 'numeric'],
         ];
     }
