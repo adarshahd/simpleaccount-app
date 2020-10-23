@@ -7,6 +7,7 @@ use App\Http\Requests\ProductStockStoreRequest;
 use App\Http\Requests\ProductStockUpdateRequest;
 use App\Http\Resources\ProductStockCollection;
 use App\Http\Resources\ProductStockResource;
+use App\Models\Product;
 use App\Models\ProductStock;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,9 @@ class ProductStockController extends Controller
      */
     public function index(Request $request)
     {
-        $productStocks = ProductStock::all();
+        $stocks = ProductStock::all();
 
-        return new ProductStockCollection($productStocks);
+        return new ProductStockCollection($stocks);
     }
 
     /**
@@ -29,41 +30,41 @@ class ProductStockController extends Controller
      */
     public function store(ProductStockStoreRequest $request)
     {
-        $productStock = ProductStock::create($request->validated());
+        $stock = ProductStock::create($request->validated());
 
-        return new ProductStockResource($productStock);
+        return new ProductStockResource($stock);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\ProductStock $productStock
+     * @param \App\Models\ProductStock $stock
      * @return \App\Http\Resources\ProductStockResource
      */
-    public function show(Request $request, ProductStock $productStock)
+    public function show(Request $request, Product $product, ProductStock $stock)
     {
-        return new ProductStockResource($productStock);
+        return new ProductStockResource($stock);
     }
 
     /**
      * @param \App\Http\Requests\ProductStockUpdateRequest $request
-     * @param \App\Models\ProductStock $productStock
+     * @param \App\Models\ProductStock $stock
      * @return \App\Http\Resources\ProductStockResource
      */
-    public function update(ProductStockUpdateRequest $request, ProductStock $productStock)
+    public function update(ProductStockUpdateRequest $request, Product $product, ProductStock $stock)
     {
-        $productStock->update($request->validated());
+        $stock->update($request->validated());
 
-        return new ProductStockResource($productStock);
+        return new ProductStockResource($stock);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\ProductStock $productStock
+     * @param \App\Models\ProductStock $stock
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, ProductStock $productStock)
+    public function destroy(Request $request, Product $product, ProductStock $stock)
     {
-        $productStock->delete();
+        $stock->delete();
 
         return response()->noContent();
     }

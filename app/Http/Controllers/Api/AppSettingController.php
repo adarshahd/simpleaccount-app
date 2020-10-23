@@ -18,9 +18,9 @@ class AppSettingController extends Controller
      */
     public function index(Request $request)
     {
-        $appSettings = AppSetting::all();
+        $settings = AppSetting::all();
 
-        return new AppSettingCollection($appSettings);
+        return new AppSettingCollection($settings);
     }
 
     /**
@@ -29,41 +29,41 @@ class AppSettingController extends Controller
      */
     public function store(AppSettingStoreRequest $request)
     {
-        $appSetting = AppSetting::create($request->validated());
+        $setting = AppSetting::create($request->validated());
 
-        return new AppSettingResource($appSetting);
+        return new AppSettingResource($setting);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\AppSetting $appSetting
+     * @param \App\Models\AppSetting $setting
      * @return \App\Http\Resources\AppSettingResource
      */
-    public function show(Request $request, AppSetting $appSetting)
+    public function show(Request $request, AppSetting $setting)
     {
-        return new AppSettingResource($appSetting);
+        return new AppSettingResource($setting);
     }
 
     /**
      * @param \App\Http\Requests\AppSettingUpdateRequest $request
-     * @param \App\Models\AppSetting $appSetting
+     * @param \App\Models\AppSetting $setting
      * @return \App\Http\Resources\AppSettingResource
      */
-    public function update(AppSettingUpdateRequest $request, AppSetting $appSetting)
+    public function update(AppSettingUpdateRequest $request, AppSetting $setting)
     {
-        $appSetting->update($request->validated());
+        $setting->update($request->validated());
 
-        return new AppSettingResource($appSetting);
+        return new AppSettingResource($setting);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\AppSetting $appSetting
+     * @param \App\Models\AppSetting $setting
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, AppSetting $appSetting)
+    public function destroy(Request $request, AppSetting $setting)
     {
-        $appSetting->delete();
+        $setting->delete();
 
         return response()->noContent();
     }

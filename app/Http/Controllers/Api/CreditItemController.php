@@ -7,6 +7,7 @@ use App\Http\Requests\CreditItemStoreRequest;
 use App\Http\Requests\CreditItemUpdateRequest;
 use App\Http\Resources\CreditItemCollection;
 use App\Http\Resources\CreditItemResource;
+use App\Models\Credit;
 use App\Models\CreditItem;
 use Illuminate\Http\Request;
 
@@ -18,9 +19,9 @@ class CreditItemController extends Controller
      */
     public function index(Request $request)
     {
-        $creditItems = CreditItem::all();
+        $items = CreditItem::all();
 
-        return new CreditItemCollection($creditItems);
+        return new CreditItemCollection($items);
     }
 
     /**
@@ -29,41 +30,41 @@ class CreditItemController extends Controller
      */
     public function store(CreditItemStoreRequest $request)
     {
-        $creditItem = CreditItem::create($request->validated());
+        $item = CreditItem::create($request->validated());
 
-        return new CreditItemResource($creditItem);
+        return new CreditItemResource($item);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\CreditItem $creditItem
+     * @param \App\Models\CreditItem $item
      * @return \App\Http\Resources\CreditItemResource
      */
-    public function show(Request $request, CreditItem $creditItem)
+    public function show(Request $request, Credit $credit, CreditItem $item)
     {
-        return new CreditItemResource($creditItem);
+        return new CreditItemResource($item);
     }
 
     /**
      * @param \App\Http\Requests\CreditItemUpdateRequest $request
-     * @param \App\Models\CreditItem $creditItem
+     * @param \App\Models\CreditItem $item
      * @return \App\Http\Resources\CreditItemResource
      */
-    public function update(CreditItemUpdateRequest $request, CreditItem $creditItem)
+    public function update(CreditItemUpdateRequest $request, Credit $credit, CreditItem $item)
     {
-        $creditItem->update($request->validated());
+        $item->update($request->validated());
 
-        return new CreditItemResource($creditItem);
+        return new CreditItemResource($item);
     }
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @param \App\Models\CreditItem $creditItem
+     * @param \App\Models\CreditItem $item
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, CreditItem $creditItem)
+    public function destroy(Request $request, Credit $credit, CreditItem $item)
     {
-        $creditItem->delete();
+        $item->delete();
 
         return response()->noContent();
     }

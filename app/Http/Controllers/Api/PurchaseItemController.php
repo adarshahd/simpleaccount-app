@@ -7,6 +7,7 @@ use App\Http\Requests\PurchaseItemStoreRequest;
 use App\Http\Requests\PurchaseItemUpdateRequest;
 use App\Http\Resources\PurchaseItemCollection;
 use App\Http\Resources\PurchaseItemResource;
+use App\Models\Purchase;
 use App\Models\PurchaseItem;
 use Illuminate\Http\Request;
 
@@ -39,7 +40,7 @@ class PurchaseItemController extends Controller
      * @param \App\Models\PurchaseItem $purchaseItem
      * @return \App\Http\Resources\PurchaseItemResource
      */
-    public function show(Request $request, PurchaseItem $purchaseItem)
+    public function show(Request $request, Purchase $purchase, PurchaseItem $purchaseItem)
     {
         return new PurchaseItemResource($purchaseItem);
     }
@@ -49,7 +50,7 @@ class PurchaseItemController extends Controller
      * @param \App\Models\PurchaseItem $purchaseItem
      * @return \App\Http\Resources\PurchaseItemResource
      */
-    public function update(PurchaseItemUpdateRequest $request, PurchaseItem $purchaseItem)
+    public function update(PurchaseItemUpdateRequest $request, Purchase $purchase, PurchaseItem $purchaseItem)
     {
         $purchaseItem->update($request->validated());
 
@@ -61,7 +62,7 @@ class PurchaseItemController extends Controller
      * @param \App\Models\PurchaseItem $purchaseItem
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, PurchaseItem $purchaseItem)
+    public function destroy(Request $request, Purchase $purchase, PurchaseItem $purchaseItem)
     {
         $purchaseItem->delete();
 
