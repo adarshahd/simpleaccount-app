@@ -83,7 +83,7 @@ class CustomerController extends Controller
     }
 
     public function details(Request $request, Customer $customer) {
-        $recentSales = Sale::query()->where('customers_id', $customer->id)->latest()->take(4)->get();
+        $recentSales = Sale::query()->where('customer_id', $customer->id)->latest()->take(4)->get();
         $recentSaleDetails = collect();
         foreach ($recentSales as $sale) {
             $saleDetails = new \stdClass();
@@ -95,7 +95,7 @@ class CustomerController extends Controller
 
             $recentSaleDetails->push($saleDetails);
         }
-        $saleQuery = Sale::query()->where('customers_id', $customer->id);
+        $saleQuery = Sale::query()->where('customer_id', $customer->id);
         $totalSales = $saleQuery->count();
         $totalSaleAmount = $saleQuery->sum('total');
         $amountPaid = $customer->receipts()->sum('total');
@@ -117,9 +117,8 @@ class CustomerController extends Controller
             return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $customers = Customer::where('company_name', 'like', $request->get('name') . "%")->take(10)->get();
-        return response()->json([
-            'data' => $customers
-        ]);
+        $customers = Customer::query()->where('company_name', 'like', $request->get('name') . "%")
+            ->take(10)->get();
+        return new CustomerCollection($customers);
     }
 }
