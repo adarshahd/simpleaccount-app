@@ -8,16 +8,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int $id
- * @property string $name
- * @property string $email
- * @property string $password
- * @property bool $email_verified
- * @property string $remember_token
+ * @property string $bill_number
+ * @property float $total
+ * @property string $payment_method
+ * @property string $payment_reference
+ * @property string $notes
+ * @property int $vendor_id
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-class User extends Model
+class Voucher extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -27,20 +28,12 @@ class User extends Model
      * @var array
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'email_verified',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'bill_number',
+        'total',
+        'payment_method',
+        'payment_reference',
+        'notes',
+        'vendor_id',
     ];
 
     /**
@@ -50,15 +43,16 @@ class User extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'email_verified' => 'boolean',
+        'total' => 'float',
+        'vendor_id' => 'integer',
     ];
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function phoneNumbers()
+    public function vendor()
     {
-        return $this->hasMany(\App\Models\PhoneNumber::class);
+        return $this->belongsTo(\App\Models\Vendor::class);
     }
 }

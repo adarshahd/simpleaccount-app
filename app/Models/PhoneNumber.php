@@ -9,15 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id
  * @property string $name
- * @property string $email
- * @property string $password
- * @property bool $email_verified
- * @property string $remember_token
+ * @property string $phone_number
+ * @property int $user_id
+ * @property bool $verified
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-class User extends Model
+class PhoneNumber extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -28,19 +27,9 @@ class User extends Model
      */
     protected $fillable = [
         'name',
-        'email',
-        'password',
-        'email_verified',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'phone_number',
+        'user_id',
+        'verified',
     ];
 
     /**
@@ -50,15 +39,16 @@ class User extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'email_verified' => 'boolean',
+        'user_id' => 'integer',
+        'verified' => 'boolean',
     ];
 
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function phoneNumbers()
+    public function user()
     {
-        return $this->hasMany(\App\Models\PhoneNumber::class);
+        return $this->belongsTo(\App\Models\User::class);
     }
 }

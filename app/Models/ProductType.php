@@ -9,15 +9,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * @property int $id
  * @property string $name
- * @property string $email
- * @property string $password
- * @property bool $email_verified
- * @property string $remember_token
+ * @property string $description
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $created_at
  * @property \Carbon\Carbon $updated_at
  */
-class User extends Model
+class ProductType extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -28,19 +25,7 @@ class User extends Model
      */
     protected $fillable = [
         'name',
-        'email',
-        'password',
-        'email_verified',
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
+        'description',
     ];
 
     /**
@@ -50,15 +35,14 @@ class User extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'email_verified' => 'boolean',
     ];
 
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function phoneNumbers()
+    public function products()
     {
-        return $this->hasMany(\App\Models\PhoneNumber::class);
+        return $this->hasMany(\App\Models\Product::class);
     }
 }

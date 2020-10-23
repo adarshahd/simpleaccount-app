@@ -4,16 +4,16 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
-use App\Models\User;
+use App\Models\Income;
 
-class UserFactory extends Factory
+class IncomeFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = User::class;
+    protected $model = Income::class;
 
     /**
      * Define the model's default state.
@@ -23,11 +23,10 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->name,
-            'email' => $this->faker->safeEmail,
-            'password' => $this->faker->password,
-            'email_verified' => $this->faker->boolean,
-            'remember_token' => $this->faker->word,
+            'total' => $this->faker->randomFloat(0, 0, 9999999999.),
+            'notes' => $this->faker->text,
+            'payment_method' => $this->faker->word,
+            'payment_reference' => $this->faker->word,
         ];
     }
 }
