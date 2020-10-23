@@ -37,6 +37,7 @@ class VendorStoreRequest extends FormRequest
             'contact_phone' => ['required', 'string', 'max:50'],
             'website' => ['string', 'max:400'],
             'id_type_id' => ['required', 'integer', 'exists:id_types,id'],
+            'image' => ['nullable', 'image']
         ];
     }
 }

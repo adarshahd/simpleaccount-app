@@ -7,8 +7,10 @@ use App\Http\Requests\VendorStoreRequest;
 use App\Http\Requests\VendorUpdateRequest;
 use App\Http\Resources\VendorCollection;
 use App\Http\Resources\VendorResource;
+use App\Models\Purchase;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class VendorController extends Controller
 {
@@ -29,7 +31,11 @@ class VendorController extends Controller
      */
     public function store(VendorStoreRequest $request)
     {
-        $vendor = Vendor::create($request->validated());
+        $vendor = Vendor::query()->create($request->validated());
+
+        if($request->hasFile('image')) {
+            $vendor->addMediaFromRequest('image')->toMediaCollection('avatars');
+        }
 
         return new VendorResource($vendor);
     }
@@ -53,6 +59,14 @@ class VendorController extends Controller
     {
         $vendor->update($request->validated());
 
+        if($request->hasFile('image')) {
+            $avatar = $vendor->getFirstMedia('avatars');
+            if($avatar) {
+                $avatar->delete();
+            }
+            $vendor->addMediaFromRequest('image')->toMediaCollection('avatars');
+        }
+
         return new VendorResource($vendor);
     }
 
@@ -66,5 +80,45 @@ class VendorController extends Controller
         $vendor->delete();
 
         return response()->noContent();
+    }
+
+    public function details(Request $request, Vendor $vendor) {
+        $recentPurchases = Purchase::query()->where('vendor_id', $vendor->id)->latest()->take(4)->get();
+        $recentPurchaseDetails = collect();
+        foreach ($recentPurchases as $purchase) {
+            $purchaseDetails = new \stdClass();
+            $purchaseDetails->id = $purchase->id;
+            $purchaseDetails->bill_number = $purchase->bill_number;
+            $purchaseDetails->total = $purchase->total;
+            $purchaseDetails->items = $purchase->purchaseItems()->count();
+            $purchaseDetails->bill_date = $purchase->bill_date;
+
+            $recentPurchaseDetails->push($purchaseDetails);
+        }
+        $purchaseQuery = Purchase::query()->where('vendor_id', $vendor->id);
+        $totalPurchases = $purchaseQuery->count();
+        $totalPurchaseAmount = $purchaseQuery->sum('total');
+        $amountPaid = $vendor->vouchers()->sum('total');
+        $balance = $totalPurchaseAmount - $amountPaid;
+
+        return response()->json([
+            'data' => [
+                'total_purchases' => $totalPurchases,
+                'recent_purchases' => $recentPurchaseDetails,
+                'total_purchase_amount' => $totalPurchaseAmount,
+                'amount_paid' => $amountPaid,
+                'balance' => $balance
+            ]
+        ]);
+    }
+
+    public function find(Request $request) {
+        if(!$request->has('name')) {
+            return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $vendors = Vendor::query()->where('name', 'like', $request->input('name') . "%")
+            ->take(10)->get();
+        return new VendorCollection($vendors);
     }
 }
