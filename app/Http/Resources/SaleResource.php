@@ -24,6 +24,7 @@ class SaleResource extends JsonResource
             'tax' => $this->tax,
             'total' => $this->total,
             'customer_id' => $this->customer_id,
+            'items' => new SaleItemCollection($this->saleItems()->get())
         ];
     }
 }

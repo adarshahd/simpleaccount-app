@@ -27,7 +27,11 @@ class SaleItem extends Model
      */
     protected $fillable = [
         'quantity',
+        'price',
         'discount',
+        'sub_total',
+        'tax',
+        'total',
         'sale_id',
         'product_stock_id',
     ];
@@ -40,7 +44,11 @@ class SaleItem extends Model
     protected $casts = [
         'id' => 'integer',
         'quantity' => 'integer',
+        'price' => 'float',
         'discount' => 'float',
+        'sub_total' => 'float',
+        'tax' => 'float',
+        'total' => 'float',
         'sale_id' => 'integer',
         'product_stock_id' => 'integer',
     ];

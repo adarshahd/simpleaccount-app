@@ -25,8 +25,8 @@ class SaleItemStoreRequest extends FormRequest
     {
         return [
             'quantity' => ['required', 'integer', 'gt:0'],
+            'price' => ['required', 'numeric'],
             'discount' => ['required', 'numeric'],
-            'sale_id' => ['required', 'integer', 'exists:sales,id'],
             'product_stock_id' => ['required', 'integer', 'exists:product_stocks,id'],
         ];
     }

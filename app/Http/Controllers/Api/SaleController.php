@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Exceptions\SaleException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaleStoreRequest;
 use App\Http\Requests\SaleUpdateRequest;
 use App\Http\Resources\SaleCollection;
 use App\Http\Resources\SaleResource;
+use App\Models\Product;
+use App\Models\ProductStock;
 use App\Models\Sale;
+use App\Models\SaleItem;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 class SaleController extends Controller
 {
@@ -25,13 +31,70 @@ class SaleController extends Controller
 
     /**
      * @param \App\Http\Requests\SaleStoreRequest $request
-     * @return \App\Http\Resources\SaleResource
+     * @return SaleResource|\Illuminate\Http\JsonResponse
      */
     public function store(SaleStoreRequest $request)
     {
-        $sale = Sale::create($request->validated());
+        $saleItems = $request->input('sale_items');
 
-        return new SaleResource($sale);
+        try {
+            //Create sale and sale item entries inside a transaction
+            DB::beginTransaction();
+
+            $appSettingController = new AppSettingController();
+            $billPrefix = $appSettingController->getBillPrefix();
+            $latestSale = Sale::query()->latest()->first();
+            if($latestSale == null) {
+                $lastBillNumber = 0;
+            } else {
+                $lastBillNumber = $latestSale->bill_id;
+            }
+
+            $billNumber = "$billPrefix" . ($lastBillNumber + 1);
+
+            $sale = Sale::query()->create([
+                'bill_id' => $lastBillNumber + 1,
+                'bill_number' => $billNumber,
+                'bill_date' => $request->input('bill_date'),
+                'discount' => $request->input('discount'),
+                'customer_id' => $request->input('customer_id'),
+                'sub_total' => 0,
+                'tax' => 0,
+                'total' => 0,
+            ]);
+
+            $saleItemAddResult = $this->addSaleItems($sale, $saleItems);
+
+            $discount = $request->input('discount');
+            $subTotal = $saleItemAddResult['sub_total'];
+            $tax = $saleItemAddResult['tax'];
+            $total = ($subTotal + $tax) - $discount;
+
+            $sale->update([
+                'sub_total' => $subTotal,
+                'discount' => $discount,
+                'tax' => $tax,
+                'total' => $total,
+            ]);
+
+            DB::commit();
+
+            return new SaleResource($sale->refresh());
+        } catch (SaleException $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'description' => $e->getMessage()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => "There were some error processing your request. Please check and try again.",
+                'description' => $e->getMessage()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -47,13 +110,59 @@ class SaleController extends Controller
     /**
      * @param \App\Http\Requests\SaleUpdateRequest $request
      * @param \App\Models\Sale $sale
-     * @return \App\Http\Resources\SaleResource
+     * @return SaleResource|\Illuminate\Http\JsonResponse
      */
     public function update(SaleUpdateRequest $request, Sale $sale)
     {
-        $sale->update($request->validated());
+        $saleItems = $request->input('sale_items');
 
-        return new SaleResource($sale);
+        try {
+            DB::beginTransaction();
+
+            foreach($sale->saleItems()->get() as $saleItem) {
+                $currentStock = $saleItem->productStock;
+                $currentStock->update([
+                    'stock' => $currentStock->stock + $saleItem->quantity
+                ]);
+
+                $saleItem->delete();
+            }
+
+            $saleItemAddResult = $this->addSaleItems($sale, $saleItems);
+
+            $subTotal = $saleItemAddResult['sub_total'];
+            $tax = $saleItemAddResult['tax'];
+            $discount = $request->input('discount');
+
+            $total = ($subTotal + $tax) - $discount;
+
+            $sale->update([
+                'bill_date' => $request->input('bill_date'),
+                'sub_total' => $subTotal,
+                'discount' => $discount,
+                'tax' => $tax,
+                'total' => $total,
+                'customer_id' => $request->input('customer_id')
+            ]);
+
+            DB::commit();
+
+            return new SaleResource($sale->refresh());
+        } catch (SaleException $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => $e->getMessage(),
+                'description' => $e->getMessage()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\PDOException $e) {
+            DB::rollBack();
+
+            return response()->json([
+                'message' => "There were some error processing your request. Please check and try again.",
+                'description' => $e->getMessage()
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
     }
 
     /**
@@ -66,5 +175,51 @@ class SaleController extends Controller
         $sale->delete();
 
         return response()->noContent();
+    }
+
+    private function addSaleItems($sale, $saleItems) {
+        $subTotal = 0;
+        $tax = 0;
+
+        foreach($saleItems as $saleItem) {
+            $productStock = ProductStock::query()->find($saleItem['product_stock_id']);
+            $product = Product::query()->find($productStock->product_id);
+            $discount = $saleItem['discount'];
+            $price = $saleItem['price'] - $discount;
+            $saleItemPrice = ($price * $saleItem['quantity']);
+            $saleItemTax = $saleItemPrice * ($product->tax->tax / 100);
+            $subTotal = $subTotal + $saleItemPrice;
+            $tax = $tax + $saleItemTax;
+
+            if($productStock == null) {
+                $productName = $product->name;
+                throw new SaleException("No stock found for $productName. Please check and try again!");
+            }
+
+            if($productStock->stock < $saleItem['quantity']) {
+                $productName = $product->name;
+                throw new SaleException("Not enough stock of $productName. Please check and try again!");
+            }
+
+            $productStock->update([
+                'stock' => $productStock->stock - $saleItem['quantity'],
+            ]);
+
+            SaleItem::query()->create([
+                'price' => $saleItem['price'],
+                'discount' => $saleItem['discount'],
+                'quantity' => $saleItem['quantity'],
+                'tax' => $saleItemTax,
+                'sub_total' => $saleItemPrice,
+                'total' => $saleItemPrice + $saleItemTax,
+                'sale_id' => $sale->id,
+                'product_stock_id' => $productStock->id,
+            ]);
+        }
+
+        return [
+            'sub_total' => $subTotal,
+            'tax' => $tax
+        ];
     }
 }

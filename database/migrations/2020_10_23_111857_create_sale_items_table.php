@@ -18,7 +18,11 @@ class CreateSaleItemsTable extends Migration
         Schema::create('sale_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('quantity');
+            $table->float('price');
             $table->float('discount')->default(0.0);
+            $table->float('sub_total');
+            $table->float('tax');
+            $table->float('total');
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_stock_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();

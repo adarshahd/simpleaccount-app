@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\SaleItemValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class SaleUpdateRequest extends FormRequest
@@ -24,14 +25,17 @@ class SaleUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_id' => ['required', 'integer'],
-            'bill_number' => ['required', 'string', 'max:100'],
             'bill_date' => ['required', 'date'],
-            'sub_total' => ['required', 'numeric'],
             'discount' => ['required', 'numeric'],
-            'tax' => ['required', 'numeric'],
-            'total' => ['required', 'numeric'],
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'sale_items' => ['required', new SaleItemValidator()]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'sale_items.required' => 'Sale items should be array of items',
         ];
     }
 }
