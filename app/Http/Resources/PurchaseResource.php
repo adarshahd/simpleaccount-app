@@ -23,6 +23,7 @@ class PurchaseResource extends JsonResource
             'tax' => $this->tax,
             'total' => $this->total,
             'vendor_id' => $this->vendor_id,
+            'items' => new PurchaseItemCollection($this->purchaseItems()->get())
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\PurchaseItemValidator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PurchaseStoreRequest extends FormRequest
@@ -26,11 +27,16 @@ class PurchaseStoreRequest extends FormRequest
         return [
             'bill_number' => ['required', 'string', 'max:100'],
             'bill_date' => ['required', 'date'],
-            'sub_total' => ['required', 'numeric'],
             'discount' => ['required', 'numeric'],
-            'tax' => ['required', 'numeric'],
-            'total' => ['required', 'numeric'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
+            'purchase_items' => ['required', new PurchaseItemValidator()]
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'purchase_items.required' => 'Purchase items should be array of items',
         ];
     }
 }
