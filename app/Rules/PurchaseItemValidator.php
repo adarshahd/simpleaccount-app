@@ -2,6 +2,7 @@
 
 namespace App\Rules;
 
+use App\Http\Controllers\Api\AppSettingController;
 use App\Models\AppSetting;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
@@ -23,15 +24,11 @@ class PurchaseItemValidator implements Rule
     {
         $this->errorMessage = 'Invalid purchase items';
 
-        $appSettingExpiry = AppSetting::query()->where('key', 'expiry_required')->first();
-        if($appSettingExpiry) {
-            if($appSettingExpiry->value) {
-                $this->expiryRule = "required|date";
-            } else {
-                $this->expiryRule = "nullable|date";
-            }
-        } else {
+        $requireExpiry = AppSettingController::getRequireExpiry();
+        if($requireExpiry) {
             $this->expiryRule = "required|date";
+        } else {
+            $this->expiryRule = "nullable|date";
         }
 
         $this->parameterBag = [

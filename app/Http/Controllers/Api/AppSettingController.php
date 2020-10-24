@@ -12,6 +12,13 @@ use Illuminate\Http\Request;
 
 class AppSettingController extends Controller
 {
+    /*
+     *  Constants required to store known settings
+     * */
+
+    private static $requireExpiryDate = "require_expiry";
+    private static $billPrefixSetting = "bill_prefix";
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\AppSettingCollection
@@ -66,5 +73,16 @@ class AppSettingController extends Controller
         $setting->delete();
 
         return response()->noContent();
+    }
+
+    public static function getRequireExpiry() {
+        $requireExpirySetting = AppSetting::query()->where('key', self::$requireExpiryDate)->first();
+        return $requireExpirySetting ? $requireExpirySetting->value : true;
+    }
+
+    public static function getBillPrefix()
+    {
+        $billPrefixSetting = AppSetting::query()->where('key', self::$billPrefixSetting)->first();
+        return $billPrefixSetting ? $billPrefixSetting->value : '';
     }
 }
