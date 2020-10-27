@@ -29,6 +29,7 @@ class CreateVendorsTable extends Migration
             $table->string('contact_email', 200)->nullable();
             $table->string('contact_phone', 50);
             $table->string('website', 400)->nullable();
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('id_type_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();

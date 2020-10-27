@@ -49,6 +49,7 @@ class Vendor extends Model implements HasMedia
         'contact_email',
         'contact_phone',
         'website',
+        'user_id',
         'id_type_id',
     ];
 
@@ -60,6 +61,7 @@ class Vendor extends Model implements HasMedia
     protected $casts = [
         'id' => 'integer',
         'id_type_id' => 'integer',
+        'user_id' => 'integer',
     ];
 
 
