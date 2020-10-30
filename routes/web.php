@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AppSettingController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +15,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    if(AppSettingController::isApplicationInitialized()) {
+        return redirect('/admin');
+    }
+
+    return redirect('/onboard');
 });
+
+Route::get('/onboard', [\App\Http\Controllers\OnboardController::class, 'index'])->where('any', '.*');
+
+//Route::get('/admin/{any}', 'OnboardController@index')->where('any', '.*');

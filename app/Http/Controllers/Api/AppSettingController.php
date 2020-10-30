@@ -18,6 +18,9 @@ class AppSettingController extends Controller
 
     private static $requireExpiryDate = "require_expiry";
     private static $billPrefixSetting = "bill_prefix";
+    private static $appInitialized = "app_initialized";
+    private static $poData = 'po_data';
+    private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
 
     /**
      * @param \Illuminate\Http\Request $request
@@ -36,7 +39,7 @@ class AppSettingController extends Controller
      */
     public function store(AppSettingStoreRequest $request)
     {
-        $setting = AppSetting::create($request->validated());
+        $setting = AppSetting::query()->create($request->validated());
 
         return new AppSettingResource($setting);
     }
@@ -73,6 +76,57 @@ class AppSettingController extends Controller
         $setting->delete();
 
         return response()->noContent();
+    }
+
+    public static function isApplicationInitialized() {
+        $appInitializedSetting = AppSetting::query()->where('key', self::$appInitialized)->first();
+        return $appInitializedSetting ? $appInitializedSetting->value : false;
+    }
+
+    public static function setApplicationInitialized() {
+        AppSetting::query()->where('key', self::$appInitialized)->firstOrCreate([
+            'key' => self::$appInitialized,
+            'value' => true
+        ]);
+    }
+
+    public static function isProductOwnerUpdated() {
+        $productOwnerSetting = AppSetting::query()->where('key', self::$poData)->first();
+        return $productOwnerSetting != null;
+    }
+
+    public static function getProductOwnerData() {
+        $productOwnerSetting = AppSetting::query()->where('key', self::$poData)->first();
+        return json_decode($productOwnerSetting->value);
+    }
+
+    public static function updateProductOwnerData($data) {
+        $productOwnerData = AppSetting::query()->where('key', self::$poData)->first();
+        if($productOwnerData) {
+            $productOwnerData->update([
+                'value' => $data
+            ]);
+        } else {
+            $productOwnerData = AppSetting::query()->create([
+                'key' => self::$poData,
+                'value' => $data
+            ]);
+        }
+
+        return $productOwnerData != null;
+    }
+
+    public static function isRolesAndPermissionsSeeded()
+    {
+        $setting = AppSetting::query()->where('key', self::$roleAndPermissionSeeded)->first();
+        return $setting ? $setting->value : false;
+    }
+
+    public static function setRolesAndPermissionsSeeded() {
+        AppSetting::query()->where('key', self::$roleAndPermissionSeeded)->firstOrCreate([
+            'key' => self::$roleAndPermissionSeeded,
+            'value' => true
+        ]);
     }
 
     public static function getRequireExpiry() {
