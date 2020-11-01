@@ -13,6 +13,7 @@ import PageNotFound from "@/components/PageNotFound";
 import Manufacturers from "./views/product/Manufacturers";
 import NewManufacturer from "./views/forms/NewManufacturer";
 import Manufacturer from "./views/product/Manufacturer";
+import Taxes from "./views/product/Taxes";
 
 Vue.use(Router);
 
@@ -66,6 +67,13 @@ const routes =  [
                 path: '/manufacturers/:id',
                 name: 'manufacturer',
                 component: Manufacturer
+            },
+
+            /* Tax */
+            {
+                path: '/taxes',
+                name: 'taxes',
+                component: Taxes
             },
 
 
