@@ -59,13 +59,12 @@
 
 <script>
     import axios from 'axios';
-    import {PerfectScrollbar} from 'vue2-perfect-scrollbar';
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
     import Tax from "../modals/Tax";
 
     export default {
         name: "Taxes",
-        components: {ProgressBarIndeterminate, PerfectScrollbar, Tax},
+        components: {ProgressBarIndeterminate, Tax},
         data() {
             return {
                 isLoading: true,

@@ -1,8 +1,8 @@
 <template>
-    <div class="modal" :class="{ 'is-active' : isActive }">
+    <div class="modal is-rounded" :class="{ 'is-active' : isActive }">
         <div class="modal-background"></div>
         <div class="modal-card">
-            <section class="modal-card-body">
+            <section class="modal-card-body has-rounded-corner">
                 <div class="field">
                     <div class="control">
                         <div class="label">
@@ -79,6 +79,7 @@ export default {
             axios.post('/api/v1/taxes', this.tax).then(response => {
                 this.isLoading = false;
                 this.errors = [];
+                this.toggleModal()
                 this.$emit('loadTax');
                 this.showToast("Tax added successfully");
             }).catch(error => {
@@ -92,6 +93,7 @@ export default {
                 this.tax = {};
                 this.isLoading = false;
                 this.errors = [];
+                this.toggleModal()
                 this.$emit('loadTax');
                 this.showToast("Tax updated successfully");
             }).catch(error => {
