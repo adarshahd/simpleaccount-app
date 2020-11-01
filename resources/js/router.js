@@ -10,6 +10,9 @@ import Logout from "./components/Logout";
 import Dashboard from "@/views/dashboard/Dashboard";
 
 import PageNotFound from "@/components/PageNotFound";
+import Manufacturers from "./views/product/Manufacturers";
+import NewManufacturer from "./views/forms/NewManufacturer";
+import Manufacturer from "./views/product/Manufacturer";
 
 Vue.use(Router);
 
@@ -46,6 +49,23 @@ const routes =  [
                 path: '/dashboard',
                 name: 'dashboard',
                 component: Dashboard
+            },
+
+            /* Manufacturers */
+            {
+                path: '/manufacturers',
+                name: 'manufacturers',
+                component: Manufacturers
+            },
+            {
+                path: '/manufacturers/new',
+                name: 'manufacturers-new',
+                component: NewManufacturer
+            },
+            {
+                path: '/manufacturers/:id',
+                name: 'manufacturer',
+                component: Manufacturer
             },
 
 
