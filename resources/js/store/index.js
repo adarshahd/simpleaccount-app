@@ -28,6 +28,9 @@ const store = new Vuex.Store({
                     reject(error)
                 })
             })
+        },
+        sideBarItemClicked({ commit, dispatch, state }) {
+            commit('sideBarItemClicked')
         }
     },
     mutations: {
@@ -35,6 +38,9 @@ const store = new Vuex.Store({
             state.currentUser.id = val.id
             state.currentUser.name = val.name
             state.currentUser.email = val.email
+        },
+        sideBarItemClicked(state) {
+
         }
     }
 })

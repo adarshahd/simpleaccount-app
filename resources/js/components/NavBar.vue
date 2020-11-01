@@ -37,8 +37,6 @@
 </template>
 
 <script>
-    import axios from 'axios'
-
     export default {
         name: "NavBar",
         data() {
@@ -51,6 +49,13 @@
                 this.isActive = !this.isActive
                 this.$emit('toggleSideBar')
             }
+        },
+        mounted() {
+            this.$store.subscribe((mutation, state) => {
+                if(mutation.type === 'sideBarItemClicked') {
+                    this.toggleSideBar()
+                }
+            })
         }
     }
 </script>

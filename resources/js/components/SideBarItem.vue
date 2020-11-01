@@ -1,6 +1,6 @@
 <template>
     <li>
-        <router-link :to="{ name: item.to }" exact-active-class="is-active" class="has-icons-left">
+        <router-link :to="{ name: item.to }" exact-active-class="is-active" class="has-icons-left" @click.native="toggleSideBar">
             <p>
                 <span><i :class="item.icon"></i></span>
                 <span class="item-label">{{ item.label }}</span>
@@ -21,6 +21,11 @@
             item: {
                 type: Object,
                 default: null
+            }
+        },
+        methods: {
+            toggleSideBar() {
+                this.$store.dispatch('sideBarItemClicked')
             }
         }
     }
