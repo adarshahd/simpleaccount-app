@@ -1,0 +1,49 @@
+//@import "~bulma/sass/utilities/all";
+
+//Fonts
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,700');
+
+$blue: #3490dc;
+$indigo: #6574cd;
+$purple: #9561e2;
+$pink: #f66d9b;
+$red: #e3342f;
+$orange: #f6993f;
+$yellow: #ffed4a;
+$green: #38c172;
+$teal: #4dc0b5;
+$cyan: #6cb2eb;
+$brown: #757763;
+$beige-light: #D0D1CD;
+$beige-lighter: #EBEBEB;
+
+// Update Bulma's global variables
+$family-sans-serif: 'Source Sans Pro', sans-serif;
+$grey-dark: #292929;
+$grey-light: $beige-light;
+$primary: $orange;
+$primary-invert: findColorInvert($primary);
+$link: $indigo;
+
+// Update some of Bulma's component variables
+$control-border-width: 2px;
+$input-background-color: $beige-lighter;
+$input-border-color: transparent;
+$input-shadow: none;
+$input-placeholder-color: $grey-dark;
+
+// Vue Select
+//$vs-state-active-color: $beige-lighter;
+$vs-component-placeholder-color: $grey-dark;
+$vs-component-line-height: 1.6;
+@import "~vue-select/src/scss/vue-select.scss";
+
+// Perfect Scrollbar
+@import "~vue2-perfect-scrollbar/src/style.css";
+
+@import "~bulma";
+@import "~buefy/src/scss/buefy";
+@import "~@mdi/font/css/materialdesignicons.css";
+
+//Import Application Css
+@import "layout";

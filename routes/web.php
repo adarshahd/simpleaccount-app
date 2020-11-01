@@ -14,14 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    if(AppSettingController::isApplicationInitialized()) {
-        return redirect('/admin');
-    }
+Route::get('/onboard', [\App\Http\Controllers\OnboardController::class, 'index']);
 
-    return redirect('/onboard');
-});
-
-Route::get('/onboard', [\App\Http\Controllers\OnboardController::class, 'index'])->where('any', '.*');
-
-//Route::get('/admin/{any}', 'OnboardController@index')->where('any', '.*');
+Route::get('/{any}', [\App\Http\Controllers\AppController::class, 'index'])->where('any', '.*');

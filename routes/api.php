@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,18 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/status', [\App\Http\Controllers\OnboardController::class, 'getProductStatus']);
     Route::post('/users/admin', [\App\Http\Controllers\OnboardController::class, 'createAdminUser']);
     Route::post('/product-owner', [\App\Http\Controllers\OnboardController::class, 'updateProductOwnerData']);
+
+    Route::group(['middleware' => 'auth:sanctum'], function() {
+
+        Route::get('/user', function(Request $request) {
+            return response()->json([
+                'data' => [
+                    'user' => $request->user()
+                ]
+            ]);
+        });
+
+    });
 
     Route::apiResources([
         'settings' => App\Http\Controllers\Api\AppSettingController::class,
