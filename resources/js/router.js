@@ -14,6 +14,7 @@ import Manufacturers from "./views/product/Manufacturers";
 import NewManufacturer from "./views/forms/NewManufacturer";
 import Manufacturer from "./views/product/Manufacturer";
 import Taxes from "./views/product/Taxes";
+import ProductTypes from "./views/product/ProductTypes";
 
 Vue.use(Router);
 
@@ -75,6 +76,15 @@ const routes =  [
                 name: 'taxes',
                 component: Taxes
             },
+
+            /* Product Types */
+            {
+                path: '/product-types',
+                name: 'product-types',
+                component: ProductTypes
+            },
+
+
 
 
 
