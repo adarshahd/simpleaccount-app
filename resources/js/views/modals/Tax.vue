@@ -75,6 +75,7 @@ export default {
             }
         },
         createTax() {
+            this.isLoading = true;
             axios.post('/api/v1/taxes', this.tax).then(response => {
                 this.isLoading = false;
                 this.errors = [];
@@ -86,6 +87,7 @@ export default {
             });
         },
         updateTax() {
+            this.isLoading = true;
             axios.patch('/api/v1/taxes/' + this.tax.id, this.tax).then(response => {
                 this.tax = {};
                 this.isLoading = false;
