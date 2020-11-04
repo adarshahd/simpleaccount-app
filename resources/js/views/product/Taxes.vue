@@ -45,7 +45,7 @@
                             <template slot="empty">
                                 <div class="columns is-centered">
                                     <div class="column has-text-centered is-spaced">
-                                        <h4 class="title">No Taxes Found</h4>
+                                        <h4 class="title m-6">No Taxes Found</h4>
                                     </div>
                                 </div>
                             </template>
