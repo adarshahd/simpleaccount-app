@@ -12,11 +12,10 @@
 <script>
     import SideBarItem from "./SideBarItem";
     import SideBarList from "./SideBarList";
-    import { PerfectScrollbar } from 'vue2-perfect-scrollbar';
 
     export default {
         name: "SideBar",
-        components: {SideBarList, SideBarItem, PerfectScrollbar},
+        components: {SideBarList, SideBarItem},
         data() {
             return {
 

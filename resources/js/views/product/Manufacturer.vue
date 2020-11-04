@@ -74,22 +74,20 @@
                 <progress-bar-indeterminate v-if="isProductsLoading"></progress-bar-indeterminate>
                 <div v-else>
                     <div v-if="manufacturerProducts.length > 0">
-                        <perfect-scrollbar ref="scroll" class="scroll">
-                            <div v-for="product in manufacturerProducts" class="card-container">
-                                <div class="product-container has-background-light">
-                                    <div class="columns">
-                                        <div class="column is-two-thirds">
-                                            <h5 class="title is-5">{{ product.name }}</h5>
-                                        </div>
-                                        <div class="column has-text-right-desktop has-text-centered-mobile">
-                                            <button class="button is-link" @click="showProduct(product)">
-                                                View
-                                            </button>
-                                        </div>
+                        <div v-for="product in manufacturerProducts" class="card-container">
+                            <div class="product-container has-background-light">
+                                <div class="columns">
+                                    <div class="column is-two-thirds">
+                                        <h5 class="title is-5">{{ product.name }}</h5>
+                                    </div>
+                                    <div class="column has-text-right-desktop has-text-centered-mobile">
+                                        <button class="button is-link" @click="showProduct(product)">
+                                            View
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                        </perfect-scrollbar>
+                        </div>
                     </div>
                     <div v-else>
                         <h4 class="subtitle is-4 has-text-centered">No product stock found for this manufacturer</h4>
@@ -102,11 +100,10 @@
 
 <script>
     import axios from 'axios'
-    import { PerfectScrollbar } from 'vue2-perfect-scrollbar';
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
     export default {
         name: "Manufacturer",
-        components: {ProgressBarIndeterminate, PerfectScrollbar},
+        components: {ProgressBarIndeterminate},
         data () {
             return {
                 isLoading: true,
@@ -196,7 +193,6 @@
     }
 </script>
 
-<style src="vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css"/>
 <style scoped>
     .scroll {
         position: relative;

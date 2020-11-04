@@ -64,7 +64,6 @@
 
 <script>
     import axios from 'axios'
-    import chunk from "lodash/core";
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
     export default {
         name: "Manufacturers",

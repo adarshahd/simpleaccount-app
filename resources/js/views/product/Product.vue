@@ -137,12 +137,11 @@
 
 <script>
     import axios from 'axios'
-    import { PerfectScrollbar } from 'vue2-perfect-scrollbar';
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
 
     export default {
         name: "Product",
-        components: {ProgressBarIndeterminate, PerfectScrollbar},
+        components: {ProgressBarIndeterminate},
         data () {
             return {
                 isLoading: true,
