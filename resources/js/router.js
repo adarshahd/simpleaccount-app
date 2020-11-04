@@ -15,6 +15,9 @@ import NewManufacturer from "./views/forms/NewManufacturer";
 import Manufacturer from "./views/product/Manufacturer";
 import Taxes from "./views/product/Taxes";
 import ProductTypes from "./views/product/ProductTypes";
+import Products from "./views/product/Products";
+import Product from "./views/forms/Product";
+import ProductDetails from "./views/product/Product";
 
 Vue.use(Router);
 
@@ -82,6 +85,28 @@ const routes =  [
                 path: '/product-types',
                 name: 'product-types',
                 component: ProductTypes
+            },
+
+            /* Products */
+            {
+                path: '/products',
+                name: 'products',
+                component: Products
+            },
+            {
+                path: '/products/new',
+                name: 'products-new',
+                component: Product
+            },
+            {
+                path: '/products/:id/details',
+                name: 'product-details',
+                component: ProductDetails
+            },
+            {
+                path: '/products/:id/edit',
+                name: 'product-edit',
+                component: Product
             },
 
 
