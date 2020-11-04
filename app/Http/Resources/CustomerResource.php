@@ -30,7 +30,8 @@ class CustomerResource extends JsonResource
             'website' => $this->website,
             'user_id' => $this->user_id,
             'id_type_id' => $this->id_type_id,
-            'image' => $this->getFirstMedia('avatars') == null ? null : $this->getFirstMedia('avatars')->getUrl()
+            'image' => $this->getFirstMedia('avatars') == null ? null : $this->getFirstMedia('avatars')->getUrl(),
+            'total_sales' => $this->sales()->count()
         ];
     }
 }

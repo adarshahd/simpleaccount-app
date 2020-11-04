@@ -103,6 +103,8 @@ class CustomerController extends Controller
 
         return response()->json([
             'data' => [
+                'customer' => new CustomerResource($customer),
+                'id_type' => $customer->idType->name,
                 'total_sales' => $totalSales,
                 'recent_sales' => $recentSaleDetails,
                 'total_sale_amount' => $totalSaleAmount,

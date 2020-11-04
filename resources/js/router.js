@@ -3,21 +3,24 @@ import Router from 'vue-router'
 import store from '@/store'
 
 import Guest from "@/views/layouts/Guest";
-import Authenticated from "./views/layouts/Authenticated";
+import Authenticated from "@/views/layouts/Authenticated";
 
 import Login from "@/views/auth/Login";
-import Logout from "./components/Logout";
+import Logout from "@/components/Logout";
 import Dashboard from "@/views/dashboard/Dashboard";
 
 import PageNotFound from "@/components/PageNotFound";
-import Manufacturers from "./views/product/Manufacturers";
-import NewManufacturer from "./views/forms/NewManufacturer";
-import Manufacturer from "./views/product/Manufacturer";
-import Taxes from "./views/product/Taxes";
-import ProductTypes from "./views/product/ProductTypes";
-import Products from "./views/product/Products";
-import Product from "./views/forms/Product";
-import ProductDetails from "./views/product/Product";
+import Manufacturers from "@/views/product/Manufacturers";
+import NewManufacturer from "@/views/forms/NewManufacturer";
+import Manufacturer from "@/views/product/Manufacturer";
+import Taxes from "@/views/product/Taxes";
+import ProductTypes from "@/views/product/ProductTypes";
+import Products from "@/views/product/Products";
+import Product from "@/views/forms/Product";
+import ProductDetails from "@/views/product/Product";
+import Customers from "@/views/customers/Customers";
+import Customer from "@/views/forms/Customer";
+import CustomerDetails from "@/views/customers/Customer"
 
 Vue.use(Router);
 
@@ -107,6 +110,28 @@ const routes =  [
                 path: '/products/:id/edit',
                 name: 'product-edit',
                 component: Product
+            },
+
+            /* Customers */
+            {
+                path: '/customers',
+                name: 'customers',
+                component: Customers
+            },
+            {
+                path: '/customers/new',
+                name: 'customers-new',
+                component: Customer
+            },
+            {
+                path: '/customers/:id/edit',
+                name: 'customer-edit',
+                component: Customer
+            },
+            {
+                path: '/customers/:id/details',
+                name: 'customer-details',
+                component: CustomerDetails
             },
 
 

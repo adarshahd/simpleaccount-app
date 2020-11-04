@@ -14,11 +14,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::group(['prefix' => 'v1'], function() {
-    //On Boarding routes
+    /*
+     * On Boarding routes
+     * */
     Route::get('/status', [\App\Http\Controllers\OnboardController::class, 'getProductStatus']);
     Route::post('/users/admin', [\App\Http\Controllers\OnboardController::class, 'createAdminUser']);
     Route::post('/product-owner', [\App\Http\Controllers\OnboardController::class, 'updateProductOwnerData']);
 
+    /*
+     * Route to get current logged in user
+     * */
     Route::group(['middleware' => 'auth:sanctum'], function() {
 
         Route::get('/user', function(Request $request) {
@@ -31,6 +36,15 @@ Route::group(['prefix' => 'v1'], function() {
 
     });
 
+    /*
+     * Extra routes
+     * */
+
+    Route::get('/customers/{customer}/details', [\App\Http\Controllers\Api\CustomerController::class, 'details']);
+
+    /*
+     * API Resource Routes
+     * */
     Route::apiResources([
         'settings' => App\Http\Controllers\Api\AppSettingController::class,
         'id-types' => App\Http\Controllers\Api\IdTypeController::class,
