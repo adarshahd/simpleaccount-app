@@ -27,15 +27,15 @@ class VendorUpdateRequest extends FormRequest
             'name' => ['required', 'string', 'max:300'],
             'identification' => ['required', 'string', 'max:200'],
             'address_line_1' => ['required'],
-            'address_line_2' => [''],
+            'address_line_2' => ['nullable', 'string'],
             'city' => ['required', 'string', 'max:300'],
             'state' => ['required', 'string', 'max:200'],
             'country' => ['required', 'string', 'max:300'],
             'pin' => ['required', 'string', 'max:50'],
             'contact_name' => ['required', 'string', 'max:200'],
-            'contact_email' => ['string', 'max:200'],
+            'contact_email' => ['nullable', 'string', 'max:200'],
             'contact_phone' => ['required', 'string', 'max:50'],
-            'website' => ['string', 'max:400'],
+            'website' => ['nullable', 'string', 'max:400'],
             'id_type_id' => ['required', 'integer', 'exists:id_types,id'],
             'image' => ['nullable', 'image']
         ];

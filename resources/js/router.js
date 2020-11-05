@@ -21,6 +21,9 @@ import ProductDetails from "@/views/product/Product";
 import Customers from "@/views/customers/Customers";
 import Customer from "@/views/forms/Customer";
 import CustomerDetails from "@/views/customers/Customer"
+import Vendors from "@/views/vendors/Vendors";
+import Vendor from "@/views/forms/Vendor";
+import VendorDetails from '@/views/vendors/Vendor'
 
 Vue.use(Router);
 
@@ -132,6 +135,28 @@ const routes =  [
                 path: '/customers/:id/details',
                 name: 'customer-details',
                 component: CustomerDetails
+            },
+
+            /* Vendors */
+            {
+                path: '/vendors',
+                name: 'vendors',
+                component: Vendors
+            },
+            {
+                path: '/vendors/new',
+                name: 'vendors-new',
+                component: Vendor
+            },
+            {
+                path: '/vendors/:id/edit',
+                name: 'vendor-edit',
+                component: Vendor
+            },
+            {
+                path: '/vendors/:id/details',
+                name: 'vendor-details',
+                component: VendorDetails
             },
 
 

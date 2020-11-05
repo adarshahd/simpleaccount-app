@@ -41,6 +41,7 @@ Route::group(['prefix' => 'v1'], function() {
      * */
 
     Route::get('/customers/{customer}/details', [\App\Http\Controllers\Api\CustomerController::class, 'details']);
+    Route::get('/vendors/{vendor}/details', [\App\Http\Controllers\Api\VendorController::class, 'details']);
 
     /*
      * API Resource Routes
