@@ -131,7 +131,6 @@
                 customerId: null,
                 customerDetails: {},
                 errors: [],
-                idTypes: []
             }
         },
         computed: {

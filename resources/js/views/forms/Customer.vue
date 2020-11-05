@@ -9,8 +9,8 @@
                         <div class="columns is-vcentered">
                             <div class="column is-two-fifths-desktop">
                                 <figure class="image is-128x128">
-                                    <img src="/images/business-shop.png" alt="" v-if="imageList.length === 0">
-                                    <img v-else :src="imageList[0]" alt="customer-image">
+                                    <img src="/images/business-shop.png" alt="" v-if="imageList === null">
+                                    <img v-else :src="imageList" alt="customer-image">
                                 </figure>
                             </div>
                             <div class="column">
@@ -229,7 +229,7 @@
                     id_type_id: null,
                     image: null,
                 },
-                customerImages: [],
+                customerImage: null,
                 idTypes: [],
                 errors: []
             }
@@ -237,7 +237,7 @@
         computed: {
             imageList : {
                 get() {
-                    return this.customerImages
+                    return this.customerImage
                 }
             },
         },
@@ -254,8 +254,7 @@
                 this.isLoading = true
                 axios.get('/api/v1/customers/' + this.customer.id).then(response => {
                     this.customer = response.data.data
-                    this.customerImages = []
-                    this.customerImages.push(response.data.data.image)
+                    this.customerImage = response.data.data.image
 
                     this.customer.image = null
                     this.customer.website = response.data.data.website == null ? '' : response.data.data.website
@@ -290,7 +289,9 @@
                 formData.append('contact_phone', this.customer.contact_phone)
                 formData.append('website', this.customer.website)
                 formData.append('id_type_id', this.customer.id_type_id)
-                formData.append('image', this.customer.image)
+                if(this.customer.image != null) {
+                    formData.append('image', this.customer.image)
+                }
 
                 axios.post('/api/v1/customers', formData, config).then(response => {
                     this.isUpdating = false;
@@ -319,14 +320,14 @@
                 formData.append('contact_phone', this.customer.contact_phone)
                 formData.append('website', this.customer.website)
                 formData.append('id_type_id', this.customer.id_type_id)
-                if(this.customerIm != null) {
+                if(this.customer.image != null) {
                     formData.append('image', this.customer.image)
                 }
 
                 axios.post('/api/v1/customers/' + this.customer.id + '/?_method=PATCH', formData, config).then(response => {
                     this.isUpdating = false;
                     this.customer = {}
-                    this.showToast("Customer created successfully!")
+                    this.showToast("Customer updated successfully!")
                     this.$router.push({ name: 'customers'})
                 }).catch(errors => {
                     this.isUpdating = false;
@@ -336,8 +337,7 @@
             handleFileChange(event) {
                 const file = event.target.files[0];
                 this.customer.image = file
-                this.customerImages = []
-                this.customerImages.push(URL.createObjectURL(file))
+                this.customerImage = URL.createObjectURL(file)
             },
             handleError(error) {
                 this.errors = error.response.data.errors
