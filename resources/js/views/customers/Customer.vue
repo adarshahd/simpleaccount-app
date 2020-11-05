@@ -139,22 +139,6 @@
             }
         },
         methods: {
-            getIdTypes () {
-                axios.get('/api/v1/idtypes').then(response => {
-                    this.idTypes = response.data.data;
-                    this.isIdTypeLoading = false;
-                }).catch(error => {
-                    this.isIdTypeLoading = false;
-                });
-            },
-            getIdType(id) {
-                for(let i=0; i<this.idTypes.length; ++i) {
-                    let idType = this.idTypes[i];
-                    if (idType.id === id) {
-                        return idType;
-                    }
-                }
-            },
             getCustomerDetails() {
                 this.isLoading = true;
                 axios.get('/api/v1/customers/' + this.customerId + '/details').then(response => {
