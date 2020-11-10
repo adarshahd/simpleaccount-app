@@ -81,6 +81,9 @@ class OnboardController extends Controller
         }
 
         $productOwnerData = $request->validated();
+        if($request->hasFile('logo')) {
+            $request->file('logo')->storeAs('logos', 'logo.png');
+        }
 
         $result = AppSettingController::updateProductOwnerData(json_encode($productOwnerData));
 
