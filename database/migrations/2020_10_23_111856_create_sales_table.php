@@ -25,6 +25,7 @@ class CreateSalesTable extends Migration
             $table->float('tax');
             $table->float('total');
             $table->foreignId('customer_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('order_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

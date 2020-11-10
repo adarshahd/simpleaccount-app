@@ -38,6 +38,7 @@ class Sale extends Model
         'tax',
         'total',
         'customer_id',
+        'order_id'
     ];
 
     /**
@@ -53,6 +54,7 @@ class Sale extends Model
         'tax' => 'float',
         'total' => 'float',
         'customer_id' => 'integer',
+        'order_id' => 'integer'
     ];
 
     /**
@@ -79,5 +81,9 @@ class Sale extends Model
     public function saleItems()
     {
         return $this->hasMany(\App\Models\SaleItem::class);
+    }
+
+    public function order() {
+        $this->belongsTo(Order::class);
     }
 }

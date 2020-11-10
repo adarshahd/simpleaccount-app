@@ -36,6 +36,7 @@ class Purchase extends Model
         'tax',
         'total',
         'vendor_id',
+        'order_id'
     ];
 
     /**
@@ -50,6 +51,7 @@ class Purchase extends Model
         'tax' => 'float',
         'total' => 'float',
         'vendor_id' => 'integer',
+        'order_id' => 'integer'
     ];
 
     /**
@@ -76,5 +78,9 @@ class Purchase extends Model
     public function purchaseItems()
     {
         return $this->hasMany(\App\Models\PurchaseItem::class);
+    }
+
+    public function order() {
+        $this->belongsTo(Order::class);
     }
 }

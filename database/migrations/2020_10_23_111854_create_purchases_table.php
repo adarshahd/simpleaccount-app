@@ -24,6 +24,7 @@ class CreatePurchasesTable extends Migration
             $table->float('tax');
             $table->float('total');
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('order_id')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
