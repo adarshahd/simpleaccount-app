@@ -30,6 +30,7 @@ class SaleItem extends Model
         'price',
         'discount',
         'sub_total',
+        'tax_percent',
         'tax',
         'total',
         'sale_id',
@@ -47,6 +48,7 @@ class SaleItem extends Model
         'price' => 'float',
         'discount' => 'float',
         'sub_total' => 'float',
+        'tax_percent' => 'float',
         'tax' => 'float',
         'total' => 'float',
         'sale_id' => 'integer',
@@ -60,22 +62,6 @@ class SaleItem extends Model
     public function sale()
     {
         return $this->belongsTo(\App\Models\Sale::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function product()
-    {
-        return $this->belongsTo(\App\Models\Product::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function manufacturer()
-    {
-        return $this->belongsTo(\App\Models\Manufacturer::class);
     }
 
     /**

@@ -7,7 +7,9 @@ import store from './store'
 
 axios.defaults.withCredentials = true
 
-Vue.use(Buefy)
+Vue.use(Buefy, {
+    defaultLocale: 'en-IN'
+})
 
 store.dispatch("getCurrentUser").then(response => {
     const app = new Vue({

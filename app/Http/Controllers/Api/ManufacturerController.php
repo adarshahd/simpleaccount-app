@@ -71,8 +71,8 @@ class ManufacturerController extends Controller
     }
 
     public function find(Request $request) {
-        if($request->has('products_id')) {
-            $ids = ProductStock::query()->where('products_id', $request->get('products_id'))->pluck('manufacturers_id')->take(10)->toArray();
+        if($request->has('product_id')) {
+            $ids = ProductStock::query()->where('product_id', $request->get('product_id'))->pluck('manufacturer_id')->take(10)->toArray();
             $manufacturers = Manufacturer::query()->whereIn('id', $ids)->get();
 
             return response()->json([

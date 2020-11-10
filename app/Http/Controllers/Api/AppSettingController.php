@@ -18,6 +18,8 @@ class AppSettingController extends Controller
 
     private static $requireExpiryDate = "require_expiry";
     private static $billPrefixSetting = "bill_prefix";
+    private static $saleBillStart = "sale_bill_start";
+    private static $saleBillFooter = "sale_bill_footer";
     private static $appInitialized = "app_initialized";
     private static $poData = 'po_data';
     private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
@@ -138,5 +140,15 @@ class AppSettingController extends Controller
     {
         $billPrefixSetting = AppSetting::query()->where('key', self::$billPrefixSetting)->first();
         return $billPrefixSetting ? $billPrefixSetting->value : '';
+    }
+
+    public static function getSaleBillStart() {
+        $billStartSetting = AppSetting::query()->where('key', self::$saleBillStart)->first();
+        return $billStartSetting ? $billStartSetting->value : 1;
+    }
+
+    public static function getSaleBillFooter() {
+        $saleBillFooterSetting = AppSetting::query()->where('key', self::$saleBillFooter)->first();
+        return $saleBillFooterSetting ? $saleBillFooterSetting->value : '';
     }
 }

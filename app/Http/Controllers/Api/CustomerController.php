@@ -119,7 +119,7 @@ class CustomerController extends Controller
             return response()->json([], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $customers = Customer::query()->where('company_name', 'like', $request->get('name') . "%")
+        $customers = Customer::query()->where('name', 'like', $request->get('name') . "%")
             ->take(10)->get();
         return new CustomerCollection($customers);
     }

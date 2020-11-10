@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-primary has-shadow" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-primary has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <div class="navbar-item">
                 <h1 class="title">SimpleAccount</h1>

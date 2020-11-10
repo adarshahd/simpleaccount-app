@@ -245,7 +245,7 @@ class PurchaseController extends Controller
                 'total_stock' => $purchaseItem['quantity'],
                 'mrp' => $purchaseItem['mrp'],
                 'price' => $purchaseItem['price'],
-                'tax' => $purchaseItem['tax'],
+                'tax' => $purchaseItem['tax'] / $purchaseItem['quantity'], // Tax is recorded for <quantity> items
                 'batch' => $purchaseItem['batch'],
                 'hsn' => $purchaseItem['hsn'] == null ? '' : $purchaseItem['hsn'],
                 'expiry' => $purchaseItem['expiry'],

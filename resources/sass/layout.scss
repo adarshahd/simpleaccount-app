@@ -1,8 +1,9 @@
 .sidebar-left {
-    width: 240px;
+    width: 15%;
     z-index: 40;
     position: fixed;
     height: 95vh;
+    margin-top: 5px;
     padding: 10px 0 10px 0;
     border-radius: 0;
     overflow-y: auto;
@@ -24,9 +25,7 @@
 }
 
 .main-content {
-    padding: 10px 30px 10px 260px;
-    width: 100%;
-    position: fixed;
+    margin: 60px 30px 10px 17%;
 }
 
 .has-rounded-corner {
@@ -35,7 +34,8 @@
 
 @media(max-width: $tablet) {
     .sidebar-left {
-        left: -240px;
+        width: 70%;
+        left: -70%;
         transition: left .3s ease;
     }
 
@@ -48,8 +48,9 @@
     }
 
     .main-content {
-        padding-left: 15px;
-        padding-right: 15px;
+        margin-top: 10px;
+        margin-left: 15px;
+        margin-right: 15px;
     }
 
     .global-search {

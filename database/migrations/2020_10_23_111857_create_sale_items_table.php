@@ -21,6 +21,7 @@ class CreateSaleItemsTable extends Migration
             $table->float('price');
             $table->float('discount')->default(0.0);
             $table->float('sub_total');
+            $table->float('tax_percent');
             $table->float('tax');
             $table->float('total');
             $table->foreignId('sale_id')->constrained()->cascadeOnDelete();

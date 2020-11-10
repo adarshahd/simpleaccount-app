@@ -37,11 +37,20 @@ Route::group(['prefix' => 'v1'], function() {
     });
 
     /*
+     * Search Routes
+     * */
+    Route::get('/customers/search', [\App\Http\Controllers\Api\CustomerController::class, 'find']);
+    Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::class, 'find']);
+    Route::get('products/{product}/stock/search', [\App\Http\Controllers\Api\ProductController::class, 'stock']);
+    Route::get('/manufacturers/search', [\App\Http\Controllers\Api\ManufacturerController::class, 'find']);
+
+    /*
      * Extra routes
      * */
 
     Route::get('/customers/{customer}/details', [\App\Http\Controllers\Api\CustomerController::class, 'details']);
     Route::get('/vendors/{vendor}/details', [\App\Http\Controllers\Api\VendorController::class, 'details']);
+    Route::get('/sales/{sale}/invoice', [\App\Http\Controllers\Api\SaleController::class, 'invoice']);
 
     /*
      * API Resource Routes

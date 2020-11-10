@@ -29,7 +29,7 @@ class CustomerResource extends JsonResource
             'contact_phone' => $this->contact_phone,
             'website' => $this->website,
             'user_id' => $this->user_id,
-            'id_type_id' => $this->id_type_id,
+            'id_type' => $this->idType,
             'image' => $this->getFirstMedia('avatars') == null ? null : $this->getFirstMedia('avatars')->getUrl(),
             'total_sales' => $this->sales()->count()
         ];

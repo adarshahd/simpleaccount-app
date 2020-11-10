@@ -25,7 +25,7 @@ class ProductStockResource extends JsonResource
             'hsn' => $this->hsn,
             'batch' => $this->batch,
             'expiry' => $this->expiry,
-            'product_id' => $this->product_id,
+            'product' => $this->product,
             'manufacturer_id' => $this->manufacturer_id,
         ];
     }

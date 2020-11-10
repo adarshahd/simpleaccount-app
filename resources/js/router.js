@@ -24,6 +24,9 @@ import CustomerDetails from "@/views/customers/Customer"
 import Vendors from "@/views/vendors/Vendors";
 import Vendor from "@/views/forms/Vendor";
 import VendorDetails from '@/views/vendors/Vendor'
+import Sales from "@/views/sales/Sales";
+import Sale from "@/views/forms/Sale";
+import SaleDetails from "@/views/sales/Sale"
 
 Vue.use(Router);
 
@@ -157,6 +160,28 @@ const routes =  [
                 path: '/vendors/:id/details',
                 name: 'vendor-details',
                 component: VendorDetails
+            },
+
+            /* Sales */
+            {
+                path: '/sales',
+                name: 'sales',
+                component: Sales
+            },
+            {
+                path: '/sales/new',
+                name: 'sales-new',
+                component: Sale
+            },
+            {
+                path: '/sales/:id/edit',
+                name: 'sale-edit',
+                component: Sale
+            },
+            {
+                path: '/sales/:id/details',
+                name: 'sale-details',
+                component: SaleDetails
             },
 
 

@@ -14,10 +14,13 @@ use App\Models\Sale;
 use App\Models\SaleItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 use Symfony\Component\HttpFoundation\Response;
 
 class SaleController extends Controller
 {
+    public static $invoiceItemsPerPage = 20;
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\SaleCollection
@@ -43,6 +46,9 @@ class SaleController extends Controller
 
             $appSettingController = new AppSettingController();
             $billPrefix = $appSettingController->getBillPrefix();
+            if($billPrefix == '') {
+                $billPrefix = 'SA0000';
+            }
             $latestSale = Sale::query()->latest()->first();
             if($latestSale == null) {
                 $lastBillNumber = 0;
@@ -186,8 +192,10 @@ class SaleController extends Controller
             $product = Product::query()->find($productStock->product_id);
             $discount = $saleItem['discount'];
             $price = $saleItem['price'] - $discount;
-            $saleItemPrice = ($price * $saleItem['quantity']);
-            $saleItemTax = $saleItemPrice * ($product->tax->tax / 100);
+            $taxPercent = $product->tax->tax;
+            $tax_excluded_price = ($price / (( $taxPercent / 100 ) + 1 ));
+            $saleItemPrice = ($tax_excluded_price * $saleItem['quantity']);
+            $saleItemTax = $saleItemPrice * ($taxPercent / 100);
             $subTotal = $subTotal + $saleItemPrice;
             $tax = $tax + $saleItemTax;
 
@@ -206,9 +214,10 @@ class SaleController extends Controller
             ]);
 
             SaleItem::query()->create([
-                'price' => $saleItem['price'],
+                'price' => $tax_excluded_price,
                 'discount' => $saleItem['discount'],
                 'quantity' => $saleItem['quantity'],
+                'tax_percent' => $taxPercent,
                 'tax' => $saleItemTax,
                 'sub_total' => $saleItemPrice,
                 'total' => $saleItemPrice + $saleItemTax,
@@ -221,5 +230,43 @@ class SaleController extends Controller
             'sub_total' => $subTotal,
             'tax' => $tax
         ];
+    }
+
+    public function invoice(Request $request, Sale $sale) {
+        $productOwnerData = AppSettingController::getProductOwnerData();
+        $saleItemsCount = $sale->saleItems()->count();
+        $taxGroupList = $sale->saleItems()->select('sale_items.tax_percent', DB::raw('sum(sale_items.sub_total) as total'))->groupBy('tax_percent')->get();
+
+        $pageCount = $this->getPdfPageCount($saleItemsCount);
+        $pages = collect();
+        if($pageCount > 1) {
+            $currentPage = 1;
+            $sale->saleItems()->chunk(self::$invoiceItemsPerPage, function ($items) use($sale ,$pages, $productOwnerData, $taxGroupList, $pageCount, &$currentPage) {
+                $page = View::make('invoices.sales.template-1.invoice', compact('sale', 'items', 'productOwnerData', 'taxGroupList', 'pageCount', 'currentPage'));
+                $pages->push($page);
+                $currentPage++;
+            });
+        } else {
+            $items = $sale->saleItems;
+            $currentPage = 1;
+            $page = View::make('invoices.sales.template-1.invoice', compact('sale', 'items', 'productOwnerData', 'taxGroupList', 'pageCount', 'currentPage'));
+            $pages->push($page);
+        }
+
+        $invoiceFooter = View::make('invoices.sales.template-1.footer')->render();
+        $pdf = \PDF::loadHtml($pages->toArray());
+        return $pdf->setOption('footer-html', $invoiceFooter)->stream('Invoice-' . $sale->bill_number . '.pdf');
+    }
+
+    private function getPdfPageCount($saleItemsCount) {
+        $pages = (int)($saleItemsCount / self::$invoiceItemsPerPage);
+        if($saleItemsCount > self::$invoiceItemsPerPage && $saleItemsCount % self::$invoiceItemsPerPage > 0) {
+            $pages++;
+        }
+        if($pages == 0) {
+            $pages = 1;
+        }
+
+        return $pages;
     }
 }
