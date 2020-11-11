@@ -110,12 +110,12 @@ class PurchaseController extends Controller
 
                 $purchaseItemCollection = collect($purchaseItems);
                 $purchaseItem = $purchaseItemCollection
-                    ->where('batch', $purchasedItem->batch)
-                    ->where('hsn', $purchasedItem->hsn)
-                    ->where('expiry', $purchasedItem->expiry)
-                    ->where('price', $purchasedItem->price)
-                    ->where('mrp', $purchasedItem->mrp)
-                    ->where('manufacturer_id', $purchasedItem->manufacturer_id)
+                    ->where('batch', $currentStock->batch)
+                    ->where('hsn', $currentStock->hsn)
+                    ->where('expiry', $currentStock->expiry->format("M Y"))
+                    ->where('price', ($currentStock->price + $currentStock->tax))
+                    ->where('mrp', $currentStock->mrp)
+                    ->where('manufacturer_id', $currentStock->manufacturer_id)
                     ->first();
 
                 if($purchaseItem != null) {
@@ -124,7 +124,7 @@ class PurchaseController extends Controller
 
                 if($oldQuantity > ($currentStock->stock + $quantityTobeAdded)) {
                     //There is not enough stock to update this item.
-                    $productName = Product::query()->find($purchasedItem->product_id)->name;
+                    $productName = Product::query()->find($purchasedItem->productStock->product->id)->name;
                     throw new PurchaseException("There is not enough stock of $productName. Modification can not be done!");
                 }
 
@@ -199,10 +199,13 @@ class PurchaseController extends Controller
             $product = Product::query()->find($purchaseItem['product_id']);
             $discount = $purchaseItem['discount'];
             $price = $purchaseItem['price'] - $discount;
-            $purchaseItemPrice = ($price * $purchaseItem['quantity']);
-            $subTotal = $subTotal + $purchaseItemPrice;
-            $purchaseItem['tax'] = $purchaseItemPrice * ($product->tax->tax / 100);
+            $taxPercent = $product->tax->tax;
+            $taxExcludedPrice = ($price / (( $taxPercent / 100 ) + 1 ));
+            $purchaseItemPrice = ($taxExcludedPrice * $purchaseItem['quantity']);
+            $purchaseItem['price'] = $taxExcludedPrice;
+            $purchaseItem['tax'] = $purchaseItemPrice * ($taxPercent / 100);
             $tax = $tax + $purchaseItem['tax'];
+            $subTotal = $subTotal + $purchaseItemPrice;
 
             $stockId = $this->updateStock($product, $purchaseItem);
 
@@ -224,8 +227,8 @@ class PurchaseController extends Controller
         $productStock = $product->productStocks()
             ->where('hsn', $purchaseItem['hsn'] == null ? '' : $purchaseItem['hsn'])
             ->where('batch', $purchaseItem['batch'])
-            ->whereDate('expiry', Carbon::parse($purchaseItem['expiry']))
-            ->where('price', $purchaseItem['price'])
+            ->where('expiry', Carbon::parse($purchaseItem['expiry'])->format('yy-m-d'))
+            ->where('price', round($purchaseItem['price'], 2))
             ->where('mrp', $purchaseItem['mrp'])
             ->where('manufacturer_id', $purchaseItem['manufacturer_id'])
             ->first();
