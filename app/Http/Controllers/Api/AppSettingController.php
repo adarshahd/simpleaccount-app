@@ -17,9 +17,13 @@ class AppSettingController extends Controller
      * */
 
     private static $requireExpiryDate = "require_expiry";
-    private static $billPrefixSetting = "bill_prefix";
+    private static $saleBillPrefixSetting = "sale_bill_prefix";
     private static $saleBillStart = "sale_bill_start";
     private static $saleBillFooter = "sale_bill_footer";
+
+    private static $creditBillPrefix = "credit_bill_prefix";
+    private static $creditBillStart = "credit_bill_start";
+    private static $creditBillFooter = "credit_bill_footer";
     private static $appInitialized = "app_initialized";
     private static $poData = 'po_data';
     private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
@@ -136,9 +140,9 @@ class AppSettingController extends Controller
         return $requireExpirySetting ? $requireExpirySetting->value : true;
     }
 
-    public static function getBillPrefix()
+    public static function getSaleBillPrefix()
     {
-        $billPrefixSetting = AppSetting::query()->where('key', self::$billPrefixSetting)->first();
+        $billPrefixSetting = AppSetting::query()->where('key', self::$saleBillPrefixSetting)->first();
         return $billPrefixSetting ? $billPrefixSetting->value : '';
     }
 
@@ -150,5 +154,20 @@ class AppSettingController extends Controller
     public static function getSaleBillFooter() {
         $saleBillFooterSetting = AppSetting::query()->where('key', self::$saleBillFooter)->first();
         return $saleBillFooterSetting ? $saleBillFooterSetting->value : '';
+    }
+
+    public function getCreditBillPrefix() {
+        $billPrefixSetting = AppSetting::query()->where('key', self::$creditBillPrefix)->first();
+        return $billPrefixSetting ? $billPrefixSetting->value : '';
+    }
+
+    public function getCreditBillStart() {
+        $billStartSetting = AppSetting::query()->where('key', self::$creditBillStart)->first();
+        return $billStartSetting ? $billStartSetting->value : 1;
+    }
+
+    public function getCreditBillFooter() {
+        $creditBillFooterSetting = AppSetting::query()->where('key', self::$creditBillFooter)->first();
+        return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
     }
 }

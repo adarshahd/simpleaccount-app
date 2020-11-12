@@ -93,8 +93,10 @@ class ProductController extends Controller
     }
 
     public function stock(Request $request, Product $product) {
-        $stockQuery = ProductStock::query()->where('product_id', $product->id)
-            ->where('stock', '>', 0);
+        $stockQuery = ProductStock::query()->where('product_id', $product->id);
+        if(!$request->has('all_stock')) {
+            $stockQuery = $stockQuery->where('stock', '>', 0);
+        }
 
         if($request->has('manufacturer_id')) {
             $stockQuery = $stockQuery->where('manufacturer_id', $request->input('manufacturer_id'));

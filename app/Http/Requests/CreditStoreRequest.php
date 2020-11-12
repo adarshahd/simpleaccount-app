@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CreditItemRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreditStoreRequest extends FormRequest
@@ -24,13 +25,9 @@ class CreditStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_number' => ['required', 'string', 'max:100'],
             'bill_date' => ['required', 'date'],
-            'sub_total' => ['required', 'numeric'],
-            'discount' => ['required', 'numeric'],
-            'tax' => ['required', 'numeric'],
-            'total' => ['required', 'numeric'],
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
+            'items' => ['required', new CreditItemRule()]
         ];
     }
 }

@@ -45,7 +45,7 @@ class SaleController extends Controller
             DB::beginTransaction();
 
             $appSettingController = new AppSettingController();
-            $billPrefix = $appSettingController->getBillPrefix();
+            $billPrefix = $appSettingController->getSaleBillPrefix();
             if($billPrefix == '') {
                 $billPrefix = 'SA0000';
             }

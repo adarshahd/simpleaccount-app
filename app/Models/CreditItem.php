@@ -49,14 +49,6 @@ class CreditItem extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function debitNote()
-    {
-        return $this->belongsTo(\App\Models\DebitNote::class);
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function credit()
     {
         return $this->belongsTo(\App\Models\Credit::class);

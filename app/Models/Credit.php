@@ -29,6 +29,7 @@ class Credit extends Model
      * @var array
      */
     protected $fillable = [
+        'bill_id',
         'bill_number',
         'bill_date',
         'sub_total',
@@ -45,6 +46,7 @@ class Credit extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'bill_id' => 'integer',
         'sub_total' => 'float',
         'discount' => 'float',
         'tax' => 'float',
