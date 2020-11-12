@@ -60,9 +60,9 @@ class PurchaseController extends Controller
             $total = ($subTotal + $tax) - $discount;
 
             $purchase->update([
-                'sub_total' => $subTotal,
+                'sub_total' => round($subTotal, 2),
                 'discount' => $discount,
-                'tax' => $tax,
+                'tax' => round($tax, 2),
                 'total' => $total,
             ]);
 
@@ -147,9 +147,9 @@ class PurchaseController extends Controller
                 'bill_number' => $request->get('bill_number'),
                 'bill_date' => $request->get('bill_date'),
                 'vendor_id' => $request->get('vendor_id'),
-                'sub_total' => $subTotal,
+                'sub_total' => round($subTotal, 2),
                 'discount' => $discount,
-                'tax' => $tax,
+                'tax' => round($tax, 2),
                 'total' => $total,
             ]);
 
@@ -227,7 +227,7 @@ class PurchaseController extends Controller
         $productStock = $product->productStocks()
             ->where('hsn', $purchaseItem['hsn'] == null ? '' : $purchaseItem['hsn'])
             ->where('batch', $purchaseItem['batch'])
-            ->where('expiry', Carbon::parse($purchaseItem['expiry'])->format('yy-m-d'))
+            ->whereDate('expiry', Carbon::parse($purchaseItem['expiry']))
             ->where('price', round($purchaseItem['price'], 2))
             ->where('mrp', $purchaseItem['mrp'])
             ->where('manufacturer_id', $purchaseItem['manufacturer_id'])

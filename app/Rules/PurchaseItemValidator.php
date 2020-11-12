@@ -26,9 +26,9 @@ class PurchaseItemValidator implements Rule
 
         $requireExpiry = AppSettingController::getRequireExpiry();
         if($requireExpiry) {
-            $this->expiryRule = "required|date";
+            $this->expiryRule = "required|date_format:M Y";
         } else {
-            $this->expiryRule = "nullable|date";
+            $this->expiryRule = "nullable|date_format:M Y";
         }
 
         $this->parameterBag = [

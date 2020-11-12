@@ -1,0 +1,161 @@
+<template>
+    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
+    <section v-else class="main-content">
+        <div class="columns is-centered">
+            <div class="column is-10">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="columns is-centered">
+                            <div class="column is-10">
+                                <p class="title">Purchases</p>
+                            </div>
+                            <div class="column is-2 is-right">
+                                <button class="button is-primary has-icons-left" @click="showAddPurchase">
+                                    <span class="mdi mdi-plus-circle"></span>
+                                    <span>&nbsp;Add Purchase</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <hr/>
+                        <b-table
+                            striped
+                            :data="purchases">
+                            <b-table-column field="id" label="ID" v-slot="props">
+                                {{ props.row.bill_number }}
+                            </b-table-column>
+                            <b-table-column field="vendor" label="Vendor" v-slot="props">
+                                {{ props.row.vendor.name }}<br/>
+                            </b-table-column>
+                            <b-table-column field="date" label="Date" v-slot="props">
+                                {{ dayjs(props.row.bill_date).format("DD MMM, YYYY") }}
+                            </b-table-column>
+                            <b-table-column field="subtotal" label="Subtotal" v-slot="props">
+                                ₹{{ props.row.sub_total }}
+                            </b-table-column>
+                            <b-table-column field="discount" label="Discount" v-slot="props">
+                                ₹{{ props.row.discount }}
+                            </b-table-column>
+                            <b-table-column field="tax" label="Tax" v-slot="props">
+                                ₹{{ props.row.tax }}
+                            </b-table-column>
+                            <b-table-column field="total" label="Total" v-slot="props">
+                                ₹{{ props.row.total }}
+                            </b-table-column>
+                            <b-table-column label="Actions" v-slot="props" numeric>
+                                <span>
+                                    <button class="button is-info is-small" @click="showPurchaseDetails(props.row)">
+                                        <span class="mdi mdi-eye mdi-18px"></span>
+                                    </button>
+                                </span>
+                                <!--<span>
+                                    <button class="button is-link is-small" @click="downloadInvoice(props.row)">
+                                        <span class="mdi mdi-download mdi-18px"></span>
+                                    </button>
+                                </span>-->
+                                <span>
+                                    <button class="button is-primary is-small" @click="editPurchase(props.row)">
+                                        <span class="mdi mdi-pencil mdi-18px"></span>
+                                    </button>
+                                </span>
+                            </b-table-column>
+                            <template slot="empty">
+                                <div class="columns is-centered">
+                                    <div class="column has-text-centered is-spaced">
+                                        <h4 class="title m-6">No Purchases Found</h4>
+                                    </div>
+                                </div>
+                            </template>
+                        </b-table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
+<script>
+    import axios from 'axios'
+    import dayjs from 'dayjs'
+    import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
+
+    export default {
+        name: "Purchases",
+        components: {
+            ProgressBarIndeterminate
+        },
+        data() {
+            return {
+                isLoading: true,
+                purchases: []
+            }
+        },
+        computed: {
+            dayjs() {
+                return dayjs
+            }
+        },
+        methods: {
+            getPurchases() {
+                this.isLoading = true
+                axios.get('/api/v1/purchases').then(response => {
+                    this.purchases = response.data.data
+                    this.isLoading = false
+                }).catch(error => {
+                    this.handleError(error)
+                })
+            },
+            showAddPurchase() {
+                this.$router.push({
+                    name: 'purchases-new',
+                    params: {
+                        id: null,
+                    }
+                })
+            },
+            downloadInvoice(purchase) {
+
+            },
+            showPurchaseDetails(purchase) {
+                this.$router.push({
+                    name: 'purchase-details',
+                    params: {
+                        id: purchase.id,
+                    }
+                })
+            },
+            editPurchase(purchase) {
+                this.$router.push({
+                    name: 'purchase-edit',
+                    params: {
+                        id: purchase.id,
+                    }
+                })
+            },
+            handleError(error) {
+                this.errors = error.response.data.errors
+                if(error.response.status === 401) {
+                    this.$router.go({
+                        name: 'login',
+                        force: true
+                    });
+                } else {
+                    this.showToast(error.response.data.message, 'is-danger');
+                }
+            },
+            showToast(message, type = 'is-success') {
+                this.$buefy.toast.open({
+                    message: message,
+                    type: type
+                });
+            }
+        },
+        mounted() {
+            this.getPurchases()
+        }
+    }
+</script>
+
+<style scoped>
+
+</style>

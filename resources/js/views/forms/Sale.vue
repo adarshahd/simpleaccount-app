@@ -258,6 +258,7 @@ export default {
                 }
             }
 
+            this.sale.bill_date = dayjs(this.sale.bill_date).format('YYYY-MM-DD')
             this.isSaleCompleting = true
             axios.post('/api/v1/sales', this.sale).then(response => {
                 this.isSaleCompleting = false
@@ -269,6 +270,7 @@ export default {
             })
         },
         updateSale() {
+            this.sale.bill_date = dayjs(this.sale.bill_date).format('YYYY-MM-DD')
             this.isSaleCompleting = true
             axios.patch('/api/v1/sales/' + this.sale.id, this.sale).then(response => {
                 this.isSaleCompleting = false

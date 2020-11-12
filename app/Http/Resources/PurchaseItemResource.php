@@ -19,7 +19,7 @@ class PurchaseItemResource extends JsonResource
             'quantity' => $this->quantity,
             'discount' => $this->discount,
             'purchase_id' => $this->purchase_id,
-            'product_stock_id' => $this->product_stock_id,
+            'product_stock' => new ProductStockResource($this->productStock),
         ];
     }
 }
