@@ -49,8 +49,8 @@ class CreditItem extends Model
         'discount' => 'float',
         'tax_percent' => 'float',
         'tax' => 'float',
-        'sub_total',
-        'total',
+        'sub_total' => 'float',
+        'total' => 'float',
         'credit_id' => 'integer',
         'product_stock_id' => 'integer',
     ];

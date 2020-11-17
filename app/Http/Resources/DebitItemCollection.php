@@ -6,16 +6,16 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class DebitItemCollection extends ResourceCollection
 {
+    public $collects = DebitItemResource::class;
+
     /**
      * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return array
+     * @return \Illuminate\Support\Collection
      */
     public function toArray($request)
     {
-        return [
-            'data' => $this->collection,
-        ];
+        return $this->collection;
     }
 }

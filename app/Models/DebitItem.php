@@ -18,8 +18,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class DebitItem extends Model
 {
-    use HasFactory, SoftDeletes;
-
     /**
      * The attributes that are mass assignable.
      *
@@ -27,10 +25,17 @@ class DebitItem extends Model
      */
     protected $fillable = [
         'quantity',
+        'price',
         'discount',
+        'tax_percent',
+        'tax',
+        'sub_total',
+        'total',
         'debit_id',
         'product_stock_id',
     ];
+
+    use HasFactory, SoftDeletes;
 
     /**
      * The attributes that should be cast to native types.
@@ -40,7 +45,12 @@ class DebitItem extends Model
     protected $casts = [
         'id' => 'integer',
         'quantity' => 'integer',
+        'price' => 'float',
         'discount' => 'float',
+        'tax_percent' => 'float',
+        'tax' => 'float',
+        'sub_total' => 'float',
+        'total' => 'float',
         'debit_id' => 'integer',
         'product_stock_id' => 'integer',
     ];

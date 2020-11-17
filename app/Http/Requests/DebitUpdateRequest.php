@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\DebitItemRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class DebitUpdateRequest extends FormRequest
@@ -24,13 +25,9 @@ class DebitUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_number' => ['required', 'string', 'max:100'],
             'bill_date' => ['required', 'date'],
-            'sub_total' => ['required', 'numeric'],
-            'discount' => ['required', 'numeric'],
-            'tax' => ['required', 'numeric'],
-            'total' => ['required', 'numeric'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
+            'items' => ['required', new DebitItemRule()]
         ];
     }
 }

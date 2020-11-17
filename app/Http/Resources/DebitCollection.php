@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class DebitCollection extends ResourceCollection
 {
+    public $collects = DebitResource::class;
+
     /**
      * Transform the resource collection into an array.
      *

@@ -5,7 +5,7 @@ namespace App\Rules;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
-class CreditItemRule implements Rule
+class DebitItemRule implements Rule
 {
     private $parameterBag = [
         'price' => "required|numeric",
@@ -22,7 +22,7 @@ class CreditItemRule implements Rule
      */
     public function __construct()
     {
-        $this->errorMessage = 'Invalid credit items';
+        $this->errorMessage = 'Invalid debit items';
     }
 
     /**
@@ -35,7 +35,7 @@ class CreditItemRule implements Rule
     public function passes($attribute, $value)
     {
         if (!is_array($value) || !$this->isMultidimensionalArray($value)) {
-            $this->errorMessage = "Invalid credit items";
+            $this->errorMessage = "Invalid debit items";
             return false;
         }
 

@@ -17,6 +17,7 @@ class CreateDebitsTable extends Migration
 
         Schema::create('debits', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('bill_id');
             $table->string('bill_number', 100);
             $table->date('bill_date');
             $table->float('sub_total');

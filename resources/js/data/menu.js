@@ -63,9 +63,9 @@ const menuItems = [
             to : "purchases"
         },
         {
-            label : "Debit Notes",
+            label : "Debits",
             icon : "mdi mdi-credit-card-plus",
-            to : "debit-notes"
+            to : "debits"
         },
     ],
     "Accounting",

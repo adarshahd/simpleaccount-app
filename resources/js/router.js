@@ -33,6 +33,9 @@ import PurchaseDetails from "@/views/purchases/Purchase"
 import Credits from "@/views/credits/Credits";
 import Credit from "@/views/forms/Credit";
 import CreditDetails from "@/views/credits/Credit"
+import Debits from "@/views/debits/Debits";
+import Debit from "@/views/forms/Debit";
+import DebitDetails from "@/views/debits/Debit"
 
 Vue.use(Router);
 
@@ -212,7 +215,7 @@ const routes =  [
                 component: PurchaseDetails
             },
 
-            /* Credit Notes */
+            /* Credits */
             {
                 path: '/credits',
                 name: 'credits',
@@ -232,6 +235,28 @@ const routes =  [
                 path: '/credits/:id/details',
                 name: 'credit-details',
                 component: CreditDetails
+            },
+
+            /* Debits */
+            {
+                path: '/debits',
+                name: 'debits',
+                component: Debits
+            },
+            {
+                path: '/debits/new',
+                name: 'debits-new',
+                component: Debit
+            },
+            {
+                path: '/debit-notes/:id/edit',
+                name: 'debit-edit',
+                component: Debit
+            },
+            {
+                path: '/debit-notes/:id/details',
+                name: 'debit-details',
+                component: DebitDetails
             },
 
 

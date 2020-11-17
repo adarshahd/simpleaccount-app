@@ -24,6 +24,11 @@ class AppSettingController extends Controller
     private static $creditBillPrefix = "credit_bill_prefix";
     private static $creditBillStart = "credit_bill_start";
     private static $creditBillFooter = "credit_bill_footer";
+
+    private static $debitBillPrefix = "debit_bill_prefix";
+    private static $debitBillStart = "debit_bill_start";
+    private static $debitBillFooter = "debit_bill_footer";
+
     private static $appInitialized = "app_initialized";
     private static $poData = 'po_data';
     private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
@@ -168,6 +173,21 @@ class AppSettingController extends Controller
 
     public static function getCreditBillFooter() {
         $creditBillFooterSetting = AppSetting::query()->where('key', self::$creditBillFooter)->first();
+        return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
+    }
+
+    public static function getDebitBillPrefix() {
+        $billPrefixSetting = AppSetting::query()->where('key', self::$debitBillPrefix)->first();
+        return $billPrefixSetting ? $billPrefixSetting->value : '';
+    }
+
+    public static function getDebitBillStart() {
+        $billStartSetting = AppSetting::query()->where('key', self::$debitBillStart)->first();
+        return $billStartSetting ? $billStartSetting->value : 1;
+    }
+
+    public static function getDebitBillFooter() {
+        $creditBillFooterSetting = AppSetting::query()->where('key', self::$debitBillFooter)->first();
         return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
     }
 }
