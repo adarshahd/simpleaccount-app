@@ -215,7 +215,8 @@
                 this.saleItem.price = this.currentStock.price;
                 this.saleItem.quantity = 1;
                 this.saleItem.stockAvailable = this.currentStock.stock;
-                this.saleItem.tax = this.currentStock.tax;
+                this.saleItem.tax_percent = this.currentStock.tax_percent;
+                this.saleItem.tax = this.saleItem.price * this.currentStock.tax_percent / 100;
                 this.saleItem.name = this.getProduct(this.product_id).name
             },
             getProduct(id) {

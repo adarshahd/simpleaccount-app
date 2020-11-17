@@ -38,7 +38,7 @@ class SaleController extends Controller
      */
     public function store(SaleStoreRequest $request)
     {
-        $saleItems = $request->input('sale_items');
+        $saleItems = $request->input('items');
 
         try {
             //Create sale and sale item entries inside a transaction
@@ -120,7 +120,7 @@ class SaleController extends Controller
      */
     public function update(SaleUpdateRequest $request, Sale $sale)
     {
-        $saleItems = $request->input('sale_items');
+        $saleItems = $request->input('items');
 
         try {
             DB::beginTransaction();

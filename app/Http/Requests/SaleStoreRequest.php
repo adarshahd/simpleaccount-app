@@ -28,14 +28,14 @@ class SaleStoreRequest extends FormRequest
             'bill_date' => ['required', 'date'],
             'discount' => ['required', 'numeric'],
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
-            'sale_items' => ['required', new SaleItemValidator()]
+            'items' => ['required', new SaleItemValidator()]
         ];
     }
 
     public function messages()
     {
         return [
-            'sale_items.required' => 'Sale items should be array of items',
+            'items.required' => 'Sale items should be array of items',
         ];
     }
 }

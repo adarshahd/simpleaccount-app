@@ -177,6 +177,7 @@ export default {
                 id: this.itemId++,
                 price: '0',
                 quantity: '0',
+                tax_percent: 0,
                 tax: 0,
                 discount: 0,
                 product_stock_id: '',
