@@ -1,7 +1,7 @@
 <template>
-    <div>
-        <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-        <div class="columns main-content m-3" v-else>
+    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
+    <section class="main-content" v-else>
+        <div class="columns">
             <div class="column is-5">
                 <div class="card has-background-light">
                     <div class="card-content">
@@ -113,7 +113,7 @@
                 </section>
             </div>
         </div>
-    </div>
+    </section>
 </template>
 
 <script>
@@ -191,25 +191,9 @@
         mounted() {
             this.customerId = this.$route.params.id
             this.getCustomerDetails()
-            this.getIdTypes();
         }
     }
 </script>
 
 <style scoped>
-    .scroll {
-        position: relative;
-        max-height: 40vh;
-        overflow: hidden;
-        padding-top: 16px;
-    }
-
-    .customer-container {
-        padding: 20px;
-        margin: 8px;
-    }
-
-    .no-margin {
-        margin-bottom: .25rem;
-    }
 </style>

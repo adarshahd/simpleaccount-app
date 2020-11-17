@@ -90,7 +90,7 @@ class CustomerController extends Controller
             $saleDetails->id = $sale->id;
             $saleDetails->bill_number = $sale->bill_number;
             $saleDetails->total = $sale->total;
-            $saleDetails->items = $sale->sale_items->count();
+            $saleDetails->items = $sale->saleItems->count();
             $saleDetails->bill_date = $sale->bill_date;
 
             $recentSaleDetails->push($saleDetails);
