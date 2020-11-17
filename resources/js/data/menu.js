@@ -19,11 +19,6 @@ const menuItems = [
             to : "products"
         },
         {
-            label : "Product Stock",
-            icon : "mdi mdi-database-search",
-            to : "stock"
-        },
-        {
             label : "Product Types",
             icon : "mdi mdi-database-search",
             to : "product-types"
