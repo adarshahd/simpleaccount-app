@@ -50,7 +50,7 @@
         </div>
         <div class="scroll">
             <sale-item
-                v-for="saleItem in sale.sale_items"
+                v-for="saleItem in sale.items"
                 :key="saleItem.id"
                 v-on:on-delete="removeSaleItem"
                 :sale-item="saleItem"/>
@@ -89,7 +89,7 @@ export default {
                 customer_id: null,
                 bill_date: null,
                 discount: 0,
-                sale_items: []
+                items: []
             },
             saleEdit: null,
             customers: [],
@@ -103,18 +103,20 @@ export default {
         },
         saleSubTotal() {
             let subTotal = 0
-            for (let i = 0; i < this.sale.sale_items.length; ++i) {
-                let saleItem = this.sale.sale_items[i]
-                subTotal = subTotal + saleItem.price * saleItem.quantity
+            for (let i = 0; i < this.sale.items.length; ++i) {
+                let saleItem = this.sale.items[i]
+                let taxExcludedPrice = (saleItem.price / (( saleItem.tax_percent / 100 ) + 1 ));
+                subTotal = subTotal + taxExcludedPrice * saleItem.quantity
             }
 
             return  Number(subTotal)
         },
         saleTax() {
             let tax = 0
-            for (let i = 0; i < this.sale.sale_items.length; ++i) {
-                let saleItem = this.sale.sale_items[i]
-                tax = tax + (saleItem.price * saleItem.quantity * saleItem.tax) / 100
+            for (let i = 0; i < this.sale.items.length; ++i) {
+                let saleItem = this.sale.items[i]
+                let taxExcludedPrice = (saleItem.price / (( saleItem.tax_percent / 100 ) + 1 ));
+                tax = tax + (taxExcludedPrice * saleItem.quantity * saleItem.tax_percent) / 100
             }
             return  Number(tax)
         },
@@ -163,7 +165,7 @@ export default {
             this.sale.customer_id = val
         },
         onCustomerCleared() {
-            this.sale.sale_items = []
+            this.sale.items = []
             this.customers = []
         },
         addSaleItem() {
@@ -182,7 +184,7 @@ export default {
                 saleId: null,
                 errors: []
             }
-            this.sale.sale_items.push(saleItem)
+            this.sale.items.push(saleItem)
         },
         addSaleItems() {
             let saleItems = []
@@ -190,10 +192,11 @@ export default {
                 let item = this.saleEdit.items[i]
                 let saleItem = {
                     id: this.itemId++,
-                    price: item.product_stock.price,
+                    price: item.price,
                     quantity: item.quantity,
                     discount: item.discount,
-                    tax: item.product_stock.tax,
+                    tax_percent: item.tax_percent,
+                    tax: item.tax,
                     product_stock_id: item.product_stock.id,
                     product_stock: item.product_stock,
                     stockAvailable: item.product_stock.stock,
@@ -204,12 +207,12 @@ export default {
                 saleItems.push(saleItem)
             }
 
-            this.sale.sale_items = saleItems
+            this.sale.items = saleItems
         },
         removeSaleItem(id) {
-            for(let i=0; i < this.sale.sale_items.length; ++i) {
-                if(this.sale.sale_items[i].id === id) {
-                    this.sale.sale_items.splice(i, 1)
+            for(let i=0; i < this.sale.items.length; ++i) {
+                if(this.sale.items[i].id === id) {
+                    this.sale.items.splice(i, 1)
                     break
                 }
             }
@@ -230,15 +233,15 @@ export default {
                 this.showToast('Please chose sale date', 'is-warning')
                 return
             }
-            if (this.sale.sale_items.length < 1) {
+            if (this.sale.items.length < 1) {
                 this.showToast(
                     'Please add an item before completing sale!',
                     'is-warning'
                 )
                 return
             }
-            for (let i = 0; i < this.sale.sale_items.length; ++i) {
-                let saleItem = this.sale.sale_items[i]
+            for (let i = 0; i < this.sale.items.length; ++i) {
+                let saleItem = this.sale.items[i]
                 if (
                     saleItem.products_stock_id === '' ||
                     saleItem.quantity === 0

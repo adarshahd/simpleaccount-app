@@ -81,17 +81,17 @@ $total = 0;
             <table class="table table-bordered table-sm">
                 <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Products</th>
-                    <th>quantity</th>
-                    <th>HSN</th>
-                    <th>Batch</th>
-                    <th>Expiry</th>
-                    <th>MRP</th>
-                    <th>Price</th>
-                    <th>Taxable</th>
-                    <th>Tax</th>
-                    <th>Item Total</th>
+                    <th class="text-center">#</th>
+                    <th class="text-center">Products</th>
+                    <th class="text-center">HSN</th>
+                    <th class="text-center">Batch</th>
+                    <th class="text-center">Expiry</th>
+                    <th class="text-center">MRP</th>
+                    <th class="text-center">Price</th>
+                    <th class="text-center">Quantity</th>
+                    <th class="text-center">Taxable</th>
+                    <th class="text-center">Tax</th>
+                    <th class="text-center">Item Total</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -103,12 +103,12 @@ $total = 0;
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->productStock->product->name }}</td>
-                        <td>{{ $item->quantity }}</td>
-                        <td>{{ $item->productStock->hsn }}</td>
-                        <td>{{ $item->productStock->batch }}</td>
-                        <td class="text-right">{{ $item->productStock->expiry->format('M - Y') }}</td>
+                        <td class="text-center">{{ $item->productStock->hsn }}</td>
+                        <td class="text-center">{{ $item->productStock->batch }}</td>
+                        <td class="text-center">{{ $item->productStock->expiry->format('M - Y') }}</td>
                         <td class="text-right">₹{{ number_format($item->productStock->mrp, 2, '.', ',') }}</td>
                         <td class="text-right">₹{{ number_format($item->price, 2, '.', ',') }}</td>
+                        <td class="text-center">{{ $item->quantity }}</td>
                         <td class="text-right">₹{{ number_format($item->price * $item->quantity, 2, '.', ',') }}</td>
                         <td class="text-right">₹{{ number_format($item->tax, 2, '.', ',') }}</td>
                         <td class="text-right">₹{{ number_format($item->total, 2, '.', ',') }}</td>

@@ -114,7 +114,7 @@
                 })
             },
             downloadInvoice(sale) {
-
+                window.open('/api/v1/sales/' + sale.id + '/invoice', '_blank')
             },
             showSaleDetails(sale) {
                 this.$router.push({

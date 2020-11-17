@@ -138,14 +138,16 @@
                 return dayjs
             },
             getTax() {
-                let tax = Number(this.currentStock.tax * this.saleItem.price * this.saleItem.quantity / 100);
+                let taxExcludedPrice = (this.saleItem.price / (( this.saleItem.tax_percent / 100 ) + 1 ));
+                let tax = Number(this.currentStock.tax_percent * taxExcludedPrice * this.saleItem.quantity / 100);
                 return tax.toFixed(2);
             },
             isStockAvailable() {
                 return this.currentStock.stock >= this.saleItem.quantity;
             },
             getItemTotal() {
-                let itemTotal = Number((this.saleItem.price * this.saleItem.quantity) + Number(this.getTax));
+                let taxExcludedPrice = (this.saleItem.price / (( this.saleItem.tax_percent / 100 ) + 1 ));
+                let itemTotal = Number((taxExcludedPrice * this.saleItem.quantity) + Number(this.getTax));
                 return itemTotal.toFixed(2);
             }
         },
@@ -253,6 +255,7 @@
                 this.product_id = this.saleItem.product_stock.product.id
                 this.stockList.push(this.saleItem.product_stock)
                 this.currentStock = this.saleItem.product_stock
+                this.saleItem.price += (this.saleItem.tax / this.saleItem.quantity)
                 this.isStockLoading = false;
                 this.stockSelected = true;
             },
