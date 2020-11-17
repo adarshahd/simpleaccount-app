@@ -203,6 +203,7 @@ class PurchaseController extends Controller
             $taxExcludedPrice = ($price / (( $taxPercent / 100 ) + 1 ));
             $purchaseItemPrice = ($taxExcludedPrice * $purchaseItem['quantity']);
             $purchaseItem['price'] = $taxExcludedPrice;
+            $purchaseItem['tax_percent'] = $taxPercent;
             $purchaseItem['tax'] = $purchaseItemPrice * ($taxPercent / 100);
             $tax = $tax + $purchaseItem['tax'];
             $subTotal = $subTotal + $purchaseItemPrice;
@@ -248,6 +249,7 @@ class PurchaseController extends Controller
                 'total_stock' => $purchaseItem['quantity'],
                 'mrp' => $purchaseItem['mrp'],
                 'price' => $purchaseItem['price'],
+                'tax_percent' => $purchaseItem['tax_percent'],
                 'tax' => $purchaseItem['tax'] / $purchaseItem['quantity'], // Tax is recorded for <quantity> items
                 'batch' => $purchaseItem['batch'],
                 'hsn' => $purchaseItem['hsn'] == null ? '' : $purchaseItem['hsn'],
