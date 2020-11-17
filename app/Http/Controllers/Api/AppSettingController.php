@@ -156,17 +156,17 @@ class AppSettingController extends Controller
         return $saleBillFooterSetting ? $saleBillFooterSetting->value : '';
     }
 
-    public function getCreditBillPrefix() {
+    public static function getCreditBillPrefix() {
         $billPrefixSetting = AppSetting::query()->where('key', self::$creditBillPrefix)->first();
         return $billPrefixSetting ? $billPrefixSetting->value : '';
     }
 
-    public function getCreditBillStart() {
+    public static function getCreditBillStart() {
         $billStartSetting = AppSetting::query()->where('key', self::$creditBillStart)->first();
         return $billStartSetting ? $billStartSetting->value : 1;
     }
 
-    public function getCreditBillFooter() {
+    public static function getCreditBillFooter() {
         $creditBillFooterSetting = AppSetting::query()->where('key', self::$creditBillFooter)->first();
         return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
     }

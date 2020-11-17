@@ -55,9 +55,9 @@ const menuItems = [
             to : "sales"
         },
         {
-            label : "Credit Notes",
+            label : "Credits",
             icon : "mdi mdi-credit-card-plus",
-            to : "credit-notes"
+            to : "credits"
         },
     ],
     "Purchases",

@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class CreditCollection extends ResourceCollection
 {
+    public $collects = CreditResource::class;
+
     /**
      * Transform the resource collection into an array.
      *

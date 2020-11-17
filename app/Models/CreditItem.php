@@ -27,7 +27,12 @@ class CreditItem extends Model
      */
     protected $fillable = [
         'quantity',
+        'price',
         'discount',
+        'tax_percent',
+        'tax',
+        'sub_total',
+        'total',
         'credit_id',
         'product_stock_id',
     ];
@@ -40,7 +45,12 @@ class CreditItem extends Model
     protected $casts = [
         'id' => 'integer',
         'quantity' => 'integer',
+        'price' => 'float',
         'discount' => 'float',
+        'tax_percent' => 'float',
+        'tax' => 'float',
+        'sub_total',
+        'total',
         'credit_id' => 'integer',
         'product_stock_id' => 'integer',
     ];

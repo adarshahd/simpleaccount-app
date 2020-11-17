@@ -22,7 +22,8 @@ class CreditResource extends JsonResource
             'discount' => $this->discount,
             'tax' => $this->tax,
             'total' => $this->total,
-            'customer_id' => $this->customer_id,
+            'customer' => new CustomerResource($this->customer),
+            'items' => new CreditItemCollection($this->creditItems)
         ];
     }
 }

@@ -222,14 +222,14 @@ class CreditController extends Controller
     public function invoice(Request $request, Credit $credit) {
         $productOwnerData = AppSettingController::getProductOwnerData();
         $creditItemsCount = $credit->creditItems()->count();
-        $taxGroupList = $credit->creditItems()->select('sale_items.tax_percent', DB::raw('sum(sale_items.sub_total) as total'))->groupBy('tax_percent')->get();
+        $taxGroupList = $credit->creditItems()->select('credit_items.tax_percent', DB::raw('sum(credit_items.sub_total) as total'))->groupBy('tax_percent')->get();
 
         $pageCount = $this->getPdfPageCount($creditItemsCount);
         $pages = collect();
         if($pageCount > 1) {
             $currentPage = 1;
             $credit->creditItems()->chunk(self::$invoiceItemsPerPage, function ($items) use($credit ,$pages, $productOwnerData, $taxGroupList, $pageCount, &$currentPage) {
-                $page = View::make('invoices.credits.template-1.invoice', compact('sale', 'items', 'productOwnerData', 'taxGroupList', 'pageCount', 'currentPage'));
+                $page = View::make('invoices.credits.template-1.invoice', compact('credit', 'items', 'productOwnerData', 'taxGroupList', 'pageCount', 'currentPage'));
                 $pages->push($page);
                 $currentPage++;
             });

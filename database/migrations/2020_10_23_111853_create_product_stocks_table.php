@@ -22,6 +22,7 @@ class CreateProductStocksTable extends Migration
             $table->bigInteger('total_stock');
             $table->float('mrp');
             $table->float('price');
+            $table->float('tax_percent');
             $table->float('tax');
             $table->string('hsn')->default("");
             $table->string('batch');

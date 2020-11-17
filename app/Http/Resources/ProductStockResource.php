@@ -21,6 +21,7 @@ class ProductStockResource extends JsonResource
             'total_stock' => $this->total_stock,
             'mrp' => $this->mrp,
             'price' => $this->price,
+            'tax_percent' => $this->tax_percent,
             'tax' => $this->tax,
             'hsn' => $this->hsn,
             'batch' => $this->batch,

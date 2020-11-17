@@ -30,6 +30,9 @@ import SaleDetails from "@/views/sales/Sale"
 import Purchases from "@/views/purchases/Purchases";
 import Purchase from "@/views/forms/Purchase";
 import PurchaseDetails from "@/views/purchases/Purchase"
+import Credits from "@/views/credits/Credits";
+import Credit from "@/views/forms/Credit";
+import CreditDetails from "@/views/credits/Credit"
 
 Vue.use(Router);
 
@@ -207,6 +210,28 @@ const routes =  [
                 path: '/purchases/:id/details',
                 name: 'purchase-details',
                 component: PurchaseDetails
+            },
+
+            /* Credit Notes */
+            {
+                path: '/credits',
+                name: 'credits',
+                component: Credits
+            },
+            {
+                path: '/credits/new',
+                name: 'credits-new',
+                component: Credit
+            },
+            {
+                path: '/credits/:id/edit',
+                name: 'credit-edit',
+                component: Credit
+            },
+            {
+                path: '/credits/:id/details',
+                name: 'credit-details',
+                component: CreditDetails
             },
 
 

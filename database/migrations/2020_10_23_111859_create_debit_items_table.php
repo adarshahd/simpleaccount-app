@@ -18,7 +18,12 @@ class CreateDebitItemsTable extends Migration
         Schema::create('debit_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('quantity');
+            $table->float('price');
+            $table->float('tax_percent');
+            $table->float('tax');
             $table->float('discount')->default(0.0);
+            $table->float('sub_total');
+            $table->float('total');
             $table->foreignId('debit_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_stock_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
