@@ -38,6 +38,8 @@ import Debit from "@/views/forms/Debit";
 import DebitDetails from "@/views/debits/Debit"
 import Receipts from "@/views/receipts/Receipts";
 import Receipt from "@/views/forms/Receipt";
+import Vouchers from "./views/vouchers/Vouchers";
+import Voucher from "./views/forms/Voucher";
 
 Vue.use(Router);
 
@@ -276,6 +278,23 @@ const routes =  [
                 path: '/receipts/:id/edit',
                 name: 'receipt-edit',
                 component: Receipt
+            },
+
+            /* Vouchers */
+            {
+                path: '/vouchers',
+                name: 'vouchers',
+                component: Vouchers
+            },
+            {
+                path: '/vouchers/new',
+                name: 'vouchers-new',
+                component: Voucher
+            },
+            {
+                path: '/vouchers/:id/edit',
+                name: 'voucher-edit',
+                component: Voucher
             },
 
 

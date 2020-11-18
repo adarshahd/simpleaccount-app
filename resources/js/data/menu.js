@@ -76,9 +76,9 @@ const menuItems = [
             to : "receipts"
         },
         {
-            label : "Expenses",
+            label : "Vouchers",
             icon : "mdi mdi-currency-inr",
-            to : "expenses"
+            to : "vouchers"
         },
     ],
     "Help",

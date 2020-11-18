@@ -24,11 +24,11 @@ class VoucherUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_number' => ['required', 'string', 'max:100'],
+            'bill_date' => ['required', 'date_format:yy-m-d'],
             'total' => ['required', 'numeric'],
-            'payment_method' => ['string', 'max:100'],
-            'payment_reference' => ['string', 'max:200'],
-            'notes' => [''],
+            'payment_method' => ['required', 'string', 'max:100'],
+            'payment_reference' => ['nullable', 'string', 'max:200'],
+            'notes' => ['nullable', 'string'],
             'vendor_id' => ['required', 'integer', 'exists:vendors,id'],
         ];
     }

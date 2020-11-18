@@ -17,11 +17,12 @@ class VoucherResource extends JsonResource
         return [
             'id' => $this->id,
             'bill_number' => $this->bill_number,
+            'bill_date' => $this->bill_date,
             'total' => $this->total,
             'payment_method' => $this->payment_method,
             'payment_reference' => $this->payment_reference,
             'notes' => $this->notes,
-            'vendor_id' => $this->vendor_id,
+            'vendor' => new VendorResource($this->vendor),
         ];
     }
 }

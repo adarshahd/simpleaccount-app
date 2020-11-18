@@ -53,6 +53,7 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('/credits/{credit}/invoice', [\App\Http\Controllers\Api\CreditController::class, 'invoice']);
         Route::get('/debits/{debit}/invoice', [\App\Http\Controllers\Api\DebitController::class, 'invoice']);
         Route::get('/receipts/{receipt}/invoice', [\App\Http\Controllers\Api\ReceiptController::class, 'invoice']);
+        Route::get('/vouchers/{voucher}/invoice', [\App\Http\Controllers\Api\VoucherController::class, 'invoice']);
 
         /*
          * API Resource Routes

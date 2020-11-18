@@ -17,7 +17,9 @@ class CreateVouchersTable extends Migration
 
         Schema::create('vouchers', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('bill_id');
             $table->string('bill_number', 100);
+            $table->date('bill_date');
             $table->float('total');
             $table->string('payment_method', 100)->nullable();
             $table->string('payment_reference', 200)->nullable();

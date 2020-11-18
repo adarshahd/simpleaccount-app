@@ -33,6 +33,10 @@ class AppSettingController extends Controller
     private static $receiptBillStart = "receipt_bill_start";
     private static $receiptBillFooter = "receipt_bill_footer";
 
+    private static $voucherBillPrefix = "voucher_bill_prefix";
+    private static $voucherBillStart = "voucher_bill_start";
+    private static $voucherBillFooter = "voucher_bill_footer";
+
     private static $appInitialized = "app_initialized";
     private static $poData = 'po_data';
     private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
@@ -207,6 +211,21 @@ class AppSettingController extends Controller
 
     public static function getReceiptBillFooter() {
         $creditBillFooterSetting = AppSetting::query()->where('key', self::$receiptBillFooter)->first();
+        return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
+    }
+
+    public static function getVoucherBillPrefix() {
+        $billPrefixSetting = AppSetting::query()->where('key', self::$voucherBillPrefix)->first();
+        return $billPrefixSetting ? $billPrefixSetting->value : '';
+    }
+
+    public static function getVoucherBillStart() {
+        $billStartSetting = AppSetting::query()->where('key', self::$voucherBillStart)->first();
+        return $billStartSetting ? $billStartSetting->value : 1;
+    }
+
+    public static function getVoucherBillFooter() {
+        $creditBillFooterSetting = AppSetting::query()->where('key', self::$voucherBillFooter)->first();
         return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
     }
 }
