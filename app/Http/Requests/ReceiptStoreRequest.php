@@ -24,6 +24,7 @@ class ReceiptStoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'bill_date' => ['required', 'date_format:yy-m-d'],
             'total' => ['required', 'numeric'],
             'payment_method' => ['required', 'string', 'max:100'],
             'payment_reference' => ['nullable', 'string', 'max:200'],

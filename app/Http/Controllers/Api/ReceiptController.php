@@ -76,7 +76,14 @@ class ReceiptController extends Controller
      */
     public function update(ReceiptUpdateRequest $request, Receipt $receipt)
     {
-        $receipt->update($request->validated());
+        $receipt->update([
+            'bill_date' => $request->input('bill_date'),
+            'total' => $request->input('total'),
+            'payment_method' => $request->input('payment_method'),
+            'payment_reference' => $request->input('payment_reference'),
+            'notes' => $request->input('notes'),
+            'customer_id' => $request->input('customer_id'),
+        ]);
 
         return new ReceiptResource($receipt);
     }
