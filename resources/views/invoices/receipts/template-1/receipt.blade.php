@@ -74,6 +74,7 @@
             <h5><strong>{{ App\Utilities\CurrencyFormatter::getIndianCurrency($receipt->total) }}</strong></h5>
         </div>
         <div class="col col-4 text-right">
+            <br/>
             <h6>For <strong>{{ $productOwnerData->name }}</strong></h6><br/>
             Signature
         </div>
