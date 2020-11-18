@@ -24,11 +24,10 @@ class ReceiptUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'bill_number' => ['required', 'string', 'max:100'],
             'total' => ['required', 'numeric'],
-            'payment_method' => ['string', 'max:100'],
-            'payment_reference' => ['string', 'max:200'],
-            'notes' => [''],
+            'payment_method' => ['required', 'string', 'max:100'],
+            'payment_reference' => ['nullable', 'string', 'max:200'],
+            'notes' => ['nullable', 'string'],
             'customer_id' => ['required', 'integer', 'exists:customers,id'],
         ];
     }

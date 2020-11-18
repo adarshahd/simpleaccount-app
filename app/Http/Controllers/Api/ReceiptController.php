@@ -8,7 +8,10 @@ use App\Http\Requests\ReceiptUpdateRequest;
 use App\Http\Resources\ReceiptCollection;
 use App\Http\Resources\ReceiptResource;
 use App\Models\Receipt;
+use App\Models\Sale;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\View;
 
 class ReceiptController extends Controller
 {
@@ -29,7 +32,29 @@ class ReceiptController extends Controller
      */
     public function store(ReceiptStoreRequest $request)
     {
-        $receipt = Receipt::create($request->validated());
+        $billPrefix = AppSettingController::getReceiptBillPrefix();
+        if($billPrefix == '') {
+            $billPrefix = 'RE0000';
+        }
+        $latestReceipt = Receipt::query()->latest()->first();
+        if($latestReceipt == null) {
+            $lastBillNumber = 0;
+        } else {
+            $lastBillNumber = $latestReceipt->bill_id;
+        }
+
+        $billNumber = "$billPrefix" . ($lastBillNumber + 1);
+
+        $receipt = Receipt::query()->create([
+            'bill_id' => $lastBillNumber + 1,
+            'bill_number' => $billNumber,
+            'bill_date' => $request->input('bill_date'),
+            'total' => $request->input('total'),
+            'payment_method' => $request->input('payment_method'),
+            'payment_reference' => $request->input('payment_reference'),
+            'notes' => $request->input('notes'),
+            'customer_id' => $request->input('customer_id'),
+        ]);
 
         return new ReceiptResource($receipt);
     }
@@ -66,5 +91,18 @@ class ReceiptController extends Controller
         $receipt->delete();
 
         return response()->noContent();
+    }
+
+    public function invoice(Request $request, Receipt $receipt) {
+        $productOwnerData = AppSettingController::getProductOwnerData();
+        $customer = $receipt->customer;
+        $totalSaleAmount = Sale::query()->where('customer_id', $customer->id)->sum('total');
+        $totalAmountPaid = Receipt::query()->where('customer_id', $customer->id)->sum('total');
+        $balanceAmount = $totalSaleAmount - $totalAmountPaid;
+
+        $page = View::make('invoices.receipts.template-1.receipt', compact('receipt', 'productOwnerData', 'customer', 'balanceAmount'));
+
+        $pdf = \PDF::loadHtml($page);
+        return $pdf->stream('Receipt-' . $receipt->bill_number . '.pdf');
     }
 }

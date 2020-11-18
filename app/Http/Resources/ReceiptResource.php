@@ -21,7 +21,7 @@ class ReceiptResource extends JsonResource
             'payment_method' => $this->payment_method,
             'payment_reference' => $this->payment_reference,
             'notes' => $this->notes,
-            'customer_id' => $this->customer_id,
+            'customer' => new CustomerResource($this->customer),
         ];
     }
 }

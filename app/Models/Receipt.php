@@ -28,7 +28,9 @@ class Receipt extends Model
      * @var array
      */
     protected $fillable = [
+        'bill_id',
         'bill_number',
+        'bill_date',
         'total',
         'payment_method',
         'payment_reference',
@@ -43,8 +45,14 @@ class Receipt extends Model
      */
     protected $casts = [
         'id' => 'integer',
+        'bill_id' => 'integer',
         'total' => 'float',
         'customer_id' => 'integer',
+    ];
+
+
+    protected $dates = [
+        'bill_date'
     ];
 
 

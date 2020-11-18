@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ReceiptCollection extends ResourceCollection
 {
+    public $collects = ReceiptResource::class;
+
     /**
      * Transform the resource collection into an array.
      *
