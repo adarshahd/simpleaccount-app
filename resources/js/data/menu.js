@@ -80,6 +80,11 @@ const menuItems = [
             icon : "mdi mdi-currency-inr",
             to : "vouchers"
         },
+        {
+            label: "Accounts",
+            icon: "mdi mdi-cash-100",
+            to: "accounts"
+        }
     ],
     "Help",
     [

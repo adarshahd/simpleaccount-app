@@ -77,7 +77,9 @@ Route::group(['prefix' => 'v1'], function() {
             'vouchers' => App\Http\Controllers\Api\VoucherController::class,
             'incomes' => App\Http\Controllers\Api\IncomeController::class,
             'expenses' => App\Http\Controllers\Api\ExpenseController::class,
-            'orders' => App\Http\Controllers\Api\OrderController::class
+            'orders' => App\Http\Controllers\Api\OrderController::class,
+            'accounts' => App\Http\Controllers\Api\AccountController::class,
+            'accounts.transactions' => App\Http\Controllers\Api\AccountTransactionController::class
         ]);
 
     });
