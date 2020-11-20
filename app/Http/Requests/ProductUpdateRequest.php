@@ -25,7 +25,7 @@ class ProductUpdateRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:300'],
-            'description' => [''],
+            'description' => ['nullable', 'string'],
             'tax_id' => ['required', 'integer', 'exists:taxes,id'],
             'product_type_id' => ['required', 'integer', 'exists:product_types,id'],
             'images' => ['nullable', 'image']

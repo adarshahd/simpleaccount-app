@@ -21,7 +21,14 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $products = Product::all();
+        if($request->has('manufacturer_id')) {
+            $product_ids = ProductStock::query()
+                ->where('manufacturer_id', $request->input('manufacturer_id'))
+                ->pluck('product_id');
+            $products = Product::query()->whereIn('id', $product_ids)->paginate();
+        } else {
+            $products = Product::query()->paginate();
+        }
 
         return new ProductCollection($products);
     }

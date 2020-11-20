@@ -153,8 +153,8 @@
                     id: null,
                     name: '',
                     description: '',
-                    tax_id: 0,
-                    product_type_id: 0,
+                    tax_id: "",
+                    product_type_id: "",
                     images: null,
                 },
                 productImages: [],
@@ -229,7 +229,9 @@
                 formData.append('description', this.product.description)
                 formData.append('tax_id', this.product.tax_id)
                 formData.append('product_type_id', this.product.product_type_id)
-                formData.append('images', this.product.images)
+                if(this.product.images != null) {
+                    formData.append('images', this.product.images)
+                }
                 axios.post('/api/v1/products', formData, config).then(response => {
                     this.showToast("Product created successfully")
                     this.product = {}
