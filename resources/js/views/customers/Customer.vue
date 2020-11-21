@@ -3,7 +3,7 @@
     <section class="main-content" v-else>
         <div class="columns">
             <div class="column is-5">
-                <div class="card has-background-light">
+                <div class="card">
                     <div class="card-content">
                         <figure class="image is-128x128">
                             <img src="/images/business-shop.png" alt="" v-if="customerDetails.customer.image === null">
@@ -48,7 +48,7 @@
                 <section>
                     <div class="columns">
                         <div class="column is-half">
-                            <div class="card has-background-light">
+                            <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Total sales</h5>
                                     <h5 class="subtitle is-5">{{ customerDetails.total_sales }}</h5>
@@ -56,7 +56,7 @@
                             </div>
                         </div>
                         <div class="column is-half">
-                            <div class="card has-background-light">
+                            <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Total transaction</h5>
                                     <h5 class="subtitle is-5">₹ {{ customerDetails.total_sale_amount }}</h5>
@@ -66,7 +66,7 @@
                     </div>
                     <div class="columns">
                         <div class="column is-half">
-                            <div class="card has-background-light">
+                            <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Amount paid</h5>
                                     <h5 class="subtitle is-5">₹ {{ customerDetails.amount_paid }}</h5>
@@ -74,7 +74,7 @@
                             </div>
                         </div>
                         <div class="column is-half">
-                            <div class="card has-background-light">
+                            <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Balance</h5>
                                     <h5 class="subtitle is-5"  :class="{'has-text-danger' : customerDetails.balance > 0, 'has-text-success' : customerDetails.balance < 1}">₹ {{ customerDetails.balance }}</h5>
@@ -83,33 +83,39 @@
                         </div>
                     </div>
                     <h5 class="title is-5 has-text-centered no-margin">Recent Sales</h5>
-                    <div v-if="customerDetails.total_sales === 0">
-                        <h6 class="subtitle is-6 has-text-centered">
-                            No recent sales found
-                        </h6>
-                    </div>
-                    <div class="customer-container has-background-grey-lighter" v-for="recentSale in customerDetails.recent_sales">
-                        <div class="columns">
-                            <div class="column is-10">
-                                <div class="columns is-mobile">
-                                    <div class="column is-half">
-                                        <h5 class="title is-5">{{ recentSale.bill_number }}</h5>
-                                        {{ dayjs(recentSale.bill_date).format("DD MMM, YYYY") }}
-                                    </div>
-                                    <div class="column is-half has-text-centered">
-                                        <h5 class="title is-5"> ₹ {{ recentSale.total }}</h5>
-                                        {{ recentSale.items }} item(s)
-                                    </div>
+                    <b-table
+                        striped
+                        narrowed
+                        :data="customerDetails.recent_sales">
+                        <b-table-column field="bill_number" label="Bill Number" v-slot="props">
+                            {{ props.row.bill_number }}
+                        </b-table-column>
+                        <b-table-column field="date" label="Date" v-slot="props">
+                            {{ dayjs(props.row.bill_date).format("DD MMM, YYYY") }}
+                        </b-table-column>
+                        <b-table-column field="items" label="Items Total" v-slot="props">
+                            {{ props.row.items }}
+                        </b-table-column>
+                        <b-table-column field="total" label="Sale Total" v-slot="props" numeric>
+                            ₹{{ props.row.total.toFixed(2) }}
+                        </b-table-column>
+                        <b-table-column field="actions" label="Actions" v-slot="props" centered>
+                            <button class="button is-link is-small has-icons-left" @click="viewSale(props.row)">
+                                <span class="mdi mdi-eye mdi-18px"></span>
+                            </button>
+                            <button class="button is-primary is-small has-icons-left" @click="editSale(props.row)">
+                                <span class="mdi mdi-pencil mdi-18px"></span>
+                            </button>
+                        </b-table-column>
+
+                        <template slot="empty">
+                            <div class="columns is-centered">
+                                <div class="column has-text-centered is-spaced">
+                                    <h4 class="title m-6">No Sales Found</h4>
                                 </div>
                             </div>
-                            <div class="column is-2 has-text-centered-mobile">
-                                <button class="button is-link" @click="showSale(recentSale)">
-                                    <span class="icon"><i class="mdi mdi-eye"></i></span>
-                                    <span>View</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
+                        </template>
+                    </b-table>
                 </section>
             </div>
         </div>
@@ -149,26 +155,50 @@
                     this.handleError(error);
                 })
             },
-            showSale(sale) {
+            viewSale(sale) {
                 this.$router.push({
-                    name: 'sale',
-                    params: {id: sale.id}
+                    name: 'sale-details',
+                    params: {
+                        id: sale.id
+                    }
+                });
+            },
+            editSale(sale) {
+                this.$router.push({
+                    name: 'sale-edit',
+                    params: {
+                        id: sale.id
+                    }
                 });
             },
             showEditCustomerView() {
                 this.$router.push({
                     name: 'customer-edit',
-                    params: {id: this.customerId }
+                    params: {
+                        id: this.customerId
+                    }
                 });
             },
             showCustomerSales() {
 
             },
             showNewSaleView() {
-
+                this.$router.push({
+                    name: 'sales-new',
+                    params: {
+                        id: null,
+                        customer_id: this.customerId,
+                    }
+                });
             },
             showNewReceiptView() {
-
+                this.$router.push({
+                    name: 'receipts-new',
+                    params: {
+                        id: null,
+                        customer_id: this.customerId,
+                    }
+                });
             },
             handleError(error) {
                 this.errors = error.response.data.errors

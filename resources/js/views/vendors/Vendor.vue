@@ -106,6 +106,13 @@
                             <span class="mdi mdi-pencil mdi-18px"></span>
                         </button>
                     </b-table-column>
+                    <template slot="empty">
+                        <div class="columns is-centered">
+                            <div class="column has-text-centered is-spaced">
+                                <h4 class="title m-6">No Purchases Found</h4>
+                            </div>
+                        </div>
+                    </template>
                 </b-table>
             </section>
         </div>

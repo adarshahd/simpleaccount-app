@@ -212,7 +212,7 @@ export default {
             this.receipt.customer_id = val
         },
         getCustomer() {
-            axios.get('/api/v1/customers/' + this.receipt.customer.id).then(response => {
+            axios.get('/api/v1/customers/' + this.receipt.customer_id).then(response => {
                 this.customers.push(response.data.data)
             }).catch(error => {
                 this.handleError(error)
@@ -277,6 +277,11 @@ export default {
         this.receipt.id = this.$route.params.id
         if(this.receipt.id != null) {
             this.loadReceipt()
+        }
+
+        if(this.$route.params.customer_id != null) {
+            this.receipt.customer_id = parseInt(this.$route.params.customer_id)
+            this.getCustomer()
         }
     }
 }

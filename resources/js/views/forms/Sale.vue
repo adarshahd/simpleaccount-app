@@ -310,6 +310,11 @@ export default {
         if(this.sale.id != null) {
             this.getSale()
         }
+
+        if(this.$route.params.customer_id != null) {
+            this.sale.customer_id = parseInt(this.$route.params.customer_id)
+            this.getCustomer()
+        }
     }
 }
 </script>

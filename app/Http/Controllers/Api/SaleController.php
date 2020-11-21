@@ -27,7 +27,12 @@ class SaleController extends Controller
      */
     public function index(Request $request)
     {
-        $sales = Sale::all();
+        $saleQuery = Sale::query();
+        if($request->has('customer_id')) {
+            $saleQuery = $saleQuery->where('customer_id', $request->input('customer_id'));
+        }
+
+        $sales = $saleQuery->paginate();
 
         return new SaleCollection($sales);
     }
