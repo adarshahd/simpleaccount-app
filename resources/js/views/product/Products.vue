@@ -111,10 +111,9 @@
             },
             showProductDetails(product) {
                 this.$router.push({
-                    name: 'products-details',
+                    name: 'product-details',
                     params: {
                         id: product.id,
-                        product: product,
                     }
                 })
             },
@@ -123,7 +122,6 @@
                     name: 'product-edit',
                     params: {
                         id: product.id,
-                        product: product,
                     }
                 })
             },
