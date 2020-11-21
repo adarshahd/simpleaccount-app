@@ -6,11 +6,11 @@
             <div class="column is-10">
                 <div class="card">
                     <div class="card-content">
-                        <div class="columns is-centered">
-                            <div class="column is-10">
+                        <div class="columns">
+                            <div class="column is-9">
                                 <p class="title">Product Types</p>
                             </div>
-                            <div class="column is-2 is-right">
+                            <div class="column is-3">
                                 <button class="button is-primary has-icons-left" @click="showAddProductTypeModal">
                                     <span class="mdi mdi-plus-circle"></span>
                                     <span>&nbsp;Add Product Type</span>

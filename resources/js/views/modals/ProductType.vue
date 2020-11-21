@@ -17,9 +17,9 @@
                 <div class="field">
                     <div class="control">
                         <div class="label">
-                            <label for="tax">Tax Percent</label>
+                            <label for="tax">Product Description</label>
                         </div>
-                        <textarea class="input" type="text" id="tax" v-model="productType.description" placeholder="Description *">
+                        <textarea class="input" type="text" id="tax" v-model="productType.description" placeholder="Description">
 
                         </textarea>
                         <span class="has-text-danger" v-if="errors.description">
