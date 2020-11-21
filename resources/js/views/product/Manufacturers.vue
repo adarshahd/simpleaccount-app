@@ -1,65 +1,65 @@
 <template>
-    <div class="main-content">
-        <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-        <section v-else>
-            <div class="columns">
-                <div class="column is-one-third">
-                    <div class="card has-background-light">
-                        <div class="card-content">
-                            <div class="columns">
-                                <div class="column">
-                                    <i class="mdi mdi-office-building mdi-48px has-text-primary"></i>
-                                </div>
-                                <div class="column is-10">
-                                    <h3 class="title is-3">Manufacturers</h3>
-                                    <p class="subtitle is-6">{{ manufacturers.length }} manufacturer(s)</p>
-                                </div>
+    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
+    <section v-else class="main-content">
+        <div class="columns is-centered">
+            <div class="column is-10">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="columns is-centered">
+                            <div class="column is-10">
+                                <p class="title">Manufacturers</p>
+                            </div>
+                            <div class="column is-2 is-right">
+                                <button class="button is-primary has-icons-left" @click="showNewManufacturerView">
+                                    <span class="mdi mdi-plus-circle"></span>
+                                    <span>&nbsp;Add Manufacturer</span>
+                                </button>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="column is-right-desktop">
-                    <div class="has-text-right-desktop has-text-centered-mobile">
-                        <button class="button is-primary" @click="showNewManufacturerView">
-                        <span class="icon">
-                            <i  class="mdi mdi-plus-circle"></i>
-                        </span>
-                            <span>Add</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <hr/>
-
-            <div v-if="manufacturers.length === 0">
-                <div class="columns">
-                    <div class="column is-centered">
-                        <h4 class="title is-4 has-text-centered">No manufacturers yet!</h4>
-                    </div>
-                </div>
-            </div>
-            <div class="columns" v-else v-for="manufacturerChunk in chunk(manufacturers, 3)">
-                <div class="column is-one-third" v-for="manufacturer in manufacturerChunk">
-                    <div class="card has-background-light">
-                        <div class="card-content">
-                            <div class="columns is-vcentered">
-                                <div class="column">
-                                    <h6 class="title is-6">{{ manufacturer.name }}</h6>
-                                    <p>{{ manufacturer.product_count }} Product(s)</p>
-                                </div>
-                                <div class="column is-3 is-right">
-                                    <div class="has-text-right-desktop has-text-centered-mobile">
-                                        <button class="button is-link" @click="showManufacturer(manufacturer)">View</button>
+                        <hr/>
+                        <b-table
+                            striped
+                            :data="manufacturers">
+                            <b-table-column field="name" label="Name" v-slot="props">
+                                {{ props.row.name }}
+                            </b-table-column>
+                            <b-table-column field="type" label="Short Name" v-slot="props">
+                                {{ props.row.short_name }}
+                            </b-table-column>
+                            <b-table-column label="Actions" v-slot="props" centered>
+                                <span>
+                                    <button class="button is-info is-small" @click="showManufacturerDetails(props.row)">
+                                        <span class="mdi mdi-eye mdi-18px"></span>
+                                    </button>
+                                </span>
+                                <span>
+                                    <button class="button is-link is-small" @click="showEditManufacturer(props.row)">
+                                        <span class="mdi mdi-pencil mdi-18px"></span>
+                                    </button>
+                                </span>
+                                <span>
+                                    <button
+                                        class="button is-danger is-small"
+                                        :class="{ 'is-loading' : isDeleteManufacturerInProgress }"
+                                        @click="deleteProduct(props.row)">
+                                        <span class="mdi mdi-delete mdi-18px"></span>
+                                    </button>
+                                </span>
+                            </b-table-column>
+                            <template slot="empty">
+                                <div class="columns is-centered">
+                                    <div class="column has-text-centered is-spaced">
+                                        <h4 class="title m-6">No Products Found</h4>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                            </template>
+                        </b-table>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 </template>
 
 <script>
@@ -71,6 +71,7 @@
         data() {
             return {
                 isLoading : false,
+                isDeleteManufacturerInProgress: false,
                 manufacturers : [],
                 errors: []
             }
@@ -90,11 +91,29 @@
                     this.handleError(error);
                 })
             },
-            showManufacturer(manufacturer) {
-                this.$router.push({ name: 'manufacturer', params: { id: manufacturer.id }})
+            showManufacturerDetails(manufacturer) {
+                this.$router.push({
+                    name: 'manufacturer-details',
+                    params: {
+                        id: manufacturer.id
+                    }
+                })
+            },
+            showEditManufacturer(manufacturer) {
+                this.$router.push({
+                    name: 'manufacturer-edit',
+                    params: {
+                        id: manufacturer.id
+                    }
+                })
             },
             showNewManufacturerView() {
-                this.$router.push({ name: 'manufacturers-new' })
+                this.$router.push({
+                    name: 'manufacturers-new',
+                    params: {
+                        id: null
+                    }
+                })
             },
             handleError(error) {
                 this.errors = error.response.data.errors
@@ -110,7 +129,8 @@
             showToast(message, type = 'is-success') {
                 this.$buefy.toast.open({
                     message: message,
-                    type: type
+                    type: type,
+                    position: 'is-top-right'
                 });
             }
         },

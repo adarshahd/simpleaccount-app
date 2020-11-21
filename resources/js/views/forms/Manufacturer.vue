@@ -1,14 +1,16 @@
 <template>
-    <section class="main-content">
-        <div class="columns">
-            <div class="column is-half is-centered">
-                <div class="box has-background-white">
+    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
+    <section class="main-content" v-else>
+        <div class="columns is-centered">
+            <div class="column is-half-desktop is-12-mobile">
+                <div class="box">
                     <h3 class="title is-3 has-text-centered">Manufacturer Information</h3>
                     <hr/>
                     <div class="columns is-vcentered">
                         <div class="column is-half has-text-centered">
                             <figure class="image is-128x128">
-                                <img :src="companyLogo">
+                                <img src="/images/business-shop.png" alt="" v-if="manufacturerLogo === null">
+                                <img v-else :src="manufacturerLogo" alt="manufacturer-image">
                             </figure>
                         </div>
                         <div class="column is-half">
@@ -61,9 +63,13 @@
                         </div>
                     </div>
                     <div class="has-text-centered">
-                        <button class="button is-primary" @click="createManufacturer" :class="{'is-loading' : isLoading}">
+                        <button
+                            class="button"
+                            @click="handleSubmitClick"
+                            :class="{'is-loading' : isManufacturerUpdating, 'is-primary' : this.manufacturer.id != null, 'is-success' : this.manufacturer.id == null}">
                             <span class="icon"><i class="mdi mdi-check-circle"></i> </span>
-                            <span>Create</span>
+                            <span v-if="this.manufacturer.id == null">&nbsp; Create</span>
+                            <span v-else>&nbsp; Update</span>
                         </button>
                     </div>
                 </div>
@@ -74,39 +80,81 @@
 
 <script>
     import axios from 'axios';
+    import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
 
     export default {
-        name: "NewManufacturer",
+        name: "Manufacturer",
+        components: {ProgressBarIndeterminate},
         data() {
             return {
                 isLoading: false,
-                logoFile : null,
-                manufacturer: {},
+                isManufacturerUpdating: false,
+                manufacturer: {
+                    id: null,
+                    name: '',
+                    short_name: '',
+                    website: '',
+                    logo: null
+                },
+                manufacturerLogo: null,
                 errors: []
             }
         },
-        computed: {
-            companyLogo : {
-                get() {
-                    return this.logoFile == null ? "/images/business-shop.png" : this.logoFile;
-                },
-                set(val) {
-                    this.companyLogo = val;
+        methods: {
+            loadManufacturer() {
+                this.isLoading = true
+                axios.get('/api/v1/manufacturers/' + this.manufacturer.id).then(response => {
+                    this.manufacturer = response.data.data
+                    this.isLoading = false
+                }).catch(error => {
+                    this.handleError(error)
+                })
+            },
+            handleSubmitClick() {
+                if(this.manufacturer.id == null) {
+                    this.createManufacturer()
+                } else {
+                    this.updateManufacturer()
                 }
             },
-        },
-        methods: {
             createManufacturer() {
-                axios.post('/api/v1/manufacturers', this.manufacturer).then(response => {
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+                let formData = new FormData()
+                formData.append('name', this.manufacturer.name)
+                formData.append('short_name', this.manufacturer.short_name)
+                formData.append('website', this.manufacturer.website)
+                if(this.manufacturer.logo != null) {
+                    formData.append('image', this.manufacturer.logo)
+                }
+                axios.post('/api/v1/manufacturers', formData, config).then(response => {
                     this.showToast("Manufacturer created successfully")
                     this.manufacturer = {}
+                    this.$router.back()
+                }).catch(error => {
+                    this.handleError(error);
+                })
+            },
+            updateManufacturer() {
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+                let formData = new FormData()
+                formData.append('name', this.manufacturer.name)
+                formData.append('short_name', this.manufacturer.short_name)
+                formData.append('website', this.manufacturer.website)
+                if(this.manufacturer.logo != null) {
+                    formData.append('image', this.manufacturer.logo)
+                }
+                axios.post('/api/v1/manufacturers/' + this.manufacturer.id + '/?_method=PATCH', formData, config).then(response => {
+                    this.showToast("Manufacturer updated successfully")
+                    this.manufacturer = {}
+                    this.$router.back()
                 }).catch(error => {
                     this.handleError(error);
                 })
             },
             handleFileChange(event) {
-                this.logoFile = event.target.files[0];
-                this.companyLogo = event.target.result;
+                const file = event.target.files[0];
+                this.manufacturer.logo = file
+                this.manufacturerLogo = URL.createObjectURL(file)
             },
             handleError(error) {
                 this.errors = error.response.data.errors
@@ -122,8 +170,15 @@
             showToast(message, type = 'is-success') {
                 this.$buefy.toast.open({
                     message: message,
-                    type: type
+                    type: type,
+                    position: 'is-top-right'
                 });
+            }
+        },
+        mounted() {
+            this.manufacturer.id = this.$route.params.id
+            if(this.manufacturer.id != null) {
+                this.loadManufacturer()
             }
         }
     }

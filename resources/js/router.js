@@ -11,8 +11,8 @@ import Dashboard from "@/views/dashboard/Dashboard";
 
 import PageNotFound from "@/components/PageNotFound";
 import Manufacturers from "@/views/product/Manufacturers";
-import NewManufacturer from "@/views/forms/NewManufacturer";
-import Manufacturer from "@/views/product/Manufacturer";
+import Manufacturer from "@/views/forms/Manufacturer";
+import ManufacturerDetails from "@/views/product/Manufacturer";
 import Taxes from "@/views/product/Taxes";
 import ProductTypes from "@/views/product/ProductTypes";
 import Products from "@/views/product/Products";
@@ -90,11 +90,16 @@ const routes =  [
             {
                 path: '/manufacturers/new',
                 name: 'manufacturers-new',
-                component: NewManufacturer
+                component: Manufacturer
             },
             {
-                path: '/manufacturers/:id',
-                name: 'manufacturer',
+                path: '/manufacturers/:id/details',
+                name: 'manufacturer-details',
+                component: ManufacturerDetails
+            },
+            {
+                path: '/manufacturers/:id/edit',
+                name: 'manufacturer-edit',
                 component: Manufacturer
             },
 

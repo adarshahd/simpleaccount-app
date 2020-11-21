@@ -2,97 +2,60 @@
     <progress-bar-indeterminate v-if="isLoading" class="main-content"></progress-bar-indeterminate>
     <section v-else class="main-content">
         <div class="columns">
-            <div class="column is-half">
+            <div class="column is-4">
                 <div class="box has-background-white">
-                    <h3 class="title is-3 has-text-centered">Manufacturer Information</h3>
-                    <hr/>
-                    <div class="columns is-vcentered">
-                        <div class="column is-half has-text-centered">
+                    <div class="columns">
+                        <div class="column is-4">
                             <figure class="image is-128x128">
-                                <img :src="companyLogo">
+                                <img src="/images/business-shop.png" alt="" v-if="manufacturer.logo !== null || manufacturer.logo !== ''">
+                                <img v-else :src="manufacturer.logo" alt="manufacturer-logo">
                             </figure>
                         </div>
-                        <div class="column is-half">
-                            <div class="file">
-                                <label class="file-label">
-                                    <input class="file-input" type="file" @change="handleFileChange">
-                                    <span class="file-cta">
-                                  <span class="file-icon">
-                                    <i class="mdi mdi-upload"></i>
-                                  </span>
-                                  <span class="file-label">
-                                    Choose logo…
-                                  </span>
-                                </span>
-                                </label>
-                            </div>
+                        <div class="column is-8">
+                            <h4 class="title is-4">{{ manufacturer.name }}</h4>
+                            <h5 class="subtitle is-5">{{ manufacturer.short_name }}</h5>
+                            <h6 class="subtitle is-5">{{ manufacturer.website }}</h6>
                         </div>
-                    </div>
-                    <div class="field">
-                        <div class="control">
-                            <label class="field-label" for="name">Manufacturer Name</label>
-                            <input class="input" id="name" type="text" placeholder="Company Name *" v-model="manufacturer.name">
-                            <span class="has-text-danger" v-if="errors.name">
-                                {{ errors.name[0] }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="columns">
-                        <div class="column is-5">
-                            <div class="field">
-                                <div class="control">
-                                    <label class="field-label" for="short_name">Short Name</label>
-                                    <input class="input" id="short_name" type="text" placeholder="Short Name" v-model="manufacturer.short_name">
-                                    <span class="has-text-danger" v-if="errors.short_name">
-                                        {{ errors.short_name[0] }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="column is-7">
-                            <div class="field">
-                                <div class="control">
-                                    <label class="field-label" for="short_name">Website</label>
-                                    <input class="input" id="website" type="text" placeholder="Website" v-model="manufacturer.website">
-                                    <span class="has-text-danger" v-if="errors.website">
-                                        {{ errors.website[0] }}
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="has-text-centered">
-                        <button class="button is-primary" @click="updateManufacturer" :class="{'is-loading' : isUpdating}">
-                            <span class="icon"><i class="mdi mdi-check-circle"></i> </span>
-                            <span>Update</span>
-                        </button>
                     </div>
                 </div>
             </div>
-            <div class="column is-half">
+            <div class="column is-8">
                 <h3 class="title is-3 has-text-centered">Products</h3>
-                <progress-bar-indeterminate v-if="isProductsLoading"></progress-bar-indeterminate>
-                <div v-else>
-                    <div v-if="manufacturerProducts.length > 0">
-                        <div v-for="product in manufacturerProducts" class="card-container">
-                            <div class="product-container has-background-light">
-                                <div class="columns">
-                                    <div class="column is-two-thirds">
-                                        <h5 class="title is-5">{{ product.name }}</h5>
-                                    </div>
-                                    <div class="column has-text-right-desktop has-text-centered-mobile">
-                                        <button class="button is-link" @click="showProduct(product)">
-                                            View
-                                        </button>
-                                    </div>
-                                </div>
+                <b-table
+                    narrowed
+                    striped
+                    :paginated="totalProductPages > 1"
+                    backend-pagination
+                    :total="totalProducts"
+                    :per-page="productsPerPage"
+                    @page-change="onPageChange"
+                    :mobile-cards="false"
+                    :data="products"
+                    :loading="isProductsLoading">
+                    <b-table-column field="name" label="Name" v-slot="props">
+                        {{ props.row.name }}
+                    </b-table-column>
+                    <b-table-column field="type" label="Type" v-slot="props">
+                        {{ props.row.product_type.name }}
+                    </b-table-column>
+                    <b-table-column field="stock" label="Stock" v-slot="props">
+                        {{ props.row.product_stock }}
+                    </b-table-column>
+                    <b-table-column label="Actions" v-slot="props" centered>
+                        <span>
+                            <button class="button is-link is-small" @click="viewProduct(props.row)">
+                                <span class="mdi mdi-eye mdi-18px"></span>
+                            </button>
+                        </span>
+                    </b-table-column>
+                    <template slot="empty">
+                        <div class="columns is-centered">
+                            <div class="column has-text-centered is-spaced">
+                                <h4 class="title m-6">No Products Found</h4>
                             </div>
                         </div>
-                    </div>
-                    <div v-else>
-                        <h4 class="subtitle is-4 has-text-centered">No product stock found for this manufacturer</h4>
-                    </div>
-                </div>
+                    </template>
+                </b-table>
             </div>
         </div>
     </section>
@@ -109,65 +72,56 @@
                 isLoading: true,
                 isProductsLoading: false,
                 isUpdating: false,
-                manufacturer: null,
-                manufacturerProducts: [],
+                manufacturer: {
+                    id: null,
+                    name: '',
+                    short_name: '',
+                    website: ''
+                },
+                products: [],
+                currentProductPage: 1,
+                totalProducts: 1,
+                productsPerPage: 1,
+                totalProductPages: 1,
                 logoFile : null,
                 errors: []
             }
         },
-        computed: {
-            currentManufacturerId: {
-                get() {
-                    return this.$route.params.id;
-                }
-            },
-            companyLogo : {
-                get() {
-                    return this.logoFile == null ? "/images/business-shop.png" : this.logoFile;
-                },
-                set() {
-
-                }
-            },
-        },
         methods: {
             loadManufacturer() {
                 this.isLoading = true;
-                axios.get('/api/v1/manufacturers/' + this.currentManufacturerId).then(response => {
+                axios.get('/api/v1/manufacturers/' + this.manufacturer.id).then(response => {
                     this.isLoading = false;
                     this.manufacturer = response.data.data;
                 }).catch(error => {
-                    //this.isLoading = false;
                     this.handleError(error);
                 })
             },
-            loadManufacturerProducts() {
+            loadProducts() {
                 this.isProductsLoading = true;
-                axios.get('/api/v1/products?manufacturers_id=' + this.currentManufacturerId).then(response =>{
+                axios.get('/api/v1/products?manufacturer_id=' + this.manufacturer.id + '&page=' + this.currentProductPage).then(response =>{
+                    this.products = response.data.data;
+                    this.totalProductPages = response.data.meta.last_page
+                    this.productsPerPage = response.data.meta.per_page
+                    this.totalProducts = response.data.meta.total
                     this.isProductsLoading = false;
-                    this.manufacturerProducts = this.manufacturerProducts.concat(response.data.data);
                 }).catch(error => {
                     this.handleError(error);
                 })
             },
-            updateManufacturer() {
-                this.isUpdating = true;
-                axios.patch('/api/v1/manufacturers/' + this.currentManufacturerId,
-                    this.manufacturer).then(response => {
-                        this.isUpdating = false;
-                        this.showToast("Updated successfully")
-                }).catch(error => {
-                    this.isUpdating = false;
-                    this.handleError(error)
-                })
+            onPageChange(val) {
+                this.currentProductPage = val
+                this.loadProducts()
             },
-            showProduct(product){
-                this.$router.push({ name: 'products', params: { id: product.id }});
+            viewProduct(product){
+                this.$router.push({
+                    name: 'product-details',
+                    params: {
+                        id: product.id
+                    }
+                });
             },
-            handleFileChange(event) {
-                this.logoFile = event.target.files[0];
-                this.companyLogo = event.target.result;
-            },
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {
@@ -182,13 +136,15 @@
             showToast(message, type = 'is-success') {
                 this.$buefy.toast.open({
                     message: message,
-                    type: type
+                    type: type,
+                    position: 'is-top-right'
                 });
             }
         },
         mounted() {
+            this.manufacturer.id = this.$route.params.id
             this.loadManufacturer();
-            this.loadManufacturerProducts();
+            this.loadProducts();
         }
     }
 </script>
