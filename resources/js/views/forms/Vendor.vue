@@ -260,6 +260,7 @@
                     this.vendor.website = response.data.data.website == null ? '' : response.data.data.website
                     this.vendor.contact_email = response.data.data.contact_email == null ? '' : response.data.data.contact_email
                     this.vendor.address_line_2 = response.data.data.address_line_2 == null ? '' : response.data.data.address_line_2
+                    this.vendor.id_type_id = this.vendor.id_type.id
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)

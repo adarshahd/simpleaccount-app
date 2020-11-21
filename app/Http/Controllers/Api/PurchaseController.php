@@ -24,7 +24,12 @@ class PurchaseController extends Controller
      */
     public function index(Request $request)
     {
-        $purchases = Purchase::all();
+        $purchaseQuery = Purchase::query();
+        if($request->has('vendor_id')) {
+            $purchaseQuery = $purchaseQuery->where('vendor_id', $request->input('vendor_id'));
+        }
+
+        $purchases = $purchaseQuery->paginate();
 
         return new PurchaseCollection($purchases);
     }

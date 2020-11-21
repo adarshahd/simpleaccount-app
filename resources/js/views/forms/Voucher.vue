@@ -212,7 +212,7 @@ export default {
             this.voucher.vendor_id = val
         },
         getVendor() {
-            axios.get('/api/v1/vendors/' + this.voucher.vendor.id).then(response => {
+            axios.get('/api/v1/vendors/' + this.voucher.vendor_id).then(response => {
                 this.vendors.push(response.data.data)
             }).catch(error => {
                 this.handleError(error)
@@ -277,6 +277,11 @@ export default {
         this.voucher.id = this.$route.params.id
         if(this.voucher.id != null) {
             this.loadVoucher()
+        }
+
+        if(this.$route.params.vendor_id != null) {
+            this.voucher.vendor_id = parseInt(this.$route.params.vendor_id)
+            this.getVendor()
         }
     }
 }

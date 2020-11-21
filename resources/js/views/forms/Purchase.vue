@@ -330,6 +330,11 @@ export default {
         if(this.purchase.id != null) {
             this.getPurchase()
         }
+
+        if(this.$route.params.vendor_id != null) {
+            this.purchase.vendor_id = parseInt(this.$route.params.vendor_id)
+            this.getVendor()
+        }
     }
 }
 </script>
