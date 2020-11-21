@@ -29,19 +29,6 @@ const menuItems = [
             to : "taxes"
         },
     ],
-    "Customers/Vendors",
-    [
-        {
-            label : "Customers",
-            icon : "mdi mdi-account-multiple",
-            to : "customers"
-        },
-        {
-            label : "Vendors",
-            icon : "mdi mdi-account-multiple",
-            to : "vendors"
-        },
-    ],
     "Sale",
     [
         {
@@ -50,9 +37,19 @@ const menuItems = [
             to : "sales"
         },
         {
+            label : "Customers",
+            icon : "mdi mdi-account-multiple",
+            to : "customers"
+        },
+        {
             label : "Credits",
             icon : "mdi mdi-credit-card-plus",
             to : "credits"
+        },
+        {
+            label : "Receipts",
+            icon : "mdi mdi-receipt",
+            to : "receipts"
         },
     ],
     "Purchases",
@@ -63,23 +60,23 @@ const menuItems = [
             to : "purchases"
         },
         {
+            label : "Vendors",
+            icon : "mdi mdi-account-multiple",
+            to : "vendors"
+        },
+        {
             label : "Debits",
             icon : "mdi mdi-credit-card-plus",
             to : "debits"
-        },
-    ],
-    "Accounting",
-    [
-        {
-            label : "Receipts",
-            icon : "mdi mdi-receipt",
-            to : "receipts"
         },
         {
             label : "Vouchers",
             icon : "mdi mdi-currency-inr",
             to : "vouchers"
         },
+    ],
+    "Accounting",
+    [
         {
             label: "Accounts",
             icon: "mdi mdi-cash-100",
