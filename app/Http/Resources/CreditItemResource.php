@@ -24,6 +24,7 @@ class CreditItemResource extends JsonResource
             'sub_total' => $this->sub_total,
             'total' => $this->total,
             'credit_id' => $this->credit_id,
+            'sale_id' => $this->sale_id,
             'product_stock' => new ProductStockResource($this->productStock),
         ];
     }

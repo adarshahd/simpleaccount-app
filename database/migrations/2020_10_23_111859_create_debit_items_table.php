@@ -24,6 +24,7 @@ class CreateDebitItemsTable extends Migration
             $table->float('discount')->default(0.0);
             $table->float('sub_total');
             $table->float('total');
+            $table->string('purchase_id')->nullable();
             $table->foreignId('debit_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_stock_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();

@@ -56,6 +56,9 @@
                 <b-table-column field="expiry" label="Expiry" v-slot="props">
                     {{ dayjs(props.row.product_stock.expiry).format("MMM YYYY") }}
                 </b-table-column>
+                <b-table-column field="sale_id" label="Sale" v-slot="props">
+                    {{ props.row.sale_id }}
+                </b-table-column>
                 <b-table-column field="mrp" label="MRP" v-slot="props" numeric>
                     ₹{{ props.row.product_stock.mrp }}
                 </b-table-column>

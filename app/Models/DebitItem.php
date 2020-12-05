@@ -32,6 +32,7 @@ class DebitItem extends Model
         'sub_total',
         'total',
         'debit_id',
+        'purchase_id',
         'product_stock_id',
     ];
 

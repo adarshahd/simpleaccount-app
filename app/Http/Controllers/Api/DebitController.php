@@ -209,6 +209,7 @@ class DebitController extends Controller
                 'sub_total' => $debitItemPrice,
                 'total' => $debitItemPrice + $debitItemTax,
                 'debit_id' => $debit->id,
+                'purchase_id' => isset($debitItem['purchase_id']) ? $debitItem['purchase_id'] : null,
                 'product_stock_id' => $productStock->id,
             ]);
         }

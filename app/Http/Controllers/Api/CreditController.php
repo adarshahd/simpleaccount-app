@@ -209,6 +209,7 @@ class CreditController extends Controller
                 'sub_total' => $creditItemPrice,
                 'total' => $creditItemPrice + $creditItemTax,
                 'credit_id' => $credit->id,
+                'sale_id' => isset($creditItem['sale_id']) ? $creditItem['sale_id'] : null,
                 'product_stock_id' => $productStock->id,
             ]);
         }

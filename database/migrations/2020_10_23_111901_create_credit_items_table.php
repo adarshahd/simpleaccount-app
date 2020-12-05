@@ -24,6 +24,7 @@ class CreateCreditItemsTable extends Migration
             $table->float('tax');
             $table->float('sub_total');
             $table->float('total');
+            $table->string('sale_id')->nullable();
             $table->foreignId('credit_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_stock_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();

@@ -34,6 +34,7 @@ class CreditItem extends Model
         'sub_total',
         'total',
         'credit_id',
+        'sale_id',
         'product_stock_id',
     ];
 

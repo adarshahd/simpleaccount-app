@@ -10,6 +10,7 @@ class DebitItemRule implements Rule
     private $parameterBag = [
         'price' => "required|numeric",
         'quantity' => "required|integer",
+        'purchase_id' => "nullable|string|exists:purchases,bill_number",
         'product_stock_id' => "required|integer"
     ];
 

@@ -261,12 +261,12 @@ const routes =  [
                 component: Debit
             },
             {
-                path: '/debit-notes/:id/edit',
+                path: '/debits/:id/edit',
                 name: 'debit-edit',
                 component: Debit
             },
             {
-                path: '/debit-notes/:id/details',
+                path: '/debits/:id/details',
                 name: 'debit-details',
                 component: DebitDetails
             },

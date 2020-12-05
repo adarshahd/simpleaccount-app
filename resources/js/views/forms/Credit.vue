@@ -181,6 +181,7 @@ export default {
                 tax: 0,
                 discount: 0,
                 product_stock_id: '',
+                sale_id: null,
                 stockAvailable: 0,
                 creditId: null,
                 errors: []
@@ -199,6 +200,7 @@ export default {
                     tax_percent: item.tax_percent,
                     tax: item.tax,
                     product_stock_id: item.product_stock.id,
+                    sale_id: item.sale_id,
                     product_stock: item.product_stock,
                     stockAvailable: item.product_stock.stock,
                     creditId: item.credit_id,

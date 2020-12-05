@@ -88,10 +88,27 @@
                             </span>
                         </div>
                     </div>
-                    <div class="column is-2">
+                    <div class="column is-3">
+                        <div class="field is-horizontal">
+                            <div class="field-label is-normal">
+                                <label class="label">Purchase ID</label>
+                            </div>
+                            <div class="field-body">
+                                <div class="field">
+                                    <p class="control">
+                                        <input class="input" placeholder="Purchase Number" type="text" v-model="debitItem.purchase_id" value="0">
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="has-text-danger" v-if="errors.purchase_id">
+                            {{ errors.purchase_id[0] }}
+                        </span>
+                    </div>
+                    <div class="column is-1">
                         <h6>Tax: ₹{{ getTax }}</h6>
                     </div>
-                    <div class="column is-3">
+                    <div class="column is-2">
                         <h6 class="title is-6 has-text-right-desktop has-text-centered-mobile">Item Total: ₹{{getItemTotal}}</h6>
                     </div>
                 </div>

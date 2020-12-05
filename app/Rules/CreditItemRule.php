@@ -10,6 +10,7 @@ class CreditItemRule implements Rule
     private $parameterBag = [
         'price' => "required|numeric",
         'quantity' => "required|integer",
+        'sale_id' => "nullable|string|exists:sales,bill_number",
         'product_stock_id' => "required|integer"
     ];
 
@@ -42,7 +43,7 @@ class CreditItemRule implements Rule
         foreach($value as $productItem) {
             $validator = Validator::make($productItem, $this->parameterBag);
             if($validator->fails()) {
-                $this->errorMessage = $validator->getMessageBag()->getMessages();
+                $this->errorMessage = $validator->getMessageBag();
                 return false;
             }
         }

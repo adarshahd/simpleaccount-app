@@ -24,6 +24,7 @@ class DebitItemResource extends JsonResource
             'sub_total' => $this->sub_total,
             'total' => $this->total,
             'debit_id' => $this->debit_id,
+            'purchase_id' => $this->purchase_id,
             'product_stock' => new ProductStockResource($this->productStock),
         ];
     }
