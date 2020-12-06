@@ -2,7 +2,7 @@
     <div class="sidebar-left card">
         <aside class="menu is-gapless">
             <template v-for="(item, index) in menu">
-                <p class="menu-label" v-if="typeof item === 'string'">{{ item }}</p>
+                <p class="menu-label has-text-dark" v-if="typeof item === 'string'">{{ item }}</p>
                 <side-bar-list v-else :menu="item"></side-bar-list>
             </template>
         </aside>

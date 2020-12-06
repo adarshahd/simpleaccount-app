@@ -2,9 +2,10 @@
     width: 15%;
     z-index: 40;
     position: fixed;
+    top: 6vh;
     height: 95vh;
     margin-top: 5px;
-    padding: 10px 0 10px 0;
+    margin-bottom: 5px;
     border-radius: 0;
     overflow-y: auto;
 }
@@ -34,8 +35,12 @@
 
 @media(max-width: $tablet) {
     .sidebar-left {
-        width: 70%;
-        left: -70%;
+        width: 65%;
+        left: -65%;
+        top: 7vh;
+        height: 94vh;
+        margin-top: 0;
+        margin-bottom: 20px;
         transition: left .3s ease;
     }
 
@@ -54,6 +59,12 @@
     }
 
     .global-search {
-        margin: 10px 10px;
+        margin: 10vh 20px 20px;
+    }
+}
+
+@media (min-width: $fullhd) {
+    .sidebar-left {
+        top: 5vh;
     }
 }
