@@ -18,7 +18,7 @@ class IncomeController extends Controller
      */
     public function index(Request $request)
     {
-        $incomes = Income::all();
+        $incomes = Income::query()->latest('date')->paginate();
 
         return new IncomeCollection($incomes);
     }
@@ -29,7 +29,7 @@ class IncomeController extends Controller
      */
     public function store(IncomeStoreRequest $request)
     {
-        $income = Income::create($request->validated());
+        $income = Income::query()->create($request->validated());
 
         return new IncomeResource($income);
     }

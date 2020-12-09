@@ -43,6 +43,8 @@ import Voucher from "@/views/forms/Voucher";
 import Accounts from "@/views/accounts/Accounts";
 import Account from "@/views/forms/Account";
 import AccountDetails from "@/views/accounts/Account"
+import Incomes from "./views/accounts/Incomes";
+import Expenses from "./views/accounts/Expenses";
 
 Vue.use(Router);
 
@@ -325,6 +327,20 @@ const routes =  [
                 path: '/accounts/:id/details',
                 name: 'account-details',
                 component: AccountDetails
+            },
+
+            /* Incomes */
+            {
+                path: '/incomes',
+                name: 'incomes',
+                component: Incomes
+            },
+
+            /* Expenses */
+            {
+                path: '/expenses',
+                name: 'expenses',
+                component: Expenses
             },
 
 

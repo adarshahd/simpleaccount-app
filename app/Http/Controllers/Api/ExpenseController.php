@@ -18,7 +18,7 @@ class ExpenseController extends Controller
      */
     public function index(Request $request)
     {
-        $expenses = Expense::all();
+        $expenses = Expense::query()->latest('date')->paginate();
 
         return new ExpenseCollection($expenses);
     }
@@ -29,7 +29,7 @@ class ExpenseController extends Controller
      */
     public function store(ExpenseStoreRequest $request)
     {
-        $expense = Expense::create($request->validated());
+        $expense = Expense::query()->create($request->validated());
 
         return new ExpenseResource($expense);
     }

@@ -17,8 +17,9 @@ class CreateExpensesTable extends Migration
 
         Schema::create('expenses', function (Blueprint $table) {
             $table->id();
+            $table->dateTime('date');
             $table->float('total');
-            $table->mediumText('notes');
+            $table->mediumText('notes')->nullable();
             $table->string('payment_method', 100)->nullable();
             $table->string('payment_reference', 200)->nullable();
             $table->softDeletes();

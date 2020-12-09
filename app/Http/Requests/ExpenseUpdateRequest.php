@@ -24,10 +24,11 @@ class ExpenseUpdateRequest extends FormRequest
     public function rules()
     {
         return [
+            'date' => ['required', 'date_format:yy-m-d'],
             'total' => ['required', 'numeric'],
-            'notes' => ['required'],
-            'payment_method' => ['string', 'max:100'],
-            'payment_reference' => ['string', 'max:200'],
+            'notes' => ['nullable', 'string'],
+            'payment_method' => ['nullable', 'string', 'max:100'],
+            'payment_reference' => ['nullable', 'string', 'max:200'],
         ];
     }
 }

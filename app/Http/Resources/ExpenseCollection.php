@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class ExpenseCollection extends ResourceCollection
 {
+    public $collects = ExpenseResource::class;
+
     /**
      * Transform the resource collection into an array.
      *

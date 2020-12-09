@@ -26,6 +26,7 @@ class Expense extends Model
      * @var array
      */
     protected $fillable = [
+        'date',
         'total',
         'notes',
         'payment_method',
@@ -40,5 +41,9 @@ class Expense extends Model
     protected $casts = [
         'id' => 'integer',
         'total' => 'float',
+    ];
+
+    protected $dates = [
+        'date'
     ];
 }

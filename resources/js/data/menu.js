@@ -81,6 +81,16 @@ const menuItems = [
             label: "Accounts",
             icon: "mdi mdi-cash-100",
             to: "accounts"
+        },
+        {
+            label: "Incomes",
+            icon: "mdi mdi-cash-plus",
+            to: "incomes"
+        },
+        {
+            label: "Expenses",
+            icon: "mdi mdi-cash-minus",
+            to: "expenses"
         }
     ],
     "Help",
