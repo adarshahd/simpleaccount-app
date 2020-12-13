@@ -32,7 +32,7 @@ class SaleController extends Controller
             $saleQuery = $saleQuery->where('customer_id', $request->input('customer_id'));
         }
 
-        $sales = $saleQuery->paginate();
+        $sales = $saleQuery->latest()->paginate();
 
         return new SaleCollection($sales);
     }

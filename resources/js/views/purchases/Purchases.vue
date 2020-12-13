@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -19,7 +18,15 @@
 
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalPurchasePages > 1"
+                            backend-pagination
+                            :total="totalPurchaseItems"
+                            :per-page="purchaseItemsPerPage"
+                            @page-change="onPurchasePageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="purchases">
                             <b-table-column field="id" label="ID" v-slot="props">
                                 {{ props.row.bill_number }}
@@ -87,7 +94,11 @@
         data() {
             return {
                 isLoading: true,
-                purchases: []
+                purchases: [],
+                totalPurchasePages: 1,
+                purchaseItemsPerPage: 1,
+                totalPurchaseItems: 1,
+                currentPurchasePage: 1,
             }
         },
         computed: {
@@ -98,8 +109,11 @@
         methods: {
             getPurchases() {
                 this.isLoading = true
-                axios.get('/api/v1/purchases').then(response => {
+                axios.get('/api/v1/purchases?page=' + this.currentPurchasePage).then(response => {
                     this.purchases = response.data.data
+                    this.totalPurchasePages = response.data.meta.last_page
+                    this.purchaseItemsPerPage = response.data.meta.per_page
+                    this.totalPurchaseItems = response.data.meta.total
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)
@@ -132,6 +146,12 @@
                     }
                 })
             },
+            onPurchasePageChange(val) {
+                this.currentPurchasePage = val
+                this.getPurchases()
+            },
+
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {

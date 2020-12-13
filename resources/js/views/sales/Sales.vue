@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -19,7 +18,15 @@
 
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalSalePages > 1"
+                            backend-pagination
+                            :total="totalSaleItems"
+                            :per-page="saleItemsPerPage"
+                            @page-change="onSalePageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="sales">
                             <b-table-column field="id" label="ID" v-slot="props">
                                 {{ props.row.bill_number }}
@@ -87,7 +94,11 @@
         data() {
             return {
                 isLoading: true,
-                sales: []
+                sales: [],
+                totalSalePages: 1,
+                saleItemsPerPage: 1,
+                totalSaleItems: 1,
+                currentSalePage: 1,
             }
         },
         computed: {
@@ -98,8 +109,11 @@
         methods: {
             getSales() {
                 this.isLoading = true
-                axios.get('/api/v1/sales').then(response => {
+                axios.get('/api/v1/sales?page=' + this.currentSalePage).then(response => {
                     this.sales = response.data.data
+                    this.totalSalePages = response.data.meta.last_page
+                    this.saleItemsPerPage = response.data.meta.per_page
+                    this.totalSaleItems = response.data.meta.total
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)
@@ -132,6 +146,11 @@
                     }
                 })
             },
+            onSalePageChange(val) {
+                this.currentSalePage = val
+                this.getSales()
+            },
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {
