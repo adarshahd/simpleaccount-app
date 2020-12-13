@@ -20,7 +20,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers = Customer::all();
+        $customers = Customer::query()->latest()->paginate();
 
         return new CustomerCollection($customers);
     }

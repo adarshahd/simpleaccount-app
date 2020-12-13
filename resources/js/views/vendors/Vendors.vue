@@ -1,7 +1,6 @@
 <template>
     <div>
-        <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-        <section v-else class="main-content">
+        <section class="main-content">
             <div class="columns is-centered">
                 <div class="column is-10">
                     <div class="card">
@@ -20,7 +19,15 @@
 
                             <hr/>
                             <b-table
+                                narrowed
                                 striped
+                                :paginated="totalVendorPages > 1"
+                                backend-pagination
+                                :total="totalVendorItems"
+                                :per-page="vendorItemsPerPage"
+                                @page-change="onVendorPageChange"
+                                :mobile-cards="false"
+                                :loading="isLoading"
                                 :data="vendors">
                                 <b-table-column field="name" label="Name" v-slot="props">
                                     {{ props.row.name }}
@@ -83,19 +90,21 @@
                 isLoading: false,
                 isDeleteVendorInProgress: false,
                 vendors: [],
-            }
-        },
-        computed: {
-            chunk() {
-                return chunk;
+                totalVendorPages: 1,
+                vendorItemsPerPage: 1,
+                totalVendorItems: 1,
+                currentVendorPage: 1,
             }
         },
         methods: {
             loadVendors() {
                 this.isLoading = true;
-                axios.get('/api/v1/vendors').then(response => {
-                    this.isLoading = false
+                axios.get('/api/v1/vendors?page=' + this.currentVendorPage).then(response => {
                     this.vendors = response.data.data
+                    this.totalVendorPages = response.data.meta.last_page
+                    this.vendorItemsPerPage = response.data.meta.per_page
+                    this.totalVendorItems = response.data.meta.total
+                    this.isLoading = false
                 }).catch(error => {
                     this.handleError(error);
                 })
@@ -134,6 +143,12 @@
                     this.handleError(error)
                 })
             },
+            onVendorPageChange(val) {
+                this.currentVendorPage = val
+                this.loadVendors()
+            },
+
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {

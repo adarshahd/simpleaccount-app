@@ -1,7 +1,6 @@
 <template>
     <div>
-        <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-        <section v-else class="main-content">
+        <section class="main-content">
             <div class="columns is-centered">
                 <div class="column is-10">
                     <div class="card">
@@ -20,7 +19,15 @@
 
                             <hr/>
                             <b-table
+                                narrowed
                                 striped
+                                :paginated="totalCustomerPages > 1"
+                                backend-pagination
+                                :total="totalCustomerItems"
+                                :per-page="customerItemsPerPage"
+                                @page-change="onCustomerPageChange"
+                                :mobile-cards="false"
+                                :loading="isLoading"
                                 :data="customers">
                                 <b-table-column field="name" label="Name" v-slot="props">
                                     {{ props.row.name }}
@@ -83,19 +90,21 @@
                 isLoading: false,
                 isDeleteCustomerInProgress: false,
                 customers: [],
-            }
-        },
-        computed: {
-            chunk() {
-                return chunk;
+                totalCustomerPages: 1,
+                customerItemsPerPage: 1,
+                totalCustomerItems: 1,
+                currentCustomerPage: 1,
             }
         },
         methods: {
             loadCustomers() {
                 this.isLoading = true;
-                axios.get('/api/v1/customers').then(response => {
-                    this.isLoading = false
+                axios.get('/api/v1/customers?page=' + this.currentCustomerPage).then(response => {
                     this.customers = response.data.data
+                    this.totalCustomerPages = response.data.meta.last_page
+                    this.customerItemsPerPage = response.data.meta.per_page
+                    this.totalCustomerItems = response.data.meta.total
+                    this.isLoading = false
                 }).catch(error => {
                     this.handleError(error);
                 })
@@ -134,6 +143,12 @@
                     this.handleError(error)
                 })
             },
+            onCustomerPageChange(val) {
+                this.currentCustomerPage = val
+                this.loadCustomers()
+            },
+
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {

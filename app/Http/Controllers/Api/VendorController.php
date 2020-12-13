@@ -20,7 +20,7 @@ class VendorController extends Controller
      */
     public function index(Request $request)
     {
-        $vendors = Vendor::all();
+        $vendors = Vendor::query()->latest()->paginate();
 
         return new VendorCollection($vendors);
     }
