@@ -9,7 +9,8 @@
                 <div class="columns is-vcentered">
                     <div class="column is-two-fifths-desktop">
                         <figure class="image is-128x128">
-                            <img class="is-rounded" :src="productOwnerData.logo">
+                            <img class="is-rounded" :src="logoFile" v-if="productOwnerData.logo != null">
+                            <img class="is-rounded" src="/images/business-shop.png" v-else>
                         </figure>
                     </div>
                     <div class="column">
@@ -212,15 +213,15 @@
         },
         methods: {
             handleFileChange(event) {
-                this.logoFile = event.target.files[0];
-                this.companyLogo = event.target.result;
+                const file = event.target.files[0]
+                this.logoFile = URL.createObjectURL(file)
+                this.productOwnerData.logo = file
             }
         },
         mounted() {
             axios.get('/api/v1/id-types').then(response => {
                 this.idTypes = response.data.data;
                 this.isIdTypeLoading = false;
-                console.log(response)
             }).catch(response => {
                 this.isIdTypeLoading = false;
             });

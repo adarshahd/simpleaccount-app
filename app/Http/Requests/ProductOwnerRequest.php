@@ -33,9 +33,9 @@ class ProductOwnerRequest extends FormRequest
             'country' => ['required', 'string', 'max:300'],
             'pin' => ['required', 'string', 'max:50'],
             'contact_name' => ['required', 'string', 'max:200'],
-            'contact_email' => ['string', 'max:200'],
+            'contact_email' => ['nullable', 'string', 'max:200'],
             'contact_phone' => ['required', 'string', 'max:50'],
-            'website' => ['string', 'max:400'],
+            'website' => ['nullable', 'string', 'max:400'],
             'id_type_id' => ['required', 'integer', 'exists:id_types,id'],
             'logo' => ['nullable', 'image']
         ];

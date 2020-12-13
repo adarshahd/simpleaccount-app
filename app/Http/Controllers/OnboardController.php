@@ -29,7 +29,7 @@ class OnboardController extends Controller
 
         // If Roles and Permissions are not seeded, seed the same into database
         if(!AppSettingController::isRolesAndPermissionsSeeded()) {
-            Artisan::call('db:seed', ['--class' => 'RoleAndPermissionSeeder']);
+            Artisan::call('db:seed', ['--class' => 'RoleAndPermissionSeeder', '--force' => true]);
             AppSettingController::setRolesAndPermissionsSeeded();
         }
 

@@ -182,22 +182,25 @@
             },
             createProductOwner() {
                 this.isLoading = true;
-                axios.post('/api/v1/product-owner', {
-                    name : this.productOwnerData.name,
-                    id_type_id : this.productOwnerData.idTypeId,
-                    identification : this.productOwnerData.identification,
-                    address_line_1 : this.productOwnerData.addressLine1,
-                    address_line_2 : this.productOwnerData.addressLine2,
-                    city : this.productOwnerData.city,
-                    state : this.productOwnerData.state,
-                    country : this.productOwnerData.country,
-                    pin : this.productOwnerData.pin,
-                    contact_name : this.productOwnerData.contactName,
-                    contact_phone : this.productOwnerData.contactPhone,
-                    contact_email : this.productOwnerData.contactEmail,
-                    website : this.productOwnerData.website,
-                    logo : this.productOwnerData.logo,
-                }).then(response => {
+                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+                let formData = new FormData()
+                formData.append('name', this.productOwnerData.name)
+                formData.append('identification', this.productOwnerData.identification)
+                formData.append('address_line_1', this.productOwnerData.addressLine1)
+                formData.append('address_line_2', this.productOwnerData.addressLine2)
+                formData.append('city', this.productOwnerData.city)
+                formData.append('state', this.productOwnerData.state)
+                formData.append('country', this.productOwnerData.country)
+                formData.append('pin', this.productOwnerData.pin)
+                formData.append('contact_name', this.productOwnerData.contactName)
+                formData.append('contact_email', this.productOwnerData.contactEmail)
+                formData.append('contact_phone', this.productOwnerData.contactPhone)
+                formData.append('website', this.productOwnerData.website)
+                formData.append('id_type_id', this.productOwnerData.idTypeId)
+                if(this.productOwnerData.logo != null) {
+                    formData.append('logo', this.productOwnerData.logo)
+                }
+                axios.post('/api/v1/product-owner', formData, config).then(response => {
                     this.isLoading = false;
                     window.location.href = '/'
                 }).catch(error => {
