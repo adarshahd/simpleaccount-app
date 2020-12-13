@@ -1,7 +1,6 @@
 <template>
     <div>
-        <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-        <section v-else class="main-content">
+        <section class="main-content">
             <div class="columns is-centered">
                 <div class="column is-10">
                     <div class="card">
@@ -20,13 +19,24 @@
 
                             <hr/>
                             <b-table
+                                narrowed
                                 striped
+                                :paginated="totalProductPages > 1"
+                                backend-pagination
+                                :total="totalProductItems"
+                                :per-page="productItemsPerPage"
+                                @page-change="onProductPageChange"
+                                :mobile-cards="false"
+                                :loading="isLoading"
                                 :data="products">
                                 <b-table-column field="name" label="Name" v-slot="props">
                                     {{ props.row.name }}
                                 </b-table-column>
                                 <b-table-column field="type" label="Type" v-slot="props">
                                     {{ props.row.product_type.name }}
+                                </b-table-column>
+                                <b-table-column field="price" label="Price" v-slot="props">
+                                    ₹{{ props.row.price == null ? '0' : props.row.price.toFixed(2) }}
                                 </b-table-column>
                                 <b-table-column field="tax" label="Tax" v-slot="props">
                                     {{ props.row.tax.tax }}%
@@ -88,17 +98,24 @@
                     description: '',
                     tax_id: 0,
                     product_type_id: 0
-                }
+                },
+                totalProductPages: 1,
+                productItemsPerPage: 1,
+                totalProductItems: 1,
+                currentProductPage: 1,
             }
         },
         methods: {
             loadProducts() {
                 this.isLoading = true;
-                axios.get('/api/v1/products').then(response => {
+                axios.get('/api/v1/products?page=' + this.currentProductPage).then(response => {
                     this.products = response.data.data;
-                    this.isLoading = false;
+                    this.totalProductPages = response.data.meta.last_page
+                    this.productItemsPerPage = response.data.meta.per_page
+                    this.totalProductItems = response.data.meta.total
+                    this.isLoading = false
                 }).catch(error => {
-                    //console.log(error.response.status);
+                    this.handleError(error)
                 })
             },
             showAddProduct() {
@@ -135,6 +152,12 @@
                     this.handleError(error)
                 })
             },
+            onProductPageChange(val) {
+                this.currentProductPage = val
+                this.loadProducts()
+            },
+
+
             handleError(error) {
                 if (error.response.status === 401) {
                     this.$router.go({

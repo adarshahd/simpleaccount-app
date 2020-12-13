@@ -56,6 +56,21 @@
                             <div class="columns">
                                 <div class="column">
                                     <div class="field">
+                                        <label class="label" for="price">Product Price</label>
+                                        <div class="control">
+                                            <input class="input" id="price" type="number" placeholder="Product Price"
+                                                   v-model="product.price">
+                                            <span class="has-text-danger" v-if="errors.price">
+                                                {{ errors.price[0] }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="field">
                                         <label class="label" for="description">Product Description</label>
                                         <div class="control">
                                     <textarea class="textarea" id="description"
@@ -227,6 +242,7 @@
                 let formData = new FormData()
                 formData.append('name', this.product.name)
                 formData.append('description', this.product.description)
+                formData.append('price', this.product.price)
                 formData.append('tax_id', this.product.tax_id)
                 formData.append('product_type_id', this.product.product_type_id)
                 if(this.product.images != null) {
@@ -246,6 +262,7 @@
                 let formData = new FormData()
                 formData.append('name', this.product.name)
                 formData.append('description', this.product.description)
+                formData.append('price', this.product.price)
                 formData.append('tax_id', this.product.tax_id)
                 formData.append('product_type_id', this.product.product_type_id)
                 if(this.product.images != null) {

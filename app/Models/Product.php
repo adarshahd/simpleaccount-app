@@ -30,6 +30,7 @@ class Product extends Model implements HasMedia
     protected $fillable = [
         'name',
         'description',
+        'price',
         'tax_id',
         'product_type_id',
     ];
@@ -43,6 +44,7 @@ class Product extends Model implements HasMedia
         'id' => 'integer',
         'tax_id' => 'integer',
         'product_type_id' => 'integer',
+        'price' => 'float'
     ];
 
 

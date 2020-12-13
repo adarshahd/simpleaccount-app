@@ -25,9 +25,9 @@ class ProductController extends Controller
             $product_ids = ProductStock::query()
                 ->where('manufacturer_id', $request->input('manufacturer_id'))
                 ->pluck('product_id');
-            $products = Product::query()->whereIn('id', $product_ids)->paginate();
+            $products = Product::query()->whereIn('id', $product_ids)->latest()->paginate();
         } else {
-            $products = Product::query()->paginate();
+            $products = Product::query()->latest()->paginate();
         }
 
         return new ProductCollection($products);
