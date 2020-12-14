@@ -32,6 +32,7 @@ Make your business simplified!
 - [ ] Income and Expense
 - [ ] Reporting
 - [ ] Dashboard
+- [ ] Global search
 
 ### Features planned
 Not in a particular order though!
@@ -51,11 +52,12 @@ Not in a particular order though!
 SimpleAccount is built on Laravel. Standard Laravel deployment will do the work.
 
 1. Download the source code
-2. `composer install --prefer-dist`
-3. `php artisan migrate`
-4. `php artisan storage:link`
-5. `php artisan serve`
-6. Access application on http://localhost:8000
+2. `composer install`
+3. `npm install && npm run dev`
+4. `php artisan migrate`
+5. `php artisan storage:link`
+6. `php artisan serve`
+7. Access application on http://localhost:8000
 
 ## Support
 You could either chose to open a ticket here or mail your queries to **"support at simpleaccount dot app"**
