@@ -214,7 +214,7 @@
                     return;
                 }
                 loading(true);
-                axios.get('/api/v1/manufacturers').then(response => {
+                axios.get('/api/v1/manufacturers/search?name=' + search).then(response => {
                     loading(false);
                     this.manufacturers = response.data.data;
                 }).catch(error => {
