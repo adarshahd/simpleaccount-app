@@ -26,10 +26,10 @@ Make your business simplified!
 - [x] Debits
 - [x] Invoicing (Sale/Credits/Debits/Receipts/Vouchers) with template support
 - [x] Bank accounts and transactions
+- [x] Income and Expense
 
 ### Features in progress
 - [ ] User roles
-- [ ] Income and Expense
 - [ ] Reporting
 - [ ] Dashboard
 - [ ] Global search
