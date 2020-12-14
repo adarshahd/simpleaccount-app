@@ -20,7 +20,7 @@ class VoucherController extends Controller
      */
     public function index(Request $request)
     {
-        $vouchers = Voucher::all();
+        $vouchers = Voucher::query()->latest()->paginate();
 
         return new VoucherCollection($vouchers);
     }

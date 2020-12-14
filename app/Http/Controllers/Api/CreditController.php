@@ -26,7 +26,7 @@ class CreditController extends Controller
      */
     public function index(Request $request)
     {
-        $credits = Credit::all();
+        $credits = Credit::query()->latest()->paginate();
 
         return new CreditCollection($credits);
     }

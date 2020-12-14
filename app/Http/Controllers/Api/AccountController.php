@@ -18,7 +18,7 @@ class AccountController extends Controller
      */
     public function index()
     {
-        $accounts = Account::query()->paginate();
+        $accounts = Account::query()->latest()->paginate();
         return new AccountCollection($accounts);
     }
 

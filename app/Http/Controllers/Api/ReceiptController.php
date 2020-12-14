@@ -21,7 +21,7 @@ class ReceiptController extends Controller
      */
     public function index(Request $request)
     {
-        $receipts = Receipt::all();
+        $receipts = Receipt::query()->latest()->paginate();
 
         return new ReceiptCollection($receipts);
     }

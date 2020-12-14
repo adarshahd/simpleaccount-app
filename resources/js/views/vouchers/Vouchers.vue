@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section class="main-content" v-else>
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -18,7 +17,15 @@
                         </div>
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalVoucherPages > 1"
+                            backend-pagination
+                            :total="totalVoucherItems"
+                            :per-page="voucherItemsPerPage"
+                            @page-change="onVoucherPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="vouchers">
                             <b-table-column field="id" label="Bill Id" v-slot="props">
                                 {{ props.row.bill_number }}
@@ -85,7 +92,11 @@ export default {
         return {
             isLoading: false,
             isDeleteVoucherInProgress: false,
-            vouchers: []
+            vouchers: [],
+            totalVoucherPages: 1,
+            voucherItemsPerPage: 1,
+            totalVoucherItems: 1,
+            currentVoucherPage: 1,
         }
     },
     computed: {
@@ -96,8 +107,11 @@ export default {
     methods: {
         getVouchers() {
             this.isLoading = true
-            axios.get('/api/v1/vouchers').then(response => {
+            axios.get('/api/v1/vouchers?page=' + this.currentVoucherPage).then(response => {
                 this.vouchers = response.data.data
+                this.totalVoucherPages = response.data.meta.last_page
+                this.voucherItemsPerPage = response.data.meta.per_page
+                this.totalVoucherItems = response.data.meta.total
                 this.isLoading = false
             }).catch(error => {
                 this.handleError(error)
@@ -128,6 +142,10 @@ export default {
                 this.isDeleteVoucherInProgress = false;
                 this.getVouchers()
             })
+        },
+        onVoucherPageChange(val) {
+            this.currentVoucherPage = val
+            this.getVouchers()
         },
 
         handleError(error) {

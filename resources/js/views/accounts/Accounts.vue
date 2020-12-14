@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section class="main-content" v-else>
+    <section class="main-content">
         <account-transaction-modal ref="transactionModal" :transaction="transactionItem" v-on:loadTransaction="loadAccounts"></account-transaction-modal>
         <div class="columns is-centered">
             <div class="column is-10">
@@ -19,7 +18,15 @@
                         </div>
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalAccountPages > 1"
+                            backend-pagination
+                            :total="totalAccountItems"
+                            :per-page="accountItemsPerPage"
+                            @page-change="onAccountPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="accounts">
                             <b-table-column field="bank" label="Bank" v-slot="props">
                                 {{ props.row.bank_name }}<br/>
@@ -94,14 +101,21 @@ export default {
                 date: null,
                 notes: '',
                 account_id: null,
-            }
+            },
+            totalAccountPages: 1,
+            accountItemsPerPage: 1,
+            totalAccountItems: 1,
+            currentAccountPage: 1,
         }
     },
     methods: {
         loadAccounts() {
             this.isLoading = true
-            axios.get('/api/v1/accounts').then(response => {
+            axios.get('/api/v1/accounts?page=' + this.currentAccountPage).then(response => {
                 this.accounts = response.data.data
+                this.totalAccountPages = response.data.meta.last_page
+                this.accountItemsPerPage = response.data.meta.per_page
+                this.totalAccountItems = response.data.meta.total
                 this.isLoading = false
             }).catch(error => {
                 this.handleError(error)
@@ -144,6 +158,10 @@ export default {
             }).catch(error => {
                 this.handleError(error)
             })
+        },
+        onAccountPageChange(val) {
+            this.currentAccountPage = val
+            this.loadAccounts()
         },
 
         handleError(error) {

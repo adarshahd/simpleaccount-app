@@ -18,7 +18,7 @@ class ProductTypeController extends Controller
      */
     public function index(Request $request)
     {
-        $productTypes = ProductType::all();
+        $productTypes = ProductType::query()->latest()->paginate();
 
         return new ProductTypeCollection($productTypes);
     }

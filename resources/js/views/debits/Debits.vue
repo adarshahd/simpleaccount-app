@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -19,7 +18,15 @@
 
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalDebitPages > 1"
+                            backend-pagination
+                            :total="totalDebitItems"
+                            :per-page="debitItemsPerPage"
+                            @page-change="onDebitPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="debits">
                             <b-table-column field="id" label="ID" v-slot="props">
                                 {{ props.row.bill_number }}
@@ -87,7 +94,11 @@
         data() {
             return {
                 isLoading: true,
-                debits: []
+                debits: [],
+                totalDebitPages: 1,
+                debitItemsPerPage: 1,
+                totalDebitItems: 1,
+                currentDebitPage: 1,
             }
         },
         computed: {
@@ -98,8 +109,11 @@
         methods: {
             getDebits() {
                 this.isLoading = true
-                axios.get('/api/v1/debits').then(response => {
+                axios.get('/api/v1/debits?page=' + this.currentDebitPage).then(response => {
                     this.debits = response.data.data
+                    this.totalDebitPages = response.data.meta.last_page
+                    this.debitItemsPerPage = response.data.meta.per_page
+                    this.totalDebitItems = response.data.meta.total
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)
@@ -132,6 +146,11 @@
                     }
                 })
             },
+            onDebitPageChange(val) {
+                this.currentDebitPage = val
+                this.getDebits()
+            },
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {

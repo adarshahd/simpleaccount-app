@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -19,7 +18,15 @@
 
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalManufacturerPages > 1"
+                            backend-pagination
+                            :total="totalManufacturerItems"
+                            :per-page="manufacturerItemsPerPage"
+                            @page-change="onManufacturerPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="manufacturers">
                             <b-table-column field="name" label="Name" v-slot="props">
                                 {{ props.row.name }}
@@ -42,7 +49,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteManufacturerInProgress }"
-                                        @click="deleteProduct(props.row)">
+                                        @click="deleteManufacturer(props.row)">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -50,7 +57,7 @@
                             <template slot="empty">
                                 <div class="columns is-centered">
                                     <div class="column has-text-centered is-spaced">
-                                        <h4 class="title m-6">No Products Found</h4>
+                                        <h4 class="title m-6">No Manufacturers Found</h4>
                                     </div>
                                 </div>
                             </template>
@@ -73,20 +80,22 @@
                 isLoading : false,
                 isDeleteManufacturerInProgress: false,
                 manufacturers : [],
-                errors: []
-            }
-        },
-        computed: {
-            chunk() {
-                return chunk;
+                errors: [],
+                totalManufacturerPages: 1,
+                manufacturerItemsPerPage: 1,
+                totalManufacturerItems: 1,
+                currentManufacturerPage: 1,
             }
         },
         methods: {
             loadManufacturers() {
                 this.isLoading = true;
-                axios.get('/api/v1/manufacturers').then(response => {
+                axios.get('/api/v1/manufacturers?page=' + this.currentManufacturerPage).then(response => {
                     this.manufacturers = response.data.data;
-                    this.isLoading = false;
+                    this.totalManufacturerPages = response.data.meta.last_page
+                    this.manufacturerItemsPerPage = response.data.meta.per_page
+                    this.totalManufacturerItems = response.data.meta.total
+                    this.isLoading = false
                 }).catch(error => {
                     this.handleError(error);
                 })
@@ -115,6 +124,22 @@
                     }
                 })
             },
+            deleteManufacturer(manufacturer){
+                this.isDeleteManufacturerInProgress = true
+                axios.delete('/api/v1/manufacturers/' + manufacturer.id).then(response => {
+                    this.showToast("Manufacturer deleted successfully")
+                    this.isDeleteManufacturerInProgress = false
+                    this.loadManufacturers()
+                }).catch(error => {
+                    this.handleError(error)
+                })
+            },
+            onManufacturerPageChange(val) {
+                this.currentManufacturerPage = val
+                this.loadManufacturers()
+            },
+
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {

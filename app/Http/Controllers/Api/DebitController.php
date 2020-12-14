@@ -28,7 +28,7 @@ class DebitController extends Controller
      */
     public function index(Request $request)
     {
-        $debits = Debit::all();
+        $debits = Debit::query()->latest()->paginate();
 
         return new DebitCollection($debits);
     }

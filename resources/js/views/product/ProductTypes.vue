@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <product-type ref="productTypeModal" :product-type="productTypeItem" v-on:loadProductType="loadProductTypes"></product-type>
         <div class="columns is-centered">
             <div class="column is-10">
@@ -20,7 +19,15 @@
 
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalProductTypePages > 1"
+                            backend-pagination
+                            :total="totalProductTypeItems"
+                            :per-page="productTypeItemsPerPage"
+                            @page-change="onProductTypePageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="productTypes">
                             <b-table-column field="name" label="Product Type" v-slot="props">
                                 {{ props.row.name }}
@@ -75,7 +82,11 @@
                     name: '',
                     description: '',
                 },
-                productTypes: null
+                productTypes: [],
+                totalProductTypePages: 1,
+                productTypeItemsPerPage: 1,
+                totalProductTypeItems: 1,
+                currentProductTypePage: 1,
             }
         },
         mounted() {
@@ -84,9 +95,12 @@
         methods: {
             loadProductTypes() {
                 this.isLoading = true
-                axios.get('/api/v1/product-types').then(response => {
+                axios.get('/api/v1/product-types?page=' + this.currentProductTypePage).then(response => {
                     this.productTypes = response.data.data;
-                    this.isLoading = false;
+                    this.totalProductTypePages = response.data.meta.last_page
+                    this.productTypeItemsPerPage = response.data.meta.per_page
+                    this.totalProductTypeItems = response.data.meta.total
+                    this.isLoading = false
                 }).catch(error => {
                     this.isLoading = false;
                 });
@@ -116,6 +130,12 @@
                     this.handleError(error)
                 })
             },
+            onProductTypePageChange(val) {
+                this.currentProductTypePage = val
+                this.loadProductTypes()
+            },
+
+
             handleError(error) {
                 if (error.response.status === 401) {
                     this.$router.go({

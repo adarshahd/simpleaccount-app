@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section class="main-content" v-else>
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -18,7 +17,15 @@
                         </div>
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalReceiptPages > 1"
+                            backend-pagination
+                            :total="totalReceiptItems"
+                            :per-page="receiptItemsPerPage"
+                            @page-change="onReceiptPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="receipts">
                             <b-table-column field="id" label="Bill Id" v-slot="props">
                                 {{ props.row.bill_number }}
@@ -85,7 +92,11 @@ export default {
         return {
             isLoading: false,
             isDeleteReceiptInProgress: false,
-            receipts: []
+            receipts: [],
+            totalReceiptPages: 1,
+            receiptItemsPerPage: 1,
+            totalReceiptItems: 1,
+            currentReceiptPage: 1,
         }
     },
     computed: {
@@ -96,8 +107,11 @@ export default {
     methods: {
         getReceipts() {
             this.isLoading = true
-            axios.get('/api/v1/receipts').then(response => {
+            axios.get('/api/v1/receipts?page=' + this.currentReceiptPage).then(response => {
                 this.receipts = response.data.data
+                this.totalReceiptPages = response.data.meta.last_page
+                this.receiptItemsPerPage = response.data.meta.per_page
+                this.totalReceiptItems = response.data.meta.total
                 this.isLoading = false
             }).catch(error => {
                 this.handleError(error)
@@ -128,6 +142,10 @@ export default {
                 this.isDeleteReceiptInProgress = false;
                 this.getReceipts()
             })
+        },
+        onReceiptPageChange(val) {
+            this.currentReceiptPage = val
+            this.getReceipts()
         },
 
         handleError(error) {

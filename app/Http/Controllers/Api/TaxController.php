@@ -18,7 +18,7 @@ class TaxController extends Controller
      */
     public function index(Request $request)
     {
-        $taxes = Tax::all();
+        $taxes = Tax::query()->latest()->paginate();
 
         return new TaxCollection($taxes);
     }

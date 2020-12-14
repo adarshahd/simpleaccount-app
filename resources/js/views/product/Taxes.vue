@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <tax ref="taxModal" :tax="taxItem" v-on:loadTax="loadTaxes"></tax>
         <div class="columns is-centered">
             <div class="column is-10">
@@ -19,7 +18,15 @@
                         </div>
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalTaxPages > 1"
+                            backend-pagination
+                            :total="totalTaxItems"
+                            :per-page="taxItemsPerPage"
+                            @page-change="onTaxPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="taxes">
                             <b-table-column field="name" label="Tax Name" v-slot="props">
                                 {{ props.row.name }}
@@ -74,7 +81,11 @@
                     name: '',
                     tax: 0,
                 },
-                taxes: null
+                taxes: [],
+                totalTaxPages: 1,
+                taxItemsPerPage: 1,
+                totalTaxItems: 1,
+                currentTaxPage: 1,
             }
         },
         mounted() {
@@ -83,11 +94,14 @@
         methods: {
             loadTaxes() {
                 this.isLoading = true;
-                axios.get('/api/v1/taxes').then(response => {
-                    this.taxes = response.data.data;
-                    this.isLoading = false;
+                axios.get('/api/v1/taxes?page=' + this.currentTaxPage).then(response => {
+                    this.taxes = response.data.data
+                    this.totalTaxPages = response.data.meta.last_page
+                    this.taxItemsPerPage = response.data.meta.per_page
+                    this.totalTaxItems = response.data.meta.total
+                    this.isLoading = false
                 }).catch(error => {
-                    this.isLoading = false;
+                    this.handleError(error)
                 });
             },
             showAddTaxModal() {
@@ -115,6 +129,11 @@
                     this.handleError(error)
                 })
             },
+            onTaxPageChange(val) {
+                this.currentTaxPage = val
+                this.loadTaxes()
+            },
+
             handleError(error) {
                 if (error.response.status === 401) {
                     this.$router.go({

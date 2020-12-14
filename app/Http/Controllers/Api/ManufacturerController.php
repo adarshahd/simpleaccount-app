@@ -20,7 +20,7 @@ class ManufacturerController extends Controller
      */
     public function index(Request $request)
     {
-        $manufacturers = Manufacturer::all();
+        $manufacturers = Manufacturer::query()->latest()->paginate();
 
         return new ManufacturerCollection($manufacturers);
     }

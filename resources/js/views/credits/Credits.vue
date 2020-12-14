@@ -1,6 +1,5 @@
 <template>
-    <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
-    <section v-else class="main-content">
+    <section class="main-content">
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -19,7 +18,15 @@
 
                         <hr/>
                         <b-table
+                            narrowed
                             striped
+                            :paginated="totalCreditPages > 1"
+                            backend-pagination
+                            :total="totalCreditItems"
+                            :per-page="creditItemsPerPage"
+                            @page-change="onCreditPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
                             :data="credits">
                             <b-table-column field="id" label="ID" v-slot="props">
                                 {{ props.row.bill_number }}
@@ -87,7 +94,11 @@
         data() {
             return {
                 isLoading: true,
-                credits: []
+                credits: [],
+                totalCreditPages: 1,
+                creditItemsPerPage: 1,
+                totalCreditItems: 1,
+                currentCreditPage: 1,
             }
         },
         computed: {
@@ -98,8 +109,11 @@
         methods: {
             getCredits() {
                 this.isLoading = true
-                axios.get('/api/v1/credits').then(response => {
+                axios.get('/api/v1/credits?page=' + this.currentCreditPage).then(response => {
                     this.credits = response.data.data
+                    this.totalCreditPages = response.data.meta.last_page
+                    this.creditItemsPerPage = response.data.meta.per_page
+                    this.totalCreditItems = response.data.meta.total
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)
@@ -132,6 +146,11 @@
                     }
                 })
             },
+            onCreditPageChange(val) {
+                this.currentCreditPage = val
+                this.getCredits()
+            },
+
             handleError(error) {
                 this.errors = error.response.data.errors
                 if(error.response.status === 401) {
