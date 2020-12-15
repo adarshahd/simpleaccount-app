@@ -1,5 +1,5 @@
 <template>
-    <li>
+    <li class="ml-3 mt-1">
         <router-link :to="{ name: item.to }" exact-active-class="is-active" class="has-icons-left" @click.native="toggleSideBar">
             <p>
                 <span><i :class="item.icon"></i></span>

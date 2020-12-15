@@ -1,7 +1,7 @@
 <template>
     <div :class="{ 'sidebar-open' : isSideBarOpen }">
-        <div v-if="isSideBarOpen" class="sidebar-overlay"></div>
-        <navBar v-on:toggleSideBar="toggleSideBar"></navBar>
+        <div v-if="isSideBarOpen" class="sidebar-overlay" @click="overlayClicked"></div>
+        <navBar ref="navBar" v-on:toggleSideBar="toggleSideBar"></navBar>
         <sideBar :menu="sideBarItems"></sideBar>
         <div class="is-hidden-desktop global-search">
             <b-field>
@@ -41,6 +41,9 @@ export default {
     methods: {
         toggleSideBar() {
             this.isSideBarOpen = !this.isSideBarOpen
+        },
+        overlayClicked() {
+            this.$refs.navBar.toggleSideBar()
         }
     }
 }

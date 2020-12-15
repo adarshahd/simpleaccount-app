@@ -15,7 +15,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 100%;
+    height: 100vh;
     z-index: 30;
     background: rgba(50, 50, 75, .3);
     display: none;
@@ -37,7 +37,7 @@
     .sidebar-left {
         width: 65%;
         left: -65%;
-        top: 7vh;
+        top: 8vh;
         height: 94vh;
         margin-top: 0;
         margin-bottom: 20px;
