@@ -24,7 +24,7 @@ class ExpenseUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'date' => ['required', 'date_format:yy-m-d'],
+            'date' => ['required', 'date_format:Y-m-d'],
             'total' => ['required', 'numeric'],
             'notes' => ['nullable', 'string'],
             'payment_method' => ['nullable', 'string', 'max:100'],

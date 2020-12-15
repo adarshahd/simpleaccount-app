@@ -28,7 +28,7 @@ class AccountTransactionRequest extends FormRequest
             'total' => ['required', 'numeric', 'min:1'],
             'method' => ['required', 'in:cash,cheque,online'],
             'reference' => ['nullable', 'string'],
-            'date' => ['required', 'date_format:yy-m-d'],
+            'date' => ['required', 'date_format:Y-m-d'],
             'notes' => ['nullable', 'string'],
             'account_id' => ['required', 'integer']
         ];

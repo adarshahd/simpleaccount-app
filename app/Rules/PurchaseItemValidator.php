@@ -26,9 +26,9 @@ class PurchaseItemValidator implements Rule
 
         $requireExpiry = AppSettingController::getRequireExpiry();
         if($requireExpiry) {
-            $this->expiryRule = "required|date_format:M Y";
+            $this->expiryRule = "required|date_format:Y-m-d";
         } else {
-            $this->expiryRule = "nullable|date_format:M Y";
+            $this->expiryRule = "nullable|date_format:Y-m-d";
         }
 
         $this->parameterBag = [
@@ -61,7 +61,7 @@ class PurchaseItemValidator implements Rule
         foreach($value as $productItem) {
             $validator = Validator::make($productItem, $this->parameterBag);
             if($validator->fails()) {
-                $this->errorMessage = $validator->getMessageBag()->getMessages();
+                $this->errorMessage = $validator->getMessageBag();
                 return false;
             }
         }
