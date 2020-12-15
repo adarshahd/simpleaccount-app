@@ -208,6 +208,7 @@ export default {
                 discount: 0,
                 batch: '',
                 expiry: null,
+                expiryISO: null,
                 hsn: '',
                 errors: []
             }
@@ -226,7 +227,8 @@ export default {
                     tax: item.product_stock.tax,
                     discount: item.discount,
                     batch: item.product_stock.batch,
-                    expiry: dayjs(item.product_stock.expiry).toDate(),
+                    expiry: item.product_stock.expiry,
+                    expiryISO: dayjs(item.product_stock.expiry).toDate(),
                     hsn: item.product_stock.hsn,
                     purchaseId: item.purchase_id,
                     product_stock: item.product_stock,
@@ -276,7 +278,7 @@ export default {
 
             this.purchase.bill_date = dayjs(this.purchase.bill_date).format('YYYY-MM-DD')
             for(let i=0; i < this.purchase.purchase_items.length; ++i) {
-                this.purchase.purchase_items[i].expiry = dayjs(this.purchase.purchase_items[i].expiry).format('MMM YYYY')
+                this.purchase.purchase_items[i].expiry = dayjs(this.purchase.purchase_items[i].expiryISO).format('YYYY-MM-DD')
             }
 
             this.isPurchaseCompleting = true
@@ -292,7 +294,7 @@ export default {
         updatePurchase() {
             this.purchase.bill_date = dayjs(this.purchase.bill_date).format('YYYY-MM-DD')
             for(let i=0; i < this.purchase.purchase_items.length; ++i) {
-                this.purchase.purchase_items[i].expiry = dayjs(this.purchase.purchase_items[i].expiry).format('MMM YYYY')
+                this.purchase.purchase_items[i].expiry = dayjs(this.purchase.purchase_items[i].expiryISO).format('YYYY-MM-DD')
             }
 
             this.isPurchaseCompleting = true

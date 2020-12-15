@@ -117,7 +117,7 @@ class PurchaseController extends Controller
                 $purchaseItem = $purchaseItemCollection
                     ->where('batch', $currentStock->batch)
                     ->where('hsn', $currentStock->hsn)
-                    ->where('expiry', $currentStock->expiry->format("M Y"))
+                    ->where('expiry', $currentStock->expiry->format('Y-m-d'))
                     ->where('price', ($currentStock->price + $currentStock->tax))
                     ->where('mrp', $currentStock->mrp)
                     ->where('manufacturer_id', $currentStock->manufacturer_id)

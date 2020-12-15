@@ -117,7 +117,7 @@
                             <div class="field-body">
                                 <div class="field">
                                     <p class="control">
-                                        <b-datepicker type="month" v-model="purchaseItem.expiry" :mobile-native="false" trap-focus locale="en-IN"></b-datepicker>
+                                        <b-datepicker type="month" v-model="purchaseItem.expiryISO" :mobile-native="false" trap-focus locale="en-IN"></b-datepicker>
                                     </p>
                                 </div>
                             </div>
@@ -270,6 +270,10 @@
                 this.purchaseItem.manufacturer_id = this.purchaseItem.product_stock.manufacturer_id
                 this.purchaseItem.product_id = this.purchaseItem.product_stock.product.id
                 this.purchaseItem.price = this.purchaseItem.product_stock.price + this.purchaseItem.tax
+            },
+            expiryChanged(val) {
+                console.log(val)
+                console.log(this.purchaseItem.expiry)
             },
             handleError(error) {
                 this.errors = error.response.data.errors
