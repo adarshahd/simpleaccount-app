@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
+use App\Models\Manufacturer;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\Vendor;
@@ -50,6 +52,36 @@ class SearchController extends Controller
             })->toArray();
 
             $searchData->push($vendorData);
+        }
+
+        //Manufacturers
+        $manufacturers = Manufacturer::query()
+            ->where('name', 'like', '%' . $queryParam . '%')
+            ->select(['id', 'name']);
+        if($manufacturers->count() > 0) {
+            $manufacturerData = new \stdClass();
+            $manufacturerData->type = 'Manufacturers';
+            $manufacturerData->items = $manufacturers->get()->transform(function ($item) {
+                $item->target = 'manufacturer';
+                return $item;
+            })->toArray();
+
+            $searchData->push($manufacturerData);
+        }
+
+        //Products
+        $products = Product::query()
+            ->where('name', 'like', '%' . $queryParam . '%')
+            ->select(['id', 'name']);
+        if($products->count() > 0) {
+            $productData = new \stdClass();
+            $productData->type = 'Products';
+            $productData->items = $products->get()->transform(function ($item) {
+                $item->target = 'product';
+                return $item;
+            })->toArray();
+
+            $searchData->push($productData);
         }
 
         //Sales

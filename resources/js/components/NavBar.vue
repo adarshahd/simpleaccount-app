@@ -135,6 +135,26 @@
                             }
                         });
                         break;
+                    case 'manufacturer':
+                        this.searchQuery = ''
+                        this.searchData = []
+                        this.$router.push({
+                            name: 'manufacturer-details',
+                            params: {
+                                id: option.id
+                            }
+                        });
+                        break;
+                    case 'product':
+                        this.searchQuery = ''
+                        this.searchData = []
+                        this.$router.push({
+                            name: 'product-details',
+                            params: {
+                                id: option.id
+                            }
+                        });
+                        break;
                     case 'sale':
                         this.searchQuery = ''
                         this.searchData = []
