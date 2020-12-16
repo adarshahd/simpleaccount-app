@@ -27,12 +27,12 @@ Make your business simplified!
 - [x] Invoicing (Sale/Credits/Debits/Receipts/Vouchers) with template support
 - [x] Bank accounts and transactions
 - [x] Income and Expense
+- [x] Global search
 
 ### Features in progress
 - [ ] User roles
 - [ ] Reporting
 - [ ] Dashboard
-- [ ] Global search
 
 ### Features planned
 Not in a particular order though!
