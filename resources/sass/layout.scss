@@ -25,6 +25,12 @@
     height: 5vh;
 }
 
+.global-search-desktop {
+    width: 500px;
+    margin-left: 15%;
+    flex-shrink: 0;
+}
+
 .main-content {
     margin: 60px 30px 10px 17%;
 }
@@ -59,6 +65,7 @@
     }
 
     .global-search {
+        width: 90%;
         margin: 10vh 20px 20px;
     }
 }

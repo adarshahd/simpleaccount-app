@@ -37,6 +37,11 @@ Route::group(['prefix' => 'v1'], function() {
         /*
          * Search Routes
          * */
+
+        // Global Search route
+        Route::get('/search', [\App\Http\Controllers\Api\SearchController::class, 'globalSearch']);
+
+        // Other search routes
         Route::get('/customers/search', [\App\Http\Controllers\Api\CustomerController::class, 'find']);
         Route::get('/vendors/search', [\App\Http\Controllers\Api\VendorController::class, 'find']);
         Route::get('/products/search', [\App\Http\Controllers\Api\ProductController::class, 'find']);
