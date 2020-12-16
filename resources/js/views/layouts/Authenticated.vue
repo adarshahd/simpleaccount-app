@@ -1,7 +1,15 @@
 <template>
     <div :class="{ 'sidebar-open' : isSideBarOpen }">
         <div v-if="isSideBarOpen" class="sidebar-overlay" @click="overlayClicked"></div>
-        <navBar ref="navBar" v-on:toggleSideBar="toggleSideBar"></navBar>
+        <navBar
+            ref="navBar"
+            :searchData="searchData"
+            :searchQuery="searchQuery"
+            :isSearching="isSearching"
+            v-on:search="search"
+            v-on:searchItemSelected="searchItemSelected"
+            v-on:toggleSideBar="toggleSideBar">
+        </navBar>
         <sideBar :menu="sideBarItems"></sideBar>
         <div class="is-hidden-desktop global-search">
             <b-field>
@@ -9,7 +17,6 @@
                     icon="magnify has-text-link"
                     rounded
                     open-on-focus
-                    v-model="searchQuery"
                     :loading="isSearching"
                     @input="search"
                     @select="searchItemSelected"
@@ -18,7 +25,7 @@
                     group-options="items"
                     :data="searchData">
                     <div slot="empty">
-                        <h6 class="subtitle is-6" v-if="searchQuery.length >= 2 && isSearching === false">Couldn't find anything!</h6>
+                        <h6 class="subtitle is-6" v-if="searchQuery && searchQuery.length >= 2 && isSearching === false">Couldn't find anything!</h6>
                         <h6 class="subtitle is-6" v-else>Start typing</h6>
                     </div>
 
@@ -76,18 +83,23 @@ export default {
         overlayClicked() {
             this.$refs.navBar.toggleSideBar()
         },
-        search(val) {
-            if(!this.searchQuery.length || this.searchQuery.length < 2) {
+        search(query) {
+            this.searchQuery = query
+            this.isSearching = true
+
+            debounce(this.doSearch, 500)(query)
+        },
+        doSearch(query) {
+            if(!query) {
+                return
+            }
+
+            if(!query.length || query.length < 2) {
                 this.searchData = []
                 return
             }
 
-            this.isSearching = true
-
-            debounce(this.doSearch, 500)()
-        },
-        doSearch() {
-            axios.get('/api/v1/search?query=' + this.searchQuery).then(response => {
+            axios.get('/api/v1/search?query=' + query).then(response => {
                 this.searchData = response.data.data
                 this.isSearching = false
             }).catch(error => {
@@ -96,10 +108,11 @@ export default {
             })
         },
         searchItemSelected(option) {
+            this.searchQuery = ''
+            this.searchData = []
+
             switch (option.target) {
                 case 'customer':
-                    this.searchQuery = ''
-                    this.searchData = []
                     this.$router.push({
                         name: 'customer-details',
                         params: {
@@ -108,8 +121,6 @@ export default {
                     });
                     break;
                 case 'vendor':
-                    this.searchQuery = ''
-                    this.searchData = []
                     this.$router.push({
                         name: 'vendor-details',
                         params: {
@@ -118,8 +129,6 @@ export default {
                     });
                     break;
                 case 'manufacturer':
-                    this.searchQuery = ''
-                    this.searchData = []
                     this.$router.push({
                         name: 'manufacturer-details',
                         params: {
@@ -128,8 +137,6 @@ export default {
                     });
                     break;
                 case 'product':
-                    this.searchQuery = ''
-                    this.searchData = []
                     this.$router.push({
                         name: 'product-details',
                         params: {
@@ -138,8 +145,6 @@ export default {
                     });
                     break;
                 case 'sale':
-                    this.searchQuery = ''
-                    this.searchData = []
                     this.$router.push({
                         name: 'sale-details',
                         params: {
@@ -148,14 +153,14 @@ export default {
                     });
                     break;
                 case 'purchase':
-                    this.searchQuery = ''
-                    this.searchData = []
                     this.$router.push({
                         name: 'purchase-details',
                         params: {
                             id: option.id
                         }
                     });
+                    break;
+                default:
                     break;
             }
         }
