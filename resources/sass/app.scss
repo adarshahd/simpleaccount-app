@@ -42,5 +42,26 @@ $vs-component-line-height: 1.6;
 @import "~buefy/src/scss/buefy";
 @import "~@mdi/font/css/materialdesignicons.css";
 
+$ct-series-names: (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o) !default;
+$ct-series-colors: (
+    #f6993f,
+    #f05b4f,
+    #f4c63d,
+    #d17905,
+    #453d3f,
+    #59922b,
+    #0544d3,
+    #6b0392,
+    #f05b4f,
+    #dda458,
+    #eacf7d,
+    #86797d,
+    #b2c326,
+    #6188e2,
+    #a748ca
+) !default;
+@import "~chartist/dist/scss/chartist";
+@import "~chartist-plugin-tooltips/dist/chartist-plugin-tooltip.css";
+
 //Import Application Css
 @import "layout";

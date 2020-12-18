@@ -52,6 +52,7 @@ Route::group(['prefix' => 'v1'], function() {
          * Extra routes
          * */
 
+        Route::get('/dashboard', [\App\Http\Controllers\Api\DashboardController::class, 'index']);
         Route::get('/customers/{customer}/details', [\App\Http\Controllers\Api\CustomerController::class, 'details']);
         Route::get('/vendors/{vendor}/details', [\App\Http\Controllers\Api\VendorController::class, 'details']);
         Route::get('/sales/{sale}/invoice', [\App\Http\Controllers\Api\SaleController::class, 'invoice']);

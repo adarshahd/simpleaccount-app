@@ -39,6 +39,10 @@
     border-radius: 5px;
 }
 
+.chart {
+    height: 300px;
+}
+
 @media(max-width: $tablet) {
     .sidebar-left {
         width: 65%;
@@ -67,6 +71,10 @@
     .global-search {
         width: 90%;
         margin: 10vh 20px 20px;
+    }
+
+    .chart {
+        height: 200px;
     }
 }
 
