@@ -120,7 +120,7 @@ const menuItems = [
         ]
     },
     {
-        label: "General",
+        label: "Application",
         children: [
             {
                 label : "Settings",
