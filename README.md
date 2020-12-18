@@ -28,11 +28,11 @@ Make your business simplified!
 - [x] Bank accounts and transactions
 - [x] Income and Expense
 - [x] Global search
+- [x] Dashboard
 
 ### Features in progress
 - [ ] User roles
 - [ ] Reporting
-- [ ] Dashboard
 
 ### Features planned
 Not in a particular order though!
