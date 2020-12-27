@@ -22,6 +22,7 @@
                     <b-datepicker
                         :disabled="currentFilter !== '4'"
                         :date-formatter=dateFormat
+                        :mobile-native="false"
                         class="is-fullwidth"
                         v-model="dateRange"
                         :append-to-body="true"
