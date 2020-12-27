@@ -20,6 +20,7 @@ class DashboardController extends Controller
      * 4. total stock with price
      * 5. sales chart data (date, sale total)
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request) {
         if($request->has('filter')) {
@@ -70,6 +71,30 @@ class DashboardController extends Controller
                     $labels->push($date->format('M'));
                 }
                 break;
+            case '4':
+                $range = [Carbon::parse($request->input('startDate'))->startOfDay(), Carbon::parse($request->input('endDate'))->endOfDay()];
+                $diff = $range[1]->diffInDays($range[0]);
+                if($diff > 0) {
+                    for($i = $diff; $i > 0; --$i) {
+                        $date = $range[1]->clone()->subDays($i);
+                        $saleQuery = Sale::query()->whereDate('bill_date', $date);
+                        $saleData = new \stdClass();
+
+                        $saleData->meta = 'Sale Total ₹' . number_format($saleQuery->sum('total'), 2);
+                        $saleData->value = $saleQuery->count();
+                        $salesData->push($saleData);
+                        $labels->push($date->format('d/m'));
+                    }
+                } else {
+                    $saleQuery = Sale::query()->whereBetween('bill_date', $range);
+                    $saleData = new \stdClass();
+
+                    $saleData->meta = 'Sale Total ₹' . number_format($saleQuery->sum('total'), 2);
+                    $saleData->value = $saleQuery->count();
+                    $salesData->push($saleData);
+                    $labels->push($range[0]->format('d/m'));
+                }
+                break;
             default:
                 $range = [Carbon::now()->subDays(7)->startOfDay(), Carbon::now()->endOfDay()];
                 for($i = 7; $i > 0; --$i) {
@@ -80,7 +105,7 @@ class DashboardController extends Controller
                     $saleData->meta = 'Sale Total ₹' . number_format($saleQuery->sum('total'), 2);
                     $saleData->value = $saleQuery->count();
                     $salesData->push($saleData);
-                    $labels->push($date->englishDayOfWeek);
+                    $labels->push($date->format('D'));
                 }
                 break;
         }

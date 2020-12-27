@@ -6,14 +6,29 @@
                 <h5 class="title is-5">Hey {{ currentUser.name }}!!</h5>
                 Welcome back
             </div>
-            <div class="column is-3 is-offset-5">
+            <div class="column is-2 is-offset-4-desktop">
                 <div class="select is-fullwidth">
                     <select @change="filterData" v-model="currentFilter">
                         <option value="0">Last 7 Days</option>
                         <option value="1">Last 30 Days</option>
                         <option value="2">This Year</option>
                         <option value="3">Last Year</option>
+                        <option value="4">Custom</option>
                     </select>
+                </div>
+            </div>
+            <div class="column is-2">
+                <div class="field">
+                    <b-datepicker
+                        :disabled="currentFilter !== '4'"
+                        :date-formatter=dateFormat
+                        class="is-fullwidth"
+                        v-model="dateRange"
+                        :append-to-body="true"
+                        position="is-bottom-left"
+                        @input="loadDashboard"
+                        range>
+                    </b-datepicker>
                 </div>
             </div>
         </div>
@@ -43,7 +58,7 @@
                 </div>
             </div>
         </div>
-        <div class="columns">
+        <div class="columns mt-4">
             <div class="column is-12">
                 <div class="chart" id="chart"></div>
                 <h5 class="subtitle is-5 has-text-centered">Sales Chart</h5>
@@ -66,7 +81,7 @@
                 isLoading: true,
                 currentUser: this.$store.state.currentUser,
                 currentFilter: 0,
-                dateRange: [dayjs().subtract(7, 'day').format("YYYY-MM-DD"), dayjs().format("YYYY-MM-DD")],
+                dateRange: [dayjs().subtract(7, 'day').toDate(), dayjs().toDate()],
                 dashboardData: {}
             }
         },
@@ -81,7 +96,9 @@
         methods: {
             loadDashboard() {
                 this.isLoading = true
-                axios.get('/api/v1/dashboard?filter=' + this.currentFilter).then(response => {
+                let startDate = dayjs(this.dateRange[0]).format("YYYY-MM-DD")
+                let endDate = dayjs(this.dateRange[1]).format("YYYY-MM-DD")
+                axios.get('/api/v1/dashboard?filter=' + this.currentFilter + '&startDate=' + startDate + '&endDate=' + endDate).then(response => {
                     this.dashboardData = response.data.data
                     this.isLoading = false
                     setTimeout(this.showChart, 500);
@@ -103,7 +120,33 @@
                 )
             },
             filterData(filter) {
-                this.loadDashboard()
+                switch (this.currentFilter) {
+                    case '0':
+                        this.dateRange = [dayjs().subtract(7, 'day').toDate(), dayjs().toDate()]
+                        break;
+                    case '1':
+                        this.dateRange = [dayjs().subtract(30, 'day').toDate(), dayjs().toDate()]
+                        break;
+                    case '2':
+                        this.dateRange = [dayjs().startOf('year').toDate(), dayjs().toDate()]
+                        break;
+                    case '3':
+                        this.dateRange = [
+                            dayjs().subtract(1, 'year').startOf('year').toDate(),
+                            dayjs().subtract(1, 'year').endOf('year').toDate()
+                        ]
+                        break;
+                    case '4':
+                        break;
+                }
+                if(this.currentFilter !== '4') {
+                    this.loadDashboard()
+                }
+            },
+            dateFormat(d) {
+                let startDate = dayjs(d[0]).format("DD-MM-YYYY")
+                let endDate = dayjs(d[1]).format("DD-MM-YYYY")
+                return startDate + ' to ' + endDate
             },
 
             handleError(error) {
