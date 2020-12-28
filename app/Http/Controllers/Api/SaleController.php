@@ -198,8 +198,9 @@ class SaleController extends Controller
             $discount = $saleItem['discount'];
             $price = $saleItem['price'] - $discount;
             $taxPercent = $product->tax->tax;
-            $tax_excluded_price = ($price / (( $taxPercent / 100 ) + 1 ));
-            $saleItemPrice = ($tax_excluded_price * $saleItem['quantity']);
+            /*$tax_excluded_price = ($price / (( $taxPercent / 100 ) + 1 ));*/
+            $taxExcludedPrice = $price;
+            $saleItemPrice = ($taxExcludedPrice * $saleItem['quantity']);
             $saleItemTax = $saleItemPrice * ($taxPercent / 100);
             $subTotal = $subTotal + $saleItemPrice;
             $tax = $tax + $saleItemTax;
@@ -219,7 +220,7 @@ class SaleController extends Controller
             ]);
 
             SaleItem::query()->create([
-                'price' => $tax_excluded_price,
+                'price' => $taxExcludedPrice,
                 'discount' => $saleItem['discount'],
                 'quantity' => $saleItem['quantity'],
                 'tax_percent' => $taxPercent,
