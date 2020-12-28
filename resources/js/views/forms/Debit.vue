@@ -74,8 +74,8 @@
 import vSelect from 'vue-select'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import DebitItem from '../../components/DebitItem'
-import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+import DebitItem from '@/views/debits/DebitItem'
+import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
 
 export default {
     name: 'NewDebit',

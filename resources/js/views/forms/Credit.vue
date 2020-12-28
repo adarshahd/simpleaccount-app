@@ -74,8 +74,8 @@
 import vSelect from 'vue-select'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import CreditItem from '../../components/CreditItem'
-import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+import CreditItem from '@/views/credits/CreditItem'
+import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
 
 export default {
     name: 'NewCredit',

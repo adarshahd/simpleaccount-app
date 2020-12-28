@@ -7,8 +7,8 @@
 </template>
 
 <script>
-    import login from '../../components/Login'
-    import register from '../../components/Register'
+    import login from '@/components/auth/Login'
+    import register from '@/components/auth/Register'
     export default {
         name: "Admin",
         components : {

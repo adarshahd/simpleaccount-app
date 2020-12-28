@@ -6,10 +6,10 @@ import Guest from "@/views/layouts/Guest";
 import Authenticated from "@/views/layouts/Authenticated";
 
 import Login from "@/views/auth/Login";
-import Logout from "@/components/Logout";
+import Logout from "@/components/auth/Logout";
 import Dashboard from "@/views/dashboard/Dashboard";
 
-import PageNotFound from "@/components/PageNotFound";
+import PageNotFound from "@/views/errors/PageNotFound";
 import Manufacturers from "@/views/product/Manufacturers";
 import Manufacturer from "@/views/forms/Manufacturer";
 import ManufacturerDetails from "@/views/product/Manufacturer";

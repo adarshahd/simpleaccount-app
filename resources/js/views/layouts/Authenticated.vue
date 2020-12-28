@@ -53,7 +53,7 @@
 import debounce from 'debounce'
 import axios from 'axios'
 import navBar from '@/components/NavBar'
-import sideBar from '@/components/SideBar'
+import sideBar from '@/components/sidebar/SideBar'
 import menuItems from "@/data/menu";
 
 export default {

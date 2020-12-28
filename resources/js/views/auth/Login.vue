@@ -21,7 +21,7 @@
 </template>
 
 <script>
-    import login from '@/components/Login'
+    import login from '@/components/auth/Login'
     import axios from 'axios'
 
     export default {

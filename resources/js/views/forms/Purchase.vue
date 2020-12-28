@@ -89,8 +89,8 @@
 import vSelect from 'vue-select'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import PurchaseItem from '../../components/PurchaseItem'
-import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+import PurchaseItem from '@/views/purchases/PurchaseItem'
+import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
 
 export default {
     name: 'NewPurchase',

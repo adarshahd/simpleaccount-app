@@ -295,7 +295,6 @@
             if(this.creditItem.creditId != null) {
                 this.buildCreditItem()
             }
-            console.log(this.errors)
         }
     }
 </script>
