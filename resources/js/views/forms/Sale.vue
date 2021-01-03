@@ -118,11 +118,11 @@ import vSelect from 'vue-select'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
-import SaleItemModal from "../modals/SaleItem";
+import SaleItemModal from "@/views/modals/SaleItem";
 
 export default {
     name: 'NewSale',
-    components: {SaleItemModal, ProgressBarIndeterminate, SaleItem, vSelect },
+    components: {SaleItemModal, ProgressBarIndeterminate, vSelect },
     data() {
         return {
             isLoading: false,
