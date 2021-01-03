@@ -139,7 +139,7 @@ export default {
         createExpense() {
             this.isLoading = true;
             this.expense.date = dayjs(this.expense.dateISO).format("YYYY-MM-DD")
-            axios.post('/api/v1/expenses/', this.expense).then(response => {
+            axios.post('/api/v1/expenses', this.expense).then(response => {
                 this.isLoading = false;
                 this.errors = [];
                 this.toggleModal()

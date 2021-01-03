@@ -139,7 +139,7 @@ export default {
         createIncome() {
             this.isLoading = true;
             this.income.date = dayjs(this.income.dateISO).format("YYYY-MM-DD")
-            axios.post('/api/v1/incomes/', this.income).then(response => {
+            axios.post('/api/v1/incomes', this.income).then(response => {
                 this.isLoading = false;
                 this.errors = [];
                 this.toggleModal()
