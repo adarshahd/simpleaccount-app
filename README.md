@@ -60,10 +60,10 @@ SimpleAccount is built on Laravel. Standard Laravel deployment will do the work.
 7. Access application on http://localhost:8000
 
 ## Support
-You could either chose to open a ticket here or mail your queries to **"support at simpleaccount dot app"**
+You could either chose to open a ticket here or mail your queries to **simpleaccount at gigathinking.com**
 
 ## Vulnerability Disclosure
-Please contact at **"support at simpleaccount dot app"**. Security issues will be promptly addressed.
+Please contact at **simpleaccount at gigathinking.com**. Security issues will be promptly addressed.
 
 ## Support Development
 This application free software. Lot of effort has been put into developing it. You could please consider making contributions at [PayPal](https://paypal.me/adarshahd)
@@ -75,4 +75,5 @@ This application free software. Lot of effort has been put into developing it. Y
 * Laravel Snappy
 * Spatie
 * Laravel Blueprint
+* Bulma and Buefy
 * Many other free and open source software!
