@@ -46,6 +46,7 @@ import AccountDetails from "@/views/accounts/Account"
 import Incomes from "@/views/accounts/Incomes";
 import Expenses from "@/views/accounts/Expenses";
 import Support from "@/views/Support";
+import Overview from "./views/settings/Overview";
 
 Vue.use(Router);
 
@@ -342,6 +343,13 @@ const routes =  [
                 path: '/expenses',
                 name: 'expenses',
                 component: Expenses
+            },
+
+            /* Settings */
+            {
+                path: '/settings',
+                name: 'settings',
+                component: Overview
             },
 
             /* Misc Routes */

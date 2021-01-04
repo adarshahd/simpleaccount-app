@@ -48,6 +48,9 @@ Route::group(['prefix' => 'v1'], function() {
         Route::get('products/{product}/stock/search', [\App\Http\Controllers\Api\ProductController::class, 'stock']);
         Route::get('/manufacturers/search', [\App\Http\Controllers\Api\ManufacturerController::class, 'find']);
 
+        // Application settings routes
+        Route::get('/settings/overview', [\App\Http\Controllers\Api\AppSettingController::class, 'getApplicationSettings']);
+
         /*
          * Extra routes
          * */

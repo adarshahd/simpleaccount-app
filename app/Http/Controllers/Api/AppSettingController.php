@@ -41,8 +41,7 @@ class AppSettingController extends Controller
     private static $poData = 'po_data';
     private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
 
-    private static $region = 'region';
-    private static $currency = 'currency';
+    private static $regionData = 'region';
 
     /**
      * @param \Illuminate\Http\Request $request
@@ -230,5 +229,30 @@ class AppSettingController extends Controller
     public static function getVoucherBillFooter() {
         $creditBillFooterSetting = AppSetting::query()->where('key', self::$voucherBillFooter)->first();
         return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
+    }
+
+    public function getApplicationSettings(Request $request) {
+        $productOwnerData = AppSetting::query()->where('key', self::$poData)->first();
+        if(!$productOwnerData) {
+            $productOwnerData = AppSetting::query()->create([
+                'key' => self::$poData,
+                'value' => '{"name" : "SimpleAccount","identification" : "","address_line_1" : "","address_line_2" : "","city" : "","state" : "","country" : "India","pin" : "","contact_name" : "","contact_email" : "","contact_phone" : "","website" : "","id_type_id" : null,"logo" : ""}'
+            ]);
+        }
+
+        $regionSettings = AppSetting::query()->where('key', self::$regionData)->first();
+        if(!$regionSettings) {
+            $regionSettings = AppSetting::query()->create([
+                'key' => self::$regionData,
+                'value' => '{"country" : "India", "currency" : "INR", "symbol" : "₹"}'
+            ]);
+        }
+
+        return response()->json([
+            'data' => [
+                'product_owner_data' => json_decode($productOwnerData->value),
+                'regional_settings_data' => json_decode($regionSettings->value)
+            ]
+        ]);
     }
 }
