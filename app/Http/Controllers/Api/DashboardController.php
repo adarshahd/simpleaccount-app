@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Expense;
 use App\Models\Income;
 use App\Models\ProductStock;
 use App\Models\Purchase;
@@ -114,6 +115,7 @@ class DashboardController extends Controller
         $totalSaleRevenue = $saleQuery->sum('total');
         $totalSaleCount = $saleQuery->count();
         $totalIncome = Income::query()->whereBetween('date', $range)->sum('total');
+        $totalExpense = Expense::query()->whereBetween('date', $range)->sum('total');
         $totalRevenue = $totalSaleRevenue + $totalIncome;
 
         $purchaseQuery = Purchase::query()->whereBetween('bill_date', $range);
@@ -128,6 +130,8 @@ class DashboardController extends Controller
         $dashboardData->sales = $totalSaleCount;
         $dashboardData->salesTotal = $totalSaleRevenue;
         $dashboardData->revenue = $totalRevenue;
+        $dashboardData->incomeTotal = $totalIncome;
+        $dashboardData->expenseTotal = $totalExpense;
         $dashboardData->purchases = $totalPurchaseCount;
         $dashboardData->purchasesTotal = $totalPurchase;
         $dashboardData->products = $productCount;

@@ -3,8 +3,8 @@
     <div class="main-content" v-else>
         <div class="columns mt-2">
             <div class="column is-4">
-                <h5 class="title is-5">Hey {{ currentUser.name }}!!</h5>
-                Welcome back
+                <h5 class="title is-5">Hey {{ currentUser.name }},</h5>
+                Welcome Back!
             </div>
             <div class="column is-2 is-offset-4-desktop">
                 <div class="select is-fullwidth">
@@ -35,26 +35,32 @@
         </div>
         <div class="columns is-gapless">
             <div class="column is-3">
-                <div class="box p-5 m-1">
+                <div class="box p-5 m-1 has-text-centered">
                     <h4 class="title is-4">₹{{ dashboardData.revenue.toFixed(2) }}</h4>
                     <h6 class="subtitle is-6">Revenue</h6>
                 </div>
             </div>
-            <div class="column is-3">
-                <div class="box p-5 m-1">
+            <div class="column is-2">
+                <div class="box p-5 m-1 has-text-centered">
                     <h4 class="title is-4">{{ dashboardData.sales }} (₹{{ dashboardData.salesTotal.toFixed(2) }})</h4>
                     <h6 class="subtitle is-6">Sales</h6>
                 </div>
             </div>
-            <div class="column is-3">
-                <div class="box p-5 m-1">
+            <div class="column is-2">
+                <div class="box p-5 m-1 has-text-centered">
                     <h4 class="title is-4">{{ dashboardData.purchases }} (₹{{ dashboardData.purchasesTotal.toFixed(2) }})</h4>
                     <h6 class="subtitle is-6">Purchases</h6>
                 </div>
             </div>
+            <div class="column is-2">
+                <div class="box p-5 m-1 has-text-centered">
+                    <h4 class="title is-4">₹{{ dashboardData.expenseTotal.toFixed(2) }}</h4>
+                    <h6 class="subtitle is-6">Expenses</h6>
+                </div>
+            </div>
             <div class="column is-3">
-                <div class="box p-5 m-1">
-                    <h4 class="title is-4">{{ dashboardData.stock }} </h4>
+                <div class="box p-5 m-1 has-text-centered">
+                    <h4 class="title is-4">{{ dashboardData.stock }} items</h4>
                     <h6 class="subtitle is-6">Total Stock</h6>
                 </div>
             </div>
