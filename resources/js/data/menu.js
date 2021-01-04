@@ -112,11 +112,6 @@ const menuItems = [
                 icon : "mdi mdi-help-box",
                 to : "support"
             },
-            {
-                label : "About",
-                icon : "mdi mdi-information-outline",
-                to : "about"
-            },
         ]
     },
     {
