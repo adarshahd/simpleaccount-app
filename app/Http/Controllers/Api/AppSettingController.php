@@ -41,6 +41,9 @@ class AppSettingController extends Controller
     private static $poData = 'po_data';
     private static $roleAndPermissionSeeded = 'roles_permissions_seeded';
 
+    private static $region = 'region';
+    private static $currency = 'currency';
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\AppSettingCollection

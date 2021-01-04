@@ -27,8 +27,7 @@ class IncomeStoreRequest extends FormRequest
             'date' => ['required', 'date_format:Y-m-d'],
             'total' => ['required', 'numeric'],
             'notes' => ['nullable', 'string'],
-            'payment_method' => ['nullable', 'string', 'max:100'],
-            'payment_reference' => ['nullable', 'string', 'max:200'],
+            'income_category_id' => ['required', 'integer', 'exists:income_categories,id'],
         ];
     }
 }

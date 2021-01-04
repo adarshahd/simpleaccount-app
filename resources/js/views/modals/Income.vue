@@ -36,37 +36,22 @@
                         <div class="field">
                             <div class="control">
                                 <div class="label">
-                                    <label for="method">Income Method</label>
+                                    <label for="category">Income Category</label>
                                 </div>
                                 <div class="select is-fullwidth">
-                                    <select v-model="income.payment_method" id="method">
-                                        <option selected disabled value="">Select Income Method</option>
-                                        <option value="cash">Cash</option>
-                                        <option value="cheque">Cheque</option>
-                                        <option value="online">Online Transfer</option>
+                                    <select v-model="income.income_category_id" id="category">
+                                        <option selected disabled value="">Select Category</option>
+                                        <option v-for="category in categoryList" :value="category.id">
+                                            {{ category.name }}
+                                        </option>
                                     </select>
-                                    <span class="has-text-danger" v-if="errors.payment_method">
-                                        {{ errors.payment_method[0] }}
+                                    <span class="has-text-danger" v-if="errors.income_category_id">
+                                        {{ errors.income_category_id[0] }}
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="column is-6">
-                        <div class="field">
-                            <div class="control">
-                                <div class="label">
-                                    <label for="reference">Income Reference</label>
-                                </div>
-                                <input class="input" type="text" id="reference" v-model="income.payment_reference" placeholder="Reference">
-                                <span class="has-text-danger" v-if="errors.payment_reference">
-                                    {{ errors.payment_reference[0] }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns">
                     <div class="column is-6">
                         <div class="field">
                             <div class="control">
@@ -111,6 +96,7 @@ export default {
         return {
             isActive: false,
             isLoading: false,
+            categoryList: [],
             errors: [],
         }
     },
@@ -128,6 +114,10 @@ export default {
     methods: {
         toggleModal() {
             this.isActive = !this.isActive
+
+            if(!this.isActive) {
+                this.income = {};
+            }
         },
         handleConfirmClick() {
             if(this.income.id === null) {
@@ -154,7 +144,6 @@ export default {
             this.isLoading = true;
             this.income.date = dayjs(this.income.dateISO).format("YYYY-MM-DD")
             axios.patch('/api/v1/incomes/' + this.income.id, this.income).then(response => {
-                this.income = {};
                 this.isLoading = false;
                 this.errors = [];
                 this.toggleModal()

@@ -29,8 +29,7 @@ class Expense extends Model
         'date',
         'total',
         'notes',
-        'payment_method',
-        'payment_reference',
+        'expense_category_id',
     ];
 
     /**
@@ -41,9 +40,14 @@ class Expense extends Model
     protected $casts = [
         'id' => 'integer',
         'total' => 'float',
+        'expense_category_id' => 'integer',
     ];
 
     protected $dates = [
         'date'
     ];
+
+    public function category() {
+        return $this->belongsTo(ExpenseCategory::class, 'expense_category_id');
+    }
 }

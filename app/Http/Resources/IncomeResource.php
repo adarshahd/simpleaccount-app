@@ -19,8 +19,7 @@ class IncomeResource extends JsonResource
             'date' => $this->date,
             'total' => $this->total,
             'notes' => $this->notes,
-            'payment_method' => $this->payment_method,
-            'payment_reference' => $this->payment_reference,
+            'category' => $this->category
         ];
     }
 }

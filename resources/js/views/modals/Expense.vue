@@ -36,37 +36,22 @@
                         <div class="field">
                             <div class="control">
                                 <div class="label">
-                                    <label for="method">Expense Method</label>
+                                    <label for="category">Expense Category</label>
                                 </div>
                                 <div class="select is-fullwidth">
-                                    <select v-model="expense.payment_method" id="method">
-                                        <option selected disabled value="">Select Expense Method</option>
-                                        <option value="cash">Cash</option>
-                                        <option value="cheque">Cheque</option>
-                                        <option value="online">Online Transfer</option>
+                                    <select v-model="expense.expense_category_id" id="category">
+                                        <option selected disabled value="">Select Category</option>
+                                        <option v-for="category in categoryList" :value="category.id">
+                                            {{ category.name }}
+                                        </option>
                                     </select>
-                                    <span class="has-text-danger" v-if="errors.payment_method">
-                                        {{ errors.payment_method[0] }}
+                                    <span class="has-text-danger" v-if="errors.expense_category_id">
+                                        {{ errors.expense_category_id[0] }}
                                     </span>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="column is-6">
-                        <div class="field">
-                            <div class="control">
-                                <div class="label">
-                                    <label for="reference">Expense Reference</label>
-                                </div>
-                                <input class="input" type="text" id="reference" v-model="expense.payment_reference" placeholder="Reference">
-                                <span class="has-text-danger" v-if="errors.payment_reference">
-                                    {{ errors.reference[0] }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="columns">
                     <div class="column is-6">
                         <div class="field">
                             <div class="control">
@@ -111,6 +96,7 @@ export default {
         return {
             isActive: false,
             isLoading: false,
+            categoryList: [],
             errors: [],
         }
     },
@@ -128,6 +114,10 @@ export default {
     methods: {
         toggleModal() {
             this.isActive = !this.isActive
+
+            if(!this.isActive) {
+                this.expense = {};
+            }
         },
         handleConfirmClick() {
             if(this.expense.id === null) {
@@ -154,7 +144,6 @@ export default {
             this.isLoading = true;
             this.expense.date = dayjs(this.expense.dateISO).format("YYYY-MM-DD")
             axios.patch('/api/v1/expenses/' + this.expense.id, this.expense).then(response => {
-                this.expense = {};
                 this.isLoading = false;
                 this.errors = [];
                 this.toggleModal()

@@ -64,6 +64,14 @@ Route::group(['prefix' => 'v1'], function() {
         /*
          * API Resource Routes
          * */
+        Route::group(['prefix' => 'expenses'], function() {
+            Route::apiResource('categories', \App\Http\Controllers\Api\ExpenseCategoryController::class);
+        });
+
+        Route::group(['prefix' => 'incomes'], function() {
+            Route::apiResource('categories', \App\Http\Controllers\Api\IncomeCategoryController::class);
+        });
+
         Route::apiResources([
             'settings' => App\Http\Controllers\Api\AppSettingController::class,
             'id-types' => App\Http\Controllers\Api\IdTypeController::class,

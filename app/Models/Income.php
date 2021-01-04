@@ -29,8 +29,7 @@ class Income extends Model
         'date',
         'total',
         'notes',
-        'payment_method',
-        'payment_reference',
+        'income_category_id',
     ];
 
     /**
@@ -41,9 +40,14 @@ class Income extends Model
     protected $casts = [
         'id' => 'integer',
         'total' => 'float',
+        'income_category_id' => 'integer',
     ];
 
     protected $dates = [
         'date'
     ];
+
+    public function category() {
+        return $this->belongsTo(IncomeCategory::class, 'income_category_id');
+    }
 }

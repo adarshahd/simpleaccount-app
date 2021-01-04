@@ -1,8 +1,63 @@
 <template>
     <section class="main-content">
         <income-modal ref="incomeModal" :income="incomeItem" v-on:loadIncome="loadIncomeList"></income-modal>
+        <income-category ref="categoryModal" :category="categoryItem" v-on:loadCategory="loadCategoryList"></income-category>
         <div class="columns is-centered">
-            <div class="column is-10-desktop is-12-mobile">
+            <div class="column is-4">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="columns">
+                            <div class="column is-8">
+                                <h3 class="title is-4">Income Categories</h3>
+                            </div>
+                            <div class="column is-4 has-text-centered-mobile has-text-right-desktop">
+                                <button class="button is-primary has-icons-left" @click="addNewCategory">
+                                    <span class="mdi mdi-plus-circle"></span>
+                                    <span>&nbsp;Category</span>
+                                </button>
+                            </div>
+                        </div>
+                        <b-table
+                            narrowed
+                            striped
+                            :paginated="totalCategoryPages > 1"
+                            backend-pagination
+                            :total="totalCategoryItems"
+                            :per-page="categoryItemsPerPage"
+                            @page-change="onCategoryPageChange"
+                            :mobile-cards="false"
+                            :data="categoryList"
+                            :loading="isCategoryLoading">
+                            <b-table-column field="name" label="Name" v-slot="props">
+                                {{ props.row.name }}
+                            </b-table-column>
+                            <b-table-column label="Actions" v-slot="props" numeric>
+                                <span>
+                                    <button class="button is-primary is-small" @click="editCategory(props.row)">
+                                        <span class="mdi mdi-pencil mdi-18px"></span>
+                                    </button>
+                                </span>
+                                <span>
+                                    <button
+                                        class="button is-danger is-small"
+                                        :class="{ 'is-loading' : isDeleteCategoryInProgress }"
+                                        @click="deleteCategory(props.row)">
+                                        <span class="mdi mdi-delete mdi-18px"></span>
+                                    </button>
+                                </span>
+                            </b-table-column>
+                            <template slot="empty">
+                                <div class="columns is-centered">
+                                    <div class="column has-text-centered is-spaced">
+                                        <h4 class="title m-6">No Categories Found</h4>
+                                    </div>
+                                </div>
+                            </template>
+                        </b-table>
+                    </div>
+                </div>
+            </div>
+            <div class="column is-8">
                 <div class="card">
                     <div class="card-content">
                         <div class="columns">
@@ -19,41 +74,38 @@
                         <b-table
                             narrowed
                             striped
-                            :paginated="totalPages > 1"
+                            :paginated="totalIncomePages > 1"
                             backend-pagination
-                            :total="totalItems"
-                            :per-page="ItemsPerPage"
-                            @page-change="onPageChange"
+                            :total="totalIncomeItems"
+                            :per-page="incomeItemsPerPage"
+                            @page-change="onIncomePageChange"
                             :mobile-cards="false"
-                            :data="incomeList" :loading="isLoading">
+                            :data="incomeList" :loading="isIncomeLoading">
                             <b-table-column field="date" label="Date" v-slot="props">
                                 {{ dayjs(props.row.date).format("DD MMM, YYYY") }}
                             </b-table-column>
-                            <b-table-column field="method" label="Method" v-slot="props">
-                                {{ props.row.payment_method }}
+                            <b-table-column field="category" label="Category" v-slot="props">
+                                {{ props.row.category.name }}
                             </b-table-column>
-                            <b-table-column field="reference" label="Reference" v-slot="props">
-                                {{ props.row.payment_reference }}
-                            </b-table-column>
-                            <b-table-column field="amount" label="Amount" v-slot="props">
+                            <b-table-column field="amount" label="Amount" v-slot="props" numeric>
                                 <h6 class="has-text-success">
-                                    + ₹{{ props.row.total }}
+                                    ₹{{ props.row.total }}
                                 </h6>
                             </b-table-column>
-                            <b-table-column label="Actions" v-slot="props" centered>
-                                        <span>
-                                            <button class="button is-primary is-small" @click="editIncome(props.row)">
-                                                <span class="mdi mdi-pencil mdi-18px"></span>
-                                            </button>
-                                        </span>
+                            <b-table-column label="Actions" v-slot="props" numeric>
                                 <span>
-                                            <button
-                                                class="button is-danger is-small"
-                                                :class="{ 'is-loading' : isDeleteIncomeInProgress }"
-                                                @click="deleteIncome(props.row)">
-                                                <span class="mdi mdi-delete mdi-18px"></span>
-                                            </button>
-                                        </span>
+                                    <button class="button is-primary is-small" @click="editIncome(props.row)">
+                                        <span class="mdi mdi-pencil mdi-18px"></span>
+                                    </button>
+                                </span>
+                                <span>
+                                    <button
+                                        class="button is-danger is-small"
+                                        :class="{ 'is-loading' : isDeleteIncomeInProgress }"
+                                        @click="deleteIncome(props.row)">
+                                        <span class="mdi mdi-delete mdi-18px"></span>
+                                    </button>
+                                </span>
                             </b-table-column>
                             <template slot="empty">
                                 <div class="columns is-centered">
@@ -72,30 +124,42 @@
 
 <script>
 import axios from 'axios'
-import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
 import dayjs from "dayjs";
-import IncomeModal from "../modals/Income";
+import IncomeModal from "@/views/modals/Income";
+import IncomeCategory from "@/views/modals/IncomeCategory";
 export default {
     name: "Incomes",
-    components: {IncomeModal, ProgressBarIndeterminate},
+    components: {IncomeCategory, IncomeModal, ProgressBarIndeterminate},
     data() {
         return {
-            isLoading: false,
+            isIncomeLoading: false,
+            isCategoryLoading: false,
             isDeleteIncomeInProgress: false,
+            isDeleteCategoryInProgress: false,
             incomeList: [],
             incomeItem: {
                 id: null,
                 total: null,
-                payment_method: "",
-                payment_reference: "",
+                income_category_id: null,
                 date: null,
                 dateISO: null,
                 notes: '',
             },
-            totalPages: 1,
-            ItemsPerPage: 1,
-            totalItems: 1,
-            currentPage: 1,
+            categoryList: [],
+            categoryItem: {
+                id: null,
+                name: '',
+                description: ''
+            },
+            totalIncomePages: 1,
+            incomeItemsPerPage: 1,
+            totalIncomeItems: 1,
+            currentIncomePage: 1,
+            totalCategoryPages: 1,
+            categoryItemsPerPage: 1,
+            totalCategoryItems: 1,
+            currentCategoryPage: 1,
         }
     },
     computed: {
@@ -105,20 +169,36 @@ export default {
     },
     methods: {
         loadIncomeList() {
-            this.isLoading = true
-            axios.get('/api/v1/incomes').then(response => {
+            this.isIncomeLoading = true
+            axios.get('/api/v1/incomes?page=' + this.currentIncomePage).then(response => {
                 this.incomeList = response.data.data
-                this.isLoading = false
+                this.isIncomeLoading = false
             }).catch(error => {
                 this.handleError(error)
             })
         },
-        onPageChange(val) {
-            this.currentPage = val
+        loadCategoryList() {
+            this.isCategoryLoading = true
+            axios.get('/api/v1/incomes/categories?page=' + this.currentCategoryPage).then(response => {
+                this.categoryList = response.data.data
+                this.isCategoryLoading = false
+            }).catch(error => {
+                this.handleError(error)
+            })
+        },
+        onIncomePageChange(val) {
+            this.currentIncomePage = val
+            this.loadIncomeList()
+        },
+        onCategoryPageChange(val) {
+            this.currentCategoryPage = val
+            this.loadCategoryList()
         },
         editIncome(income) {
             this.incomeItem = income;
             this.incomeItem.dateISO = dayjs(this.incomeItem.date).toDate()
+            this.incomeItem.income_category_id = income.category.id
+            this.$refs.incomeModal.categoryList = this.categoryList
             this.$refs.incomeModal.toggleModal();
         },
         deleteIncome(income) {
@@ -133,7 +213,27 @@ export default {
             })
         },
         addNewIncome() {
+            this.incomeItem.income_category_id = ''
+            this.$refs.incomeModal.categoryList = this.categoryList
             this.$refs.incomeModal.toggleModal();
+        },
+        editCategory(category) {
+            this.categoryItem = category;
+            this.$refs.categoryModal.toggleModal();
+        },
+        deleteCategory(category) {
+            this.isDeleteCategoryInProgress = true
+            axios.delete('/api/v1/incomes/categories/' + category.id).then(response => {
+                this.isDeleteCategoryInProgress = false
+                this.showToast("Category deleted successfully!")
+                this.loadCategoryList()
+            }).catch(error => {
+                this.isDeleteCategoryInProgress = false
+                this.handleError(error)
+            })
+        },
+        addNewCategory() {
+            this.$refs.categoryModal.toggleModal();
         },
 
 
@@ -158,6 +258,7 @@ export default {
         }
     },
     mounted() {
+        this.loadCategoryList()
         this.loadIncomeList()
     }
 }
