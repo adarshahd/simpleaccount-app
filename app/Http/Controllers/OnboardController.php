@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\Response;
 
 class OnboardController extends Controller
@@ -82,8 +83,9 @@ class OnboardController extends Controller
 
         $productOwnerData = $request->validated();
         if($request->hasFile('logo')) {
-            $request->file('logo')->storeAs('logos', 'logo.png');
+            $request->file('logo')->storeAs('public/logos', 'logo.png');
         }
+        $productOwnerData['logo'] = asset('storage/logos/logo.png');
 
         $result = AppSettingController::updateProductOwnerData(json_encode($productOwnerData));
 
