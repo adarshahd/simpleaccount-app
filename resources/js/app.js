@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
-import { Table, Toast, Datepicker, Collapse, Autocomplete, Field, Icon } from 'buefy'
+import { Table, Toast, Datepicker, Collapse, Autocomplete, Field, Icon, Dropdown } from 'buefy'
 
 import router from './router'
 import store from './store'
@@ -14,6 +14,7 @@ Vue.use(Collapse, {defaultLocale: 'en-IN'})
 Vue.use(Autocomplete, {defaultLocale: 'en-IN'})
 Vue.use(Field, {defaultLocale: 'en-IN'})
 Vue.use(Icon, {defaultLocale: 'en-IN'})
+Vue.use(Dropdown, {defaultLocale: 'en-IN'})
 
 store.dispatch("getCurrentUser").finally(() => {
     const app = new Vue({

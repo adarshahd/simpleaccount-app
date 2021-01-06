@@ -1,6 +1,8 @@
 <template>
     <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
     <section class="main-content" v-else>
+        <tax ref="taxModal" :tax="taxItem" v-on:loadTax="loadTax"></tax>
+        <product-type ref="productTypeModal" :product-type="productTypeItem" v-on:loadProductType="loadProductType"></product-type>
         <div class="columns is-centered">
             <div class="column is-centered">
                 <div class="box has-background-white">
@@ -56,19 +58,22 @@
                                     <div class="field">
                                         <label class="label" for="productType">Product Type</label>
                                         <div class="control">
-                                            <div class="select is-fullwidth"
-                                                 :class="{'is-loading' : isSelectProductTypeLoading}">
-                                                <select id="productType" v-model="product.product_type_id">
-                                                    <option disabled value="">Select Product Type</option>
-                                                    <option v-for="productType in productTypes" :key="productType.id"
-                                                            v-bind:value="productType.id">
-                                                        {{ productType.name }}
-                                                    </option>
-                                                </select>
-                                                <span class="has-text-danger" v-if="errors.product_type_id">
-                                            {{ errors.product_type_id[0] }}
-                                        </span>
-                                            </div>
+                                            <b-dropdown
+                                                id="productType"
+                                                class="select"
+                                                animation="slide"
+                                                expanded>
+                                                <button class="button has-background-white-ter is-fullwidth has-text-left" slot="trigger" slot-scope="{ active }">
+                                                    <span v-if="product.product_type_id == null">Select Product Type</span>
+                                                    <span v-else>{{ product.product_type_name }}</span>
+                                                </button>
+
+                                                <b-dropdown-item @click="showAddNewProductType">Add Product Type</b-dropdown-item>
+                                                <b-dropdown-item v-for="item in productTypes" @click="productTypeSelected(item)" :key="item.id">{{ item.name }}</b-dropdown-item>
+                                            </b-dropdown>
+                                            <span class="has-text-danger" v-if="errors.product_type_id">
+                                                {{ errors.product_type_id[0] }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -107,18 +112,22 @@
                                     <div class="field">
                                         <label class="label" for="productTax">Tax</label>
                                         <div class="control">
-                                            <div class="select is-fullwidth"
-                                                 :class="{'is-loading' : isSelectTaxLoading}">
-                                                <select id="productTax" v-model="product.tax_id">
-                                                    <option disabled value="">Select Tax</option>
-                                                    <option v-for="tax in taxes" :key="tax.id" v-bind:value="tax.id">
-                                                        {{ tax.name }}
-                                                    </option>
-                                                </select>
-                                                <span class="has-text-danger" v-if="errors.tax_id">
-                                            {{ errors.tax_id[0] }}
-                                        </span>
-                                            </div>
+                                            <b-dropdown
+                                                id="productTax"
+                                                class="select"
+                                                animation="slide"
+                                                expanded>
+                                                <button class="button has-background-white-ter is-fullwidth" slot="trigger" slot-scope="{ active }">
+                                                    <span v-if="product.tax_id == null">Select Tax</span>
+                                                    <span v-else>{{ product.tax_name }}</span>
+                                                </button>
+
+                                                <b-dropdown-item @click="showAddNewTax">Add Tax</b-dropdown-item>
+                                                <b-dropdown-item v-for="item in taxes" @click="taxSelected(item)" :key="item.id">{{ item.name }}</b-dropdown-item>
+                                            </b-dropdown>
+                                            <span class="has-text-danger" v-if="errors.tax_id">
+                                                {{ errors.tax_id[0] }}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -176,10 +185,12 @@
 <script>
     import axios from 'axios';
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+    import Tax from "../modals/Tax";
+    import ProductType from "../modals/ProductType";
 
     export default {
         name: "NewProduct",
-        components: {ProgressBarIndeterminate},
+        components: {ProductType, Tax, ProgressBarIndeterminate},
         data() {
             return {
                 isLoading: false,
@@ -190,13 +201,24 @@
                     mrp: '',
                     price: '',
                     hsn: '',
-                    tax_id: "",
-                    product_type_id: "",
+                    tax_id: null,
+                    tax_name: "",
+                    product_type_id: null,
                     images: null,
                 },
                 productImages: [],
                 productTypes: [],
+                productTypeItem: {
+                    id: null,
+                    name: '',
+                    description: '',
+                },
                 taxes: [],
+                taxItem: {
+                    id: null,
+                    name: '',
+                    tax: 0,
+                },
                 isSelectProductTypeLoading: true,
                 isSelectTaxLoading: true,
                 errors: []
@@ -246,6 +268,13 @@
                     this.isSelectTaxLoading = false;
                 });
             },
+            showAddNewTax() {
+                this.$refs.taxModal.toggleModal()
+            },
+            taxSelected(tax) {
+                this.product.tax_id = tax.id
+                this.product.tax_name = tax.name
+            },
             loadProductType() {
                 axios.get('/api/v1/product-types').then(response => {
                     this.productTypes = response.data.data;
@@ -254,6 +283,13 @@
                     this.handleError(error);
                     this.isSelectProductTypeLoading = false;
                 });
+            },
+            showAddNewProductType() {
+                this.$refs.productTypeModal.toggleModal()
+            },
+            productTypeSelected(productType) {
+                this.product.product_type_id = productType.id
+                this.product.product_type_name = productType.name
             },
             handleSubmitClick() {
                 if(this.product.id == null) {
