@@ -25,7 +25,7 @@ class IdTypeStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:200'],
-            'description' => [''],
+            'description' => ['nullable', 'string'],
         ];
     }
 }

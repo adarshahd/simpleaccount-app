@@ -6,6 +6,8 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class IdTypeCollection extends ResourceCollection
 {
+    public $collects = IdTypeResource::class;
+
     /**
      * Transform the resource collection into an array.
      *
