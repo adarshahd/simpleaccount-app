@@ -223,7 +223,7 @@ export default {
         onStockSelected() {
             this.stockSelected = true;
             this.currentStock = this.getProductStock(this.saleItem.product_stock_id)
-            this.saleItem.price = this.currentStock.price;
+            this.saleItem.price = this.currentStock.product.price;
             this.saleItem.quantity = 1;
             this.saleItem.stockAvailable = this.currentStock.stock;
             this.saleItem.product_stock = this.currentStock

@@ -103,7 +103,7 @@ $total = 0;
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->productStock->product->name }}</td>
-                        <td class="text-center">{{ $item->productStock->hsn }}</td>
+                        <td class="text-center">{{ $item->productStock->product->hsn }}</td>
                         <td class="text-center">{{ $item->productStock->batch }}</td>
                         <td class="text-center">{{ $item->productStock->expiry->format('M - Y') }}</td>
                         <td class="text-right">₹{{ number_format($item->productStock->mrp, 2, '.', ',') }}</td>

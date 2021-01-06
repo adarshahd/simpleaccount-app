@@ -37,7 +37,7 @@
                             </div>
                         </div>
 
-                        <div class="column is-5">
+                        <div class="column is-10">
                             <div class="columns">
                                 <div class="column">
                                     <div class="field">
@@ -51,42 +51,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="columns">
-                                <div class="column">
-                                    <div class="field">
-                                        <label class="label" for="price">Product Price</label>
-                                        <div class="control">
-                                            <input class="input" id="price" type="number" placeholder="Product Price"
-                                                   v-model="product.price">
-                                            <span class="has-text-danger" v-if="errors.price">
-                                                {{ errors.price[0] }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="columns">
-                                <div class="column">
-                                    <div class="field">
-                                        <label class="label" for="description">Product Description</label>
-                                        <div class="control">
-                                    <textarea class="textarea" id="description"
-                                              placeholder="Product description"
-                                              v-model="product.description"></textarea>
-                                            <span class="has-text-danger" v-if="errors.description">
-                                                {{ errors.description[0] }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="column is-5">
-                            <div class="columns">
                                 <div class="column">
                                     <div class="field">
                                         <label class="label" for="productType">Product Type</label>
@@ -112,6 +77,34 @@
                             <div class="columns">
                                 <div class="column">
                                     <div class="field">
+                                        <label class="label" for="mrp">MRP</label>
+                                        <div class="control">
+                                            <input class="input" id="mrp" type="number" placeholder="MRP"
+                                                   v-model="product.mrp">
+                                            <span class="has-text-danger" v-if="errors.mrp">
+                                                {{ errors.mrp[0] }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label" for="price">Retail Price</label>
+                                        <div class="control">
+                                            <input class="input" id="price" type="number" placeholder="Retail Price"
+                                                   v-model="product.price">
+                                            <span class="has-text-danger" v-if="errors.price">
+                                                {{ errors.price[0] }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="columns">
+                                <div class="column">
+                                    <div class="field">
                                         <label class="label" for="productTax">Tax</label>
                                         <div class="control">
                                             <div class="select is-fullwidth"
@@ -129,8 +122,34 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="column">
+                                    <div class="field">
+                                        <label class="label" for="hsn">HSN</label>
+                                        <div class="control">
+                                            <input class="input" id="hsn" type="text" placeholder="HSN"
+                                                   v-model="product.hsn">
+                                            <span class="has-text-danger" v-if="errors.hsn">
+                                                {{ errors.hsn[0] }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-5 is-offset-2-desktop">
+                            <div class="field">
+                                <label class="label" for="description">Product Description</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="description"
+                                              placeholder="Product description"
+                                              v-model="product.description"></textarea>
+                                    <span class="has-text-danger" v-if="errors.description">
+                                                {{ errors.description[0] }}
+                                            </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr/>
@@ -168,6 +187,9 @@
                     id: null,
                     name: '',
                     description: '',
+                    mrp: '',
+                    price: '',
+                    hsn: '',
                     tax_id: "",
                     product_type_id: "",
                     images: null,
@@ -202,7 +224,10 @@
                     let productResponse = response.data.data
                     this.product.name = productResponse.name
                     this.product.description = productResponse.description == null ? '' : productResponse.description
+                    this.product.mrp = productResponse.mrp
+                    this.product.price = productResponse.price
                     this.product.tax_id = productResponse.tax.id
+                    this.product.hsn = productResponse.hsn
                     this.product.product_type_id = productResponse.product_type.id
                     this.productImages = productResponse.images
 
@@ -242,8 +267,10 @@
                 let formData = new FormData()
                 formData.append('name', this.product.name)
                 formData.append('description', this.product.description)
+                formData.append('mrp', this.product.mrp)
                 formData.append('price', this.product.price)
                 formData.append('tax_id', this.product.tax_id)
+                formData.append('hsn', this.product.hsn)
                 formData.append('product_type_id', this.product.product_type_id)
                 if(this.product.images != null) {
                     formData.append('images', this.product.images)
@@ -262,8 +289,10 @@
                 let formData = new FormData()
                 formData.append('name', this.product.name)
                 formData.append('description', this.product.description)
+                formData.append('mrp', this.product.mrp)
                 formData.append('price', this.product.price)
                 formData.append('tax_id', this.product.tax_id)
+                formData.append('hsn', this.product.hsn)
                 formData.append('product_type_id', this.product.product_type_id)
                 if(this.product.images != null) {
                     formData.append('images', this.product.images)

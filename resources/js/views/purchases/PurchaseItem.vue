@@ -126,27 +126,6 @@
                             </span>
                         </div>
                     </div>
-                    <div class="column is-2">
-                        <div class="field is-horizontal">
-                            <div class="field-label is-normal">
-                                <label class="label">HSN</label>
-                            </div>
-                            <div class="field-body">
-                                <div class="field">
-                                    <p class="control">
-                                        <input
-                                            class="input"
-                                            placeholder="HSN"
-                                            type="text"
-                                            v-model="purchaseItem.hsn">
-                                    </p>
-                                </div>
-                            </div>
-                            <span class="has-text-danger" v-if="errors.hsn">
-                                {{ errors.hsn }}
-                            </span>
-                        </div>
-                    </div>
                     <div class="column is-3">
                         <h6 class="title is-6 has-text-right">
                             Item Total: ₹{{ getItemTotal }}
@@ -240,6 +219,7 @@
             productSelected(val) {
                 this.currentProduct = this.getProduct(val)
                 this.purchaseItem.tax_percent = this.currentProduct.tax.tax
+                this.purchaseItem.mrp = this.currentProduct.mrp
             },
             getProduct(id) {
                 for(let i=0; i < this.products.length; ++i) {
@@ -261,7 +241,6 @@
                 this.purchaseItem.tax = 0
                 this.purchaseItem.batch = ''
                 this.purchaseItem.expiry = null
-                this.purchaseItem.hsn = ''
             },
             buildPurchaseItem() {
                 this.fetchProduct()

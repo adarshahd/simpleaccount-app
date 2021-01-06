@@ -25,8 +25,8 @@ class ManufacturerStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:300'],
-            'short_name' => ['string', 'max:100'],
-            'website' => ['string', 'max:400'],
+            'short_name' => ['nullable', 'string', 'max:100'],
+            'website' => ['nullable', 'string', 'max:400'],
         ];
     }
 }

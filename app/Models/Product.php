@@ -12,7 +12,10 @@ use Spatie\MediaLibrary\InteractsWithMedia;
  * @property int $id
  * @property string $name
  * @property string $description
+ * @property float $mrp
+ * @property float $price
  * @property int $tax_id
+ * @property float $hsn
  * @property int $product_type_id
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $created_at
@@ -30,7 +33,9 @@ class Product extends Model implements HasMedia
     protected $fillable = [
         'name',
         'description',
+        'mrp',
         'price',
+        'hsn',
         'tax_id',
         'product_type_id',
     ];
@@ -44,7 +49,8 @@ class Product extends Model implements HasMedia
         'id' => 'integer',
         'tax_id' => 'integer',
         'product_type_id' => 'integer',
-        'price' => 'float'
+        'price' => 'float',
+        'mrp' => 'float'
     ];
 
 

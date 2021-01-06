@@ -27,7 +27,7 @@
                             :date-formatter=dateFormat
                             placeholder="Sale date"
                             icon="calendar"
-                            v-model="saleDate"
+                            v-model="sale.billDateISO"
                         />
                     </div>
                 </div>
@@ -131,13 +131,13 @@ export default {
                 id: null,
                 customer_id: null,
                 bill_date: null,
+                billDateISO: dayjs().toDate(),
                 discount: 0,
                 items: []
             },
             saleEdit: null,
             customers: [],
             itemId: 0,
-            saleDate: dayjs().toDate(),
             draggingRow: null,
             droppedOnRow: null,
         }
@@ -178,7 +178,7 @@ export default {
             axios.get('/api/v1/sales/' + this.sale.id).then(response => {
                 this.saleEdit = response.data.data
                 this.sale.customer_id = this.saleEdit.customer.id
-                this.saleDate = dayjs(this.saleEdit.bill_date).toDate()
+                this.sale.billDateISO = dayjs(this.saleEdit.bill_date).toDate()
                 this.getCustomer()
                 this.addSaleItems()
                 this.isLoading = false
@@ -307,7 +307,7 @@ export default {
                 this.showToast('Please select a customer first', 'is-danger')
                 return
             }
-            if (this.sale.bill_date == null) {
+            if (this.sale.billDateISO == null) {
                 this.showToast('Please chose sale date', 'is-warning')
                 return
             }
@@ -339,7 +339,7 @@ export default {
                 }
             }
 
-            this.sale.bill_date = dayjs(this.saleDate).format('YYYY-MM-DD')
+            this.sale.bill_date = dayjs(this.sale.billDateISO).format('YYYY-MM-DD')
             this.isSaleCompleting = true
             axios.post('/api/v1/sales', this.sale).then(response => {
                 this.isSaleCompleting = false
@@ -351,7 +351,7 @@ export default {
             })
         },
         updateSale() {
-            this.sale.bill_date = dayjs(this.saleDate).format('YYYY-MM-DD')
+            this.sale.bill_date = dayjs(this.sale.billDateISO).format('YYYY-MM-DD')
             this.isSaleCompleting = true
             axios.patch('/api/v1/sales/' + this.sale.id, this.sale).then(response => {
                 this.isSaleCompleting = false

@@ -116,7 +116,6 @@ class PurchaseController extends Controller
                 $purchaseItemCollection = collect($purchaseItems);
                 $purchaseItem = $purchaseItemCollection
                     ->where('batch', $currentStock->batch)
-                    ->where('hsn', $currentStock->hsn)
                     ->where('expiry', $currentStock->expiry->format('Y-m-d'))
                     ->where('price', ($currentStock->price + $currentStock->tax))
                     ->where('mrp', $currentStock->mrp)
@@ -210,6 +209,7 @@ class PurchaseController extends Controller
             $purchaseItem['price'] = $taxExcludedPrice;
             $purchaseItem['tax_percent'] = $taxPercent;
             $purchaseItem['tax'] = $purchaseItemPrice * ($taxPercent / 100);
+            $purchaseItem['hsn'] = $product->hsn;
             $tax = $tax + $purchaseItem['tax'];
             $subTotal = $subTotal + $purchaseItemPrice;
 
@@ -231,7 +231,6 @@ class PurchaseController extends Controller
 
     private function updateStock($product, $purchaseItem) {
         $productStock = $product->productStocks()
-            ->where('hsn', $purchaseItem['hsn'] == null ? '' : $purchaseItem['hsn'])
             ->where('batch', $purchaseItem['batch'])
             ->whereDate('expiry', Carbon::parse($purchaseItem['expiry']))
             ->where('price', round($purchaseItem['price'], 2))
@@ -257,7 +256,6 @@ class PurchaseController extends Controller
                 'tax_percent' => $purchaseItem['tax_percent'],
                 'tax' => $purchaseItem['tax'] / $purchaseItem['quantity'], // Tax is recorded for <quantity> items
                 'batch' => $purchaseItem['batch'],
-                'hsn' => $purchaseItem['hsn'] == null ? '' : $purchaseItem['hsn'],
                 'expiry' => $purchaseItem['expiry'],
                 'product_id' => $purchaseItem['product_id'],
                 'manufacturer_id' => $purchaseItem['manufacturer_id'],

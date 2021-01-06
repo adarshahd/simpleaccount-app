@@ -48,7 +48,7 @@
                     {{ props.row.quantity }}
                 </b-table-column>
                 <b-table-column field="hsn" label="HSN" v-slot="props">
-                    {{ props.row.product_stock.hsn }}
+                    {{ props.row.product_stock.product.hsn }}
                 </b-table-column>
                 <b-table-column field="batch" label="Batch" v-slot="props">
                     {{ props.row.product_stock.batch }}

@@ -19,7 +19,9 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name', 300);
             $table->mediumText('description')->nullable();
-            $table->float('price')->nullable();
+            $table->float('mrp')->nullable();
+            $table->float('price', 10, 5)->nullable();
+            $table->string('hsn')->default("");
             $table->foreignId('tax_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_type_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();

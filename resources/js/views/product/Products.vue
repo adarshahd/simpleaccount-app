@@ -35,11 +35,17 @@
                                 <b-table-column field="type" label="Type" v-slot="props">
                                     {{ props.row.product_type.name }}
                                 </b-table-column>
-                                <b-table-column field="price" label="Price" v-slot="props">
-                                    ₹{{ props.row.price == null ? '0' : props.row.price.toFixed(2) }}
+                                <b-table-column field="mrp" label="MRP" v-slot="props">
+                                    ₹{{ props.row.mrp == null ? '-' : props.row.mrp.toFixed(2) }}
+                                </b-table-column>
+                                <b-table-column field="price" label="Retail Price" v-slot="props">
+                                    ₹{{ props.row.price == null ? '-' : props.row.price.toFixed(2) }}
                                 </b-table-column>
                                 <b-table-column field="tax" label="Tax" v-slot="props">
                                     {{ props.row.tax.tax }}%
+                                </b-table-column>
+                                <b-table-column field="hsn" label="HSN" v-slot="props">
+                                    {{ props.row.hsn }}
                                 </b-table-column>
                                 <b-table-column field="stock" label="Stock" v-slot="props">
                                     {{ props.row.product_stock }}
@@ -96,7 +102,10 @@
                     id: null,
                     name: '',
                     description: '',
+                    mrp: '',
+                    price: '',
                     tax_id: 0,
+                    hsn: '',
                     product_type_id: 0
                 },
                 totalProductPages: 1,
