@@ -17,13 +17,13 @@ class CreateCreditItemsTable extends Migration
 
         Schema::create('credit_items', function (Blueprint $table) {
             $table->id();
-            $table->float('price');
+            $table->float('price', 10, 5);
             $table->unsignedInteger('quantity');
             $table->float('discount')->default(0.0);
             $table->float('tax_percent');
-            $table->float('tax');
-            $table->float('sub_total');
-            $table->float('total');
+            $table->float('tax', 10, 5);
+            $table->float('sub_total', 10, 5);
+            $table->float('total', 10, 5);
             $table->string('sale_id')->nullable();
             $table->foreignId('credit_id')->constrained()->cascadeOnDelete();
             $table->foreignId('product_stock_id')->constrained()->cascadeOnDelete();

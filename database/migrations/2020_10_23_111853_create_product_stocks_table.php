@@ -21,10 +21,9 @@ class CreateProductStocksTable extends Migration
             $table->bigInteger('stock');
             $table->bigInteger('total_stock');
             $table->float('mrp');
-            $table->float('price');
+            $table->float('price', 10, 5);
             $table->float('tax_percent');
-            $table->float('tax');
-            $table->string('hsn')->default("");
+            $table->float('tax', 10, 5);
             $table->string('batch');
             $table->date('expiry')->nullable();
             $table->foreignId('product_id')->constrained()->cascadeOnDelete();

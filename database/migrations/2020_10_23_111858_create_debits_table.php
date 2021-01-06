@@ -20,10 +20,10 @@ class CreateDebitsTable extends Migration
             $table->bigInteger('bill_id');
             $table->string('bill_number', 100);
             $table->date('bill_date');
-            $table->float('sub_total');
+            $table->float('sub_total', 10, 5);
             $table->float('discount')->default(0.0);
-            $table->float('tax');
-            $table->float('total');
+            $table->float('tax', 10, 5);
+            $table->float('total', 10, 5);
             $table->foreignId('vendor_id')->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
