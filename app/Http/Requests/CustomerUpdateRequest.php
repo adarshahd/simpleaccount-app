@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Controllers\Api\AppSettingController;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CustomerUpdateRequest extends FormRequest
@@ -23,20 +24,22 @@ class CustomerUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $shouldAllowSimpleCustomerData = AppSettingController::shouldAllowSimpleCustomerVendorData();
+
         return [
             'name' => ['required', 'string', 'max:300'],
-            'identification' => ['required', 'string', 'max:200'],
-            'address_line_1' => ['required'],
+            'identification' => $shouldAllowSimpleCustomerData ? ['nullable', 'string', 'max:200'] : ['required', 'string', 'max:200'],
+            'address_line_1' => $shouldAllowSimpleCustomerData ? ['nullable', 'string'] : ['required', 'string'],
             'address_line_2' => ['nullable', 'string'],
-            'city' => ['required', 'string', 'max:300'],
-            'state' => ['required', 'string', 'max:200'],
-            'country' => ['required', 'string', 'max:300'],
-            'pin' => ['required', 'string', 'max:50'],
+            'city' => $shouldAllowSimpleCustomerData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:300'],
+            'state' => $shouldAllowSimpleCustomerData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:300'],
+            'country' => $shouldAllowSimpleCustomerData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:300'],
+            'pin' => $shouldAllowSimpleCustomerData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:50'],
             'contact_name' => ['required', 'string', 'max:200'],
             'contact_email' => ['nullable', 'string', 'max:200'],
             'contact_phone' => ['required', 'string', 'max:50'],
             'website' => ['nullable', 'string', 'max:400'],
-            'id_type_id' => ['required', 'integer', 'exists:id_types,id'],
+            'id_type_id' => $shouldAllowSimpleCustomerData ? ['nullable', 'integer', 'exists:id_types,id'] : ['required', 'integer', 'exists:id_types,id'],
             'image' => ['nullable', 'image']
         ];
     }

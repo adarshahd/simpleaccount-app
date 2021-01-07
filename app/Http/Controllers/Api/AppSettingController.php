@@ -43,6 +43,9 @@ class AppSettingController extends Controller
 
     private static $regionData = 'region';
 
+    // Support little customer data
+    private static $allowSimpleCustomerVendorData = 'allow_simple_customer_vendor_data';
+
     /**
      * @param \Illuminate\Http\Request $request
      * @return \App\Http\Resources\AppSettingCollection
@@ -229,6 +232,11 @@ class AppSettingController extends Controller
     public static function getVoucherBillFooter() {
         $creditBillFooterSetting = AppSetting::query()->where('key', self::$voucherBillFooter)->first();
         return $creditBillFooterSetting ? $creditBillFooterSetting->value : '';
+    }
+
+    public static function shouldAllowSimpleCustomerVendorData() {
+        $setting = AppSetting::query()->where('key', self::$allowSimpleCustomerVendorData)->first();
+        return $setting ? $setting->value : false;
     }
 
     public function getApplicationSettings(Request $request) {

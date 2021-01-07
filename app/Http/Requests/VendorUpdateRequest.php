@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Controllers\Api\AppSettingController;
 use Illuminate\Foundation\Http\FormRequest;
 
 class VendorUpdateRequest extends FormRequest
@@ -23,20 +24,22 @@ class VendorUpdateRequest extends FormRequest
      */
     public function rules()
     {
+        $shouldAllowSimpleVendorData = AppSettingController::shouldAllowSimpleCustomerVendorData();
+
         return [
             'name' => ['required', 'string', 'max:300'],
-            'identification' => ['required', 'string', 'max:200'],
-            'address_line_1' => ['required'],
+            'identification' => $shouldAllowSimpleVendorData ? ['nullable', 'string', 'max:200'] : ['required', 'string', 'max:200'],
+            'address_line_1' => $shouldAllowSimpleVendorData ? ['nullable', 'string'] : ['required', 'string'],
             'address_line_2' => ['nullable', 'string'],
-            'city' => ['required', 'string', 'max:300'],
-            'state' => ['required', 'string', 'max:200'],
-            'country' => ['required', 'string', 'max:300'],
-            'pin' => ['required', 'string', 'max:50'],
+            'city' => $shouldAllowSimpleVendorData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:300'],
+            'state' => $shouldAllowSimpleVendorData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:300'],
+            'country' => $shouldAllowSimpleVendorData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:300'],
+            'pin' => $shouldAllowSimpleVendorData ? ['nullable', 'string', 'max:300'] : ['required', 'string', 'max:50'],
             'contact_name' => ['required', 'string', 'max:200'],
             'contact_email' => ['nullable', 'string', 'max:200'],
             'contact_phone' => ['required', 'string', 'max:50'],
             'website' => ['nullable', 'string', 'max:400'],
-            'id_type_id' => ['required', 'integer', 'exists:id_types,id'],
+            'id_type_id' => $shouldAllowSimpleVendorData ? ['nullable', 'integer', 'exists:id_types,id'] : ['required', 'integer', 'exists:id_types,id'],
             'image' => ['nullable', 'image']
         ];
     }

@@ -50,12 +50,15 @@ $total = 0;
             <address>
                 <h5><strong>{{ $productOwnerData->name }}</strong></h5>
                 {{ $productOwnerData->address_line_1 }}<br>
-                {{ $productOwnerData->city }}, {{ $productOwnerData->pin }}<br>
+                {{ $productOwnerData->city }} {{ $productOwnerData->pin }}<br>
                 Phone : {{ $productOwnerData->contact_phone }}<br>
                 @if($productOwnerData->contact_email != null || $productOwnerData->contact_email !== '')
                 Email : {{ $productOwnerData->contact_email }}<br>
                 @endif
-                <h6><strong>{{ App\Models\IdType::query()->find($productOwnerData->id_type_id)->name }}# </strong>{{ $productOwnerData->identification }}</h6>
+                <?php $idType = App\Models\IdType::query()->find($productOwnerData->id_type_id) ?>
+                @if($idType != null)
+                <h6><strong>{{ $idType->name }}# </strong>{{ $productOwnerData->identification }}</h6>
+                @endif
             </address>
         </div>
 
@@ -65,12 +68,14 @@ $total = 0;
                 <address>
                     <h5><strong>{{ $sale->customer->name }}</strong></h5>
                     {{ $sale->customer->address_line_1 }}<br>
-                    {{ $sale->customer->city }}, {{ $sale->customer->pin }}<br>
+                    {{ $sale->customer->city }} {{ $sale->customer->pin }}<br>
                     Phone : {{ $sale->customer->contact_phone }}<br>
                     @if($sale->customer->contact_email != null || $sale->customer->contact_email != '')
                         Email : {{ $sale->customer->contact_email }}<br>
                     @endif
-                    <h6><strong>{{ $sale->customer->idType->name }}# </strong>{{ $sale->customer->identification }}</h6>
+                    @if($idType = $sale->customer->idType != null)
+                    <h6><strong>{{ $idType->name }}# </strong>{{ $sale->customer->identification }}</h6>
+                    @endif
                 </address>
             </div>
         </div>
@@ -96,10 +101,6 @@ $total = 0;
                 </thead>
                 <tbody>
                 @foreach($items as $item)
-                    <?php
-                        $tax_included_price = $item->price;
-                        $tax_excluded_price = ($tax_included_price / (( $item->tax / 100 ) + 1 ));
-                    ?>
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->productStock->product->name }}</td>

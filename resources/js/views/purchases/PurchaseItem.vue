@@ -220,6 +220,7 @@
                 this.currentProduct = this.getProduct(val)
                 this.purchaseItem.tax_percent = this.currentProduct.tax.tax
                 this.purchaseItem.mrp = this.currentProduct.mrp
+                this.purchaseItem.price = this.currentProduct.price
             },
             getProduct(id) {
                 for(let i=0; i < this.products.length; ++i) {

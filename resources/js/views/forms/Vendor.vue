@@ -1,6 +1,7 @@
 <template>
     <progress-bar-indeterminate v-if="isLoading"></progress-bar-indeterminate>
     <div v-else class="columns is-centered main-content">
+        <id-type-modal ref="idTypeModal" :idType="idTypeItem" v-on:loadIdType="getIdTypes"></id-type-modal>
         <div class="column is-10-desktop mt-2">
             <div class="box has-background-white">
                 <div class="columns is-centered">
@@ -42,15 +43,22 @@
                             <div class="column is-4">
                                 <div class="field">
                                     <div class="control">
-                                        <div class="select is-fullwidth" :class="{'is-loading' : isIdTypeLoading}">
-                                            <select v-model="vendor.id_type_id">
-                                                <option disabled value="">Select ID</option>
-                                                <option v-for="idType in idTypes" :key="idType.id" v-bind:value="idType.id">{{ idType.name }}</option>
-                                            </select>
-                                            <span class="has-text-danger" v-if="errors.id_type_id">
-                                                {{ errors.id_type_id[0] }}
-                                            </span>
-                                        </div>
+                                        <b-dropdown
+                                            id="idType"
+                                            class="select"
+                                            animation="slide"
+                                            expanded>
+                                            <button class="button has-background-white-ter is-fullwidth has-text-left" slot="trigger" slot-scope="{ active }">
+                                                <span v-if="vendor.id_type_id  === ''">Select ID Type</span>
+                                                <span v-else>{{ vendor.id_type_name }}</span>
+                                            </button>
+
+                                            <b-dropdown-item @click="showAddNewIdType">Add ID Type</b-dropdown-item>
+                                            <b-dropdown-item v-for="item in idTypes" @click="idTypeSelected(item)" :key="item.id">{{ item.name }}</b-dropdown-item>
+                                        </b-dropdown>
+                                        <span class="has-text-danger" v-if="errors.id_type_id">
+                                            {{ errors.id_type_id[0] }}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
@@ -58,7 +66,7 @@
                                 <div class="field">
                                     <div class="control">
                                         <input class="input" v-model="vendor.identification"
-                                               placeholder="Identification *" autofocus="">
+                                               placeholder="Identification" autofocus="">
                                         <span class="has-text-danger" v-if="errors.identification">
                                             {{ errors.identification[0] }}
                                         </span>
@@ -96,7 +104,7 @@
                         <div class="field">
                             <div class="control">
                                 <input class="input" type="text" v-model="vendor.address_line_1"
-                                       placeholder="Address line 1 *" autofocus="">
+                                       placeholder="Address line 1" autofocus="">
                                 <span class="has-text-danger" v-if="errors.address_line_1">
                                     {{ errors.address_line_1[0] }}
                                 </span>
@@ -116,7 +124,7 @@
                                 <div class="field">
                                     <div class="control">
                                         <input class="input" type="text" v-model="vendor.city"
-                                               placeholder="City *" autofocus="">
+                                               placeholder="City" autofocus="">
                                         <span class="has-text-danger" v-if="errors.city">
                                             {{ errors.city[0] }}
                                         </span>
@@ -127,7 +135,7 @@
                                 <div class="field">
                                     <div class="control">
                                         <input class="input" type="text" v-model="vendor.state"
-                                               placeholder="State *" autofocus="">
+                                               placeholder="State" autofocus="">
                                         <span class="has-text-danger" v-if="errors.state">
                                             {{ errors.state[0] }}
                                         </span>
@@ -140,7 +148,7 @@
                                 <div class="field">
                                     <div class="control">
                                         <input class="input" type="text" v-model="vendor.country"
-                                               placeholder="Country *" autofocus="">
+                                               placeholder="Country" autofocus="">
                                         <span class="has-text-danger" v-if="errors.country">
                                             {{ errors.country[0] }}
                                         </span>
@@ -151,7 +159,7 @@
                                 <div class="field">
                                     <div class="control">
                                         <input class="input" type="text" v-model="vendor.pin"
-                                               placeholder="Pin *" autofocus="">
+                                               placeholder="Pin" autofocus="">
                                         <span class="has-text-danger" v-if="errors.pin">
                                             {{ errors.pin[0] }}
                                         </span>
@@ -204,10 +212,11 @@
 <script>
     import axios from "axios";
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+    import IdTypeModal from "../modals/IdType";
 
     export default {
         name: "NewVendor",
-        components: {ProgressBarIndeterminate},
+        components: {IdTypeModal, ProgressBarIndeterminate},
         data () {
             return {
                 isLoading: false,
@@ -226,11 +235,17 @@
                     contact_email: '',
                     contact_phone: '',
                     website: '',
-                    id_type_id: null,
+                    id_type_id: '',
+                    id_type_name: null,
                     image: null,
                 },
                 vendorImage: null,
                 idTypes: [],
+                idTypeItem: {
+                    id: null,
+                    name: '',
+                    description: '',
+                },
                 errors: []
             }
         },
@@ -242,14 +257,6 @@
             },
         },
         methods: {
-            getIdTypes () {
-                axios.get('/api/v1/id-types').then(response => {
-                    this.idTypes = response.data.data;
-                    this.isIdTypeLoading = false;
-                }).catch(error => {
-                    this.isIdTypeLoading = false;
-                });
-            },
             loadVendor() {
                 this.isLoading = true
                 axios.get('/api/v1/vendors/' + this.vendor.id).then(response => {
@@ -265,6 +272,21 @@
                 }).catch(error => {
                     this.handleError(error)
                 })
+            },
+            getIdTypes () {
+                axios.get('/api/v1/id-types').then(response => {
+                    this.idTypes = response.data.data;
+                    this.isIdTypeLoading = false;
+                }).catch(error => {
+                    this.isIdTypeLoading = false;
+                });
+            },
+            showAddNewIdType() {
+                this.$refs.idTypeModal.toggleModal()
+            },
+            idTypeSelected(idType) {
+                this.vendor.id_type_id = idType.id
+                this.vendor.id_type_name = idType.name
             },
             handleSubmitClick() {
                 if(this.vendor.id == null) {

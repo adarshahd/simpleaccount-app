@@ -38,7 +38,7 @@
                     <address>
                         <h4><strong>{{ $productOwnerData->name }}</strong></h4>
                         {{ $productOwnerData->address_line_1 }}<br/>
-                        {{ $productOwnerData->city }}, {{ $productOwnerData->pin }}
+                        {{ $productOwnerData->city }} {{ $productOwnerData->pin }}
                     </address>
                 </div>
             </div>
@@ -54,7 +54,7 @@
             <address>
                 <h5>{{ $customer->name }}</h5>
                 {{ $customer->address_line_1 }}<br/>
-                {{ $customer->city }}, {{ $customer->pin }}
+                {{ $customer->city }} {{ $customer->pin }}
             </address>
         </div>
         <div class="col col-4">

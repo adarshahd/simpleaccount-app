@@ -50,12 +50,15 @@ $total = 0;
             <address>
                 <h5><strong>{{ $productOwnerData->name }}</strong></h5>
                 {{ $productOwnerData->address_line_1 }}<br>
-                {{ $productOwnerData->city }}, {{ $productOwnerData->pin }}<br>
+                {{ $productOwnerData->city }} {{ $productOwnerData->pin }}<br>
                 Phone : {{ $productOwnerData->contact_phone }}<br>
                 @if($productOwnerData->contact_email != null || $productOwnerData->contact_email !== '')
                 Email : {{ $productOwnerData->contact_email }}<br>
                 @endif
-                <h6><strong>{{ App\Models\IdType::query()->find($productOwnerData->id_type_id)->name }}# </strong>{{ $productOwnerData->identification }}</h6>
+                <?php $idType = App\Models\IdType::query()->find($productOwnerData->id_type_id) ?>
+                @if($idType != null)
+                <h6><strong>{{ $idType->name }}# </strong>{{ $productOwnerData->identification }}</h6>
+                @endif
             </address>
         </div>
 

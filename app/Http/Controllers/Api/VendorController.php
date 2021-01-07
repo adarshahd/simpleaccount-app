@@ -103,7 +103,7 @@ class VendorController extends Controller
 
         return response()->json([
             'data' => [
-                'id_type' => $vendor->idType->name,
+                'id_type' => $vendor->idType == null ? '' : $vendor->idType->name,
                 'vendor' => new VendorResource($vendor),
                 'total_purchases' => $totalPurchases,
                 'recent_purchases' => $recentPurchaseDetails,

@@ -18,19 +18,19 @@ class CreateCustomersTable extends Migration
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
             $table->string('name', 300);
-            $table->string('identification', 200);
-            $table->mediumText('address_line_1');
+            $table->string('identification', 200)->nullable();
+            $table->mediumText('address_line_1')->nullable();
             $table->mediumText('address_line_2')->nullable();
-            $table->string('city', 300);
-            $table->string('state', 200);
-            $table->string('country', 300);
-            $table->string('pin', 50);
+            $table->string('city', 300)->nullable();
+            $table->string('state', 200)->nullable();
+            $table->string('country', 300)->nullable();
+            $table->string('pin', 50)->nullable();
             $table->string('contact_name', 200);
             $table->string('contact_email', 200)->nullable();
             $table->string('contact_phone', 50);
             $table->string('website', 400)->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
-            $table->foreignId('id_type_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('id_type_id')->nullable()->constrained()->cascadeOnDelete();
             $table->softDeletes();
             $table->timestamps();
         });
