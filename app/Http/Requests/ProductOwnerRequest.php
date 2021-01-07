@@ -26,8 +26,8 @@ class ProductOwnerRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:300'],
             'identification' => ['required', 'string', 'max:200'],
-            'address_line_1' => ['required'],
-            'address_line_2' => [''],
+            'address_line_1' => ['required', 'string'],
+            'address_line_2' => ['nullable', 'string'],
             'city' => ['required', 'string', 'max:300'],
             'state' => ['required', 'string', 'max:200'],
             'country' => ['required', 'string', 'max:300'],

@@ -65,6 +65,9 @@ Route::group(['prefix' => 'v1'], function() {
          * */
 
         Route::post('/region', [\App\Http\Controllers\Api\AppSettingController::class, 'updateRegionData']);
+        Route::get('/product-owner', [\App\Http\Controllers\Api\AppSettingController::class, 'getProductData']);
+        Route::post('/product-owner', [\App\Http\Controllers\Api\AppSettingController::class, 'updateProductData']);
+
         Route::get('/dashboard', [\App\Http\Controllers\Api\DashboardController::class, 'index']);
         Route::get('/customers/{customer}/details', [\App\Http\Controllers\Api\CustomerController::class, 'details']);
         Route::get('/vendors/{vendor}/details', [\App\Http\Controllers\Api\VendorController::class, 'details']);

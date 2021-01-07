@@ -134,7 +134,7 @@ class AppSettingController extends Controller
         if(!$productOwnerSetting) {
             return false;
         }
-        $productOwnerData = json_decode($productOwnerSetting);
+        $productOwnerData = json_decode($productOwnerSetting->value);
         if(!$productOwnerData) {
             return false;
         }
@@ -291,7 +291,7 @@ class AppSettingController extends Controller
         ]);
     }
 
-    public function updateProductOwnerData(ProductOwnerRequest $request) {
+    public function updateProductData(ProductOwnerRequest $request) {
         $productOwnerData = $request->validated();
         if($request->hasFile('logo')) {
             $request->file('logo')->storeAs('public/logos', 'logo.png');
@@ -314,6 +314,13 @@ class AppSettingController extends Controller
             'data' => [
                 'status' => true
             ]
+        ]);
+    }
+
+    public function getProductData(Request $request) {
+        $productData = self::getProductOwnerData();
+        return response()->json([
+            'data' => $productData
         ]);
     }
 

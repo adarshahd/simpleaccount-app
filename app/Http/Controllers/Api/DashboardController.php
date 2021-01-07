@@ -137,7 +137,11 @@ class DashboardController extends Controller
         $dashboardData->products = $productCount;
         $dashboardData->stock = $stockCount;
 
-        //$salesDataCollection = collect($salesData);
+        if(!AppSettingController::isProductOwnerUpdated()) {
+            $dashboardData->productOwnerUpdateRequired = true;
+        } else {
+            $dashboardData->productOwnerUpdateRequired = false;
+        }
 
         $dashboardData->salesChartData = [
             'labels' => $labels,

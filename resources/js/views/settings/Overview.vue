@@ -9,7 +9,7 @@
                             <h4 class="subtitle is-4">Company Information</h4>
                         </div>
                         <div class="column is-2">
-                            <button class="button is-primary is-small has-icons-right">
+                            <button class="button is-primary is-small has-icons-right" @click="showProductInformationSetting">
                                 <span class="mdi mdi-pencil"></span>
                             </button>
                         </div>
@@ -158,6 +158,11 @@ export default {
                 this.isSettingsLoading = false
             }).catch(error => {
                 this.handleError(error)
+            })
+        },
+        showProductInformationSetting() {
+            this.$router.push({
+                name: 'business',
             })
         },
 

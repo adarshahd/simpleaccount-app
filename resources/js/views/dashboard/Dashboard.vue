@@ -109,6 +109,20 @@
                     this.dashboardData = response.data.data
                     this.isLoading = false
                     setTimeout(this.showChart, 500);
+                    if(this.dashboardData.productOwnerUpdateRequired) {
+                        this.$buefy.snackbar.open({
+                            message: 'Please update your product information before using application',
+                            type: 'is-info',
+                            position: 'is-top',
+                            actionText: 'Update',
+                            indefinite: true,
+                            onAction: () => {
+                                this.$router.push({
+                                    name: 'business'
+                                })
+                            }
+                        });
+                    }
                 }).catch(error => {
                     this.handleError(error)
                 })
