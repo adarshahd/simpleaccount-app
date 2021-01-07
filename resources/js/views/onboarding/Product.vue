@@ -1,5 +1,6 @@
 <template>
     <div>
+        <id-type-modal ref="idTypeModal" :idType="idTypeItem" v-on:loadIdType="getIdTypes"></id-type-modal>
         <h1 class="has-text-centered title is-size-1 has-text-primary">SimpleAccount</h1>
         <h6 class="has-text-centered is-size-4">Please provide your company information</h6>
         <br/>
@@ -42,15 +43,22 @@
                     <div class="column is-4">
                         <div class="field">
                             <div class="control">
-                                <div class="select is-fullwidth" :class="{'is-loading' : isIdTypeLoading}">
-                                    <select v-model="productOwnerData.idTypeId">
-                                        <option disabled value="">Select ID</option>
-                                        <option v-for="idType in idTypes" :key="idType.id" v-bind:value="idType.id">{{ idType.name }}</option>
-                                    </select>
-                                    <span class="has-text-danger" v-if="errors.id_type_id">
-                                        {{ errors.id_type_id[0] }}
-                                    </span>
-                                </div>
+                                <b-dropdown
+                                    id="idType"
+                                    class="select"
+                                    animation="slide"
+                                    expanded>
+                                    <button class="button has-background-white-ter is-fullwidth has-text-left" slot="trigger" slot-scope="{ active }">
+                                        <span v-if="productOwnerData.idTypeId === ''">Select ID Type</span>
+                                        <span v-else>{{ productOwnerData.id_type_name }}</span>
+                                    </button>
+
+                                    <b-dropdown-item @click="showAddNewIdType">Add ID Type</b-dropdown-item>
+                                    <b-dropdown-item v-for="item in idTypes" @click="idTypeSelected(item)" :key="item.id">{{ item.name }}</b-dropdown-item>
+                                </b-dropdown>
+                                <span class="has-text-danger" v-if="errors.id_type_id">
+                                    {{ errors.id_type_id[0] }}
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -191,12 +199,19 @@
 
 <script>
     import axios from 'axios'
+    import IdTypeModal from "../modals/IdType";
 
     export default {
         name: "Product",
+        components: {IdTypeModal},
         data() {
             return {
                 idTypes : [],
+                idTypeItem: {
+                    id: null,
+                    name: '',
+                    description: '',
+                },
                 logoFile : null,
                 isIdTypeLoading : true,
             }
@@ -216,15 +231,25 @@
                 const file = event.target.files[0]
                 this.logoFile = URL.createObjectURL(file)
                 this.productOwnerData.logo = file
-            }
+            },
+            getIdTypes() {
+                axios.get('/api/v1/id-types').then(response => {
+                    this.idTypes = response.data.data;
+                    this.isIdTypeLoading = false;
+                }).catch(response => {
+                    this.isIdTypeLoading = false;
+                });
+            },
+            showAddNewIdType() {
+                this.$refs.idTypeModal.toggleModal()
+            },
+            idTypeSelected(idType) {
+                this.productOwnerData.idTypeId = idType.id
+                this.productOwnerData.id_type_name = idType.name
+            },
         },
         mounted() {
-            axios.get('/api/v1/id-types').then(response => {
-                this.idTypes = response.data.data;
-                this.isIdTypeLoading = false;
-            }).catch(response => {
-                this.isIdTypeLoading = false;
-            });
+            this.getIdTypes()
         }
     }
 </script>
