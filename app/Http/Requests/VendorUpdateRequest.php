@@ -40,6 +40,11 @@ class VendorUpdateRequest extends FormRequest
             'contact_phone' => ['required', 'string', 'max:50'],
             'website' => ['nullable', 'string', 'max:400'],
             'id_type_id' => $shouldAllowSimpleVendorData ? ['nullable', 'integer', 'exists:id_types,id'] : ['required', 'integer', 'exists:id_types,id'],
+            'bank_name' => ['nullable', 'string'],
+            'account_name' => ['nullable', 'string'],
+            'account_number' => ['nullable', 'string'],
+            'ifsc_code' => ['nullable', 'string'],
+            'vpa' => ['nullable', 'string'],
             'image' => ['nullable', 'image']
         ];
     }

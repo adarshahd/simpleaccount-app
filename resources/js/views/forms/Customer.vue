@@ -98,6 +98,31 @@
                                 </div>
                             </div>
                         </div>
+                        <h5 class="title is-5">Contact Info</h5>
+                        <div class="columns">
+                            <div class="column is-half">
+                                <div class="field">
+                                    <div class="control">
+                                        <input class="input" type="text" v-model="customer.contact_name"
+                                               placeholder="Contact Person *" autofocus="">
+                                        <span class="has-text-danger" v-if="errors.contact_name">
+                                            {{ errors.contact_name[0] }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="column is-half">
+                                <div class="field">
+                                    <div class="control">
+                                        <input class="input" type="text" v-model="customer.contact_phone"
+                                               placeholder="Contact Phone *" autofocus="">
+                                        <span class="has-text-danger" v-if="errors.contact_phone">
+                                            {{ errors.contact_phone[0] }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="column is-6">
                         <h5 class="title is-5">Address</h5>
@@ -167,33 +192,76 @@
                                 </div>
                             </div>
                         </div>
-                        <h5 class="title is-5">Contact Info</h5>
+                        <h5 class="title is-5">Bank Details</h5>
                         <div class="columns">
-                            <div class="column is-half">
-                                <div class="field">
-                                    <div class="control">
-                                        <input class="input" type="text" v-model="customer.contact_name"
-                                               placeholder="Contact Person *" autofocus="">
-                                        <span class="has-text-danger" v-if="errors.contact_name">
-                                            {{ errors.contact_name[0] }}
+                            <div class="column">
+                                <div class="columns">
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="customer.bank_name"
+                                                       placeholder="Bank Name" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.bank_name">
+                                            {{ errors.bank_name[0] }}
                                         </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="customer.account_name"
+                                                       placeholder="Account Name" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.account_name">
+                                            {{ errors.account_name[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="column is-half">
-                                <div class="field">
-                                    <div class="control">
-                                        <input class="input" type="text" v-model="customer.contact_phone"
-                                               placeholder="Contact Phone *" autofocus="">
-                                        <span class="has-text-danger" v-if="errors.contact_phone">
-                                            {{ errors.contact_phone[0] }}
+                                <div class="columns">
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="customer.account_number"
+                                                       placeholder="Account Number" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.account_number">
+                                            {{ errors.account_number[0] }}
                                         </span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="customer.ifsc_code"
+                                                       placeholder="IFSC Code" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.ifsc_code">
+                                            {{ errors.ifsc_code[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="customer.vpa"
+                                                       placeholder="UPI VPA" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.vpa">
+                                            {{ errors.vpa[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-6"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="has-text-centered">
                     <button
                         class="button"
@@ -238,6 +306,11 @@
                     id_type_id: '',
                     id_type_name: null,
                     image: null,
+                    bank_name: '',
+                    account_name: '',
+                    account_number: '',
+                    ifsc_code: '',
+                    vpa: '',
                 },
                 customerImage: null,
                 idTypes: [],
@@ -262,12 +335,25 @@
                 axios.get('/api/v1/customers/' + this.customer.id).then(response => {
                     this.customer = response.data.data
                     this.customerImage = response.data.data.image
-
                     this.customer.image = null
-                    this.customer.website = response.data.data.website == null ? '' : response.data.data.website
-                    this.customer.contact_email = response.data.data.contact_email == null ? '' : response.data.data.contact_email
-                    this.customer.address_line_2 = response.data.data.address_line_2 == null ? '' : response.data.data.address_line_2
-                    this.customer.id_type_id = this.customer.id_type.id
+
+                    this.customer.id_type_id = this.customer.id_type != null ? this.customer.id_type.id : ''
+                    this.customer.id_type_name = this.customer.id_type != null ? this.customer.id_type.name : ''
+                    this.customer.identification = this.customer.identification == null ? '' : this.customer.identification
+                    this.customer.address_line_1 = this.customer.address_line_1 == null ? '' : this.customer.address_line_1
+                    this.customer.address_line_2 = this.customer.address_line_2 == null ? '' : this.customer.address_line_2
+                    this.customer.city = this.customer.city == null ? '' : this.customer.city
+                    this.customer.state = this.customer.state == null ? '' : this.customer.state
+                    this.customer.country = this.customer.country == null ? '' : this.customer.country
+                    this.customer.pin = this.customer.pin == null ? '' : this.customer.pin
+                    this.customer.website = this.customer.website == null ? '' : this.customer.website
+                    this.customer.contact_email = this.customer.contact_email == null ? '' : this.customer.contact_email
+                    this.customer.bank_name = this.customer.bank_name == null ? '' : this.customer.bank_name
+                    this.customer.account_name = this.customer.account_name == null ? '' : this.customer.account_name
+                    this.customer.account_number = this.customer.account_number == null ? '' : this.customer.account_number
+                    this.customer.ifsc_code = this.customer.ifsc_code == null ? '' : this.customer.ifsc_code
+                    this.customer.vpa = this.customer.vpa == null ? '' : this.customer.vpa
+
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)
@@ -312,6 +398,11 @@
                 formData.append('contact_phone', this.customer.contact_phone)
                 formData.append('website', this.customer.website)
                 formData.append('id_type_id', this.customer.id_type_id)
+                formData.append('bank_name', this.customer.bank_name)
+                formData.append('account_name', this.customer.account_name)
+                formData.append('account_number', this.customer.account_number)
+                formData.append('ifsc_code', this.customer.ifsc_code)
+                formData.append('vpa', this.customer.vpa)
                 if(this.customer.image != null) {
                     formData.append('image', this.customer.image)
                 }
@@ -343,6 +434,11 @@
                 formData.append('contact_phone', this.customer.contact_phone)
                 formData.append('website', this.customer.website)
                 formData.append('id_type_id', this.customer.id_type_id)
+                formData.append('bank_name', this.customer.bank_name)
+                formData.append('account_name', this.customer.account_name)
+                formData.append('account_number', this.customer.account_number)
+                formData.append('ifsc_code', this.customer.ifsc_code)
+                formData.append('vpa', this.customer.vpa)
                 if(this.customer.image != null) {
                     formData.append('image', this.customer.image)
                 }

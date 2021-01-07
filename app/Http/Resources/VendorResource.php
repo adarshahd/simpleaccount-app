@@ -30,6 +30,11 @@ class VendorResource extends JsonResource
             'website' => $this->website,
             'user_id' => $this->user_id,
             'id_type' => new IdTypeResource($this->idType),
+            'bank_name' => $this->bank_name,
+            'account_name' => $this->account_name,
+            'account_number' => $this->account_number,
+            'ifsc_code' => $this->ifsc_code,
+            'vpa' => $this->vpa,
             'image' => $this->getFirstMedia('avatars') == null ? null : $this->getFirstMedia('avatars')->getUrl()
         ];
     }

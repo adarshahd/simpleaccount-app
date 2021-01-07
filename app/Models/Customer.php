@@ -51,6 +51,11 @@ class Customer extends Model implements HasMedia
         'website',
         'user_id',
         'id_type_id',
+        'bank_name',
+        'account_name',
+        'account_number',
+        'ifsc_code',
+        'vpa',
     ];
 
     /**

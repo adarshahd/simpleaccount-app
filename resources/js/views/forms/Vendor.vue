@@ -98,6 +98,36 @@
                                 </div>
                             </div>
                         </div>
+
+                        <h5 class="title is-5">Contact Info</h5>
+                        <div class="columns">
+                            <div class="column">
+                                <div class="columns">
+                                    <div class="column is-half">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.contact_name"
+                                                       placeholder="Contact Person *" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.contact_name">
+                                            {{ errors.contact_name[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-half">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.contact_phone"
+                                                       placeholder="Contact Phone *" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.contact_phone">
+                                            {{ errors.contact_phone[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="column is-6">
                         <h5 class="title is-5">Address</h5>
@@ -167,32 +197,78 @@
                                 </div>
                             </div>
                         </div>
-                        <h5 class="title is-5">Contact Info</h5>
+
+                        <h5 class="title is-5">Bank Details</h5>
                         <div class="columns">
-                            <div class="column is-half">
-                                <div class="field">
-                                    <div class="control">
-                                        <input class="input" type="text" v-model="vendor.contact_name"
-                                               placeholder="Contact Person *" autofocus="">
-                                        <span class="has-text-danger" v-if="errors.contact_name">
-                                            {{ errors.contact_name[0] }}
+                            <div class="column">
+                                <div class="columns">
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.bank_name"
+                                                       placeholder="Bank Name" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.bank_name">
+                                            {{ errors.bank_name[0] }}
                                         </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.account_name"
+                                                       placeholder="Account Name" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.account_name">
+                                            {{ errors.account_name[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="column is-half">
-                                <div class="field">
-                                    <div class="control">
-                                        <input class="input" type="text" v-model="vendor.contact_phone"
-                                               placeholder="Contact Phone *" autofocus="">
-                                        <span class="has-text-danger" v-if="errors.contact_phone">
-                                            {{ errors.contact_phone[0] }}
+                                <div class="columns">
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.account_number"
+                                                       placeholder="Account Number" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.account_number">
+                                            {{ errors.account_number[0] }}
                                         </span>
+                                            </div>
+                                        </div>
                                     </div>
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.ifsc_code"
+                                                       placeholder="IFSC Code" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.ifsc_code">
+                                            {{ errors.ifsc_code[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="columns">
+                                    <div class="column is-6">
+                                        <div class="field">
+                                            <div class="control">
+                                                <input class="input" type="text" v-model="vendor.vpa"
+                                                       placeholder="UPI VPA" autofocus="">
+                                                <span class="has-text-danger" v-if="errors.vpa">
+                                            {{ errors.vpa[0] }}
+                                        </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="column is-6"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="columns">
+
                 </div>
                 <div class="has-text-centered">
                     <button
@@ -238,6 +314,11 @@
                     id_type_id: '',
                     id_type_name: null,
                     image: null,
+                    bank_name: '',
+                    account_name: '',
+                    account_number: '',
+                    ifsc_code: '',
+                    vpa: '',
                 },
                 vendorImage: null,
                 idTypes: [],
@@ -262,12 +343,25 @@
                 axios.get('/api/v1/vendors/' + this.vendor.id).then(response => {
                     this.vendor = response.data.data
                     this.vendorImage = response.data.data.image
-
                     this.vendor.image = null
-                    this.vendor.website = response.data.data.website == null ? '' : response.data.data.website
-                    this.vendor.contact_email = response.data.data.contact_email == null ? '' : response.data.data.contact_email
-                    this.vendor.address_line_2 = response.data.data.address_line_2 == null ? '' : response.data.data.address_line_2
-                    this.vendor.id_type_id = this.vendor.id_type.id
+
+                    this.vendor.id_type_id = this.vendor.id_type != null ? this.vendor.id_type.id : ''
+                    this.vendor.id_type_name = this.vendor.id_type != null ? this.vendor.id_type.name : ''
+                    this.vendor.identification = this.vendor.identification == null ? '' : this.vendor.identification
+                    this.vendor.address_line_1 = this.vendor.address_line_1 == null ? '' : this.vendor.address_line_1
+                    this.vendor.address_line_2 = this.vendor.address_line_2 == null ? '' : this.vendor.address_line_2
+                    this.vendor.city = this.vendor.city == null ? '' : this.vendor.city
+                    this.vendor.state = this.vendor.state == null ? '' : this.vendor.state
+                    this.vendor.country = this.vendor.country == null ? '' : this.vendor.country
+                    this.vendor.pin = this.vendor.pin == null ? '' : this.vendor.pin
+                    this.vendor.website = this.vendor.website == null ? '' : this.vendor.website
+                    this.vendor.contact_email = this.vendor.contact_email == null ? '' : this.vendor.contact_email
+                    this.vendor.bank_name = this.vendor.bank_name == null ? '' : this.vendor.bank_name
+                    this.vendor.account_name = this.vendor.account_name == null ? '' : this.vendor.account_name
+                    this.vendor.account_number = this.vendor.account_number == null ? '' : this.vendor.account_number
+                    this.vendor.ifsc_code = this.vendor.ifsc_code == null ? '' : this.vendor.ifsc_code
+                    this.vendor.vpa = this.vendor.vpa == null ? '' : this.vendor.vpa
+
                     this.isLoading = false
                 }).catch(error => {
                     this.handleError(error)
@@ -312,6 +406,11 @@
                 formData.append('contact_phone', this.vendor.contact_phone)
                 formData.append('website', this.vendor.website)
                 formData.append('id_type_id', this.vendor.id_type_id)
+                formData.append('bank_name', this.vendor.bank_name)
+                formData.append('account_name', this.vendor.account_name)
+                formData.append('account_number', this.vendor.account_number)
+                formData.append('ifsc_code', this.vendor.ifsc_code)
+                formData.append('vpa', this.vendor.vpa)
                 if(this.vendor.image != null) {
                     formData.append('image', this.vendor.image)
                 }
@@ -343,6 +442,11 @@
                 formData.append('contact_phone', this.vendor.contact_phone)
                 formData.append('website', this.vendor.website)
                 formData.append('id_type_id', this.vendor.id_type_id)
+                formData.append('bank_name', this.vendor.bank_name)
+                formData.append('account_name', this.vendor.account_name)
+                formData.append('account_number', this.vendor.account_number)
+                formData.append('ifsc_code', this.vendor.ifsc_code)
+                formData.append('vpa', this.vendor.vpa)
                 if(this.vendor.image != null) {
                     formData.append('image', this.vendor.image)
                 }

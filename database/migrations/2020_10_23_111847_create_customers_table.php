@@ -29,6 +29,11 @@ class CreateCustomersTable extends Migration
             $table->string('contact_email', 200)->nullable();
             $table->string('contact_phone', 50);
             $table->string('website', 400)->nullable();
+            $table->string('bank_name', 200)->nullable();
+            $table->string('account_name', 200)->nullable();
+            $table->string('account_number', 30)->nullable();
+            $table->string('ifsc_code', 20)->nullable();
+            $table->string('vpa', 50)->nullable();
             $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete();
             $table->foreignId('id_type_id')->nullable()->constrained()->cascadeOnDelete();
             $table->softDeletes();
