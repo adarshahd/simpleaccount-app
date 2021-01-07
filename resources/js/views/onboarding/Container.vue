@@ -3,7 +3,7 @@
         <div class="hero-body">
             <div class="container">
                 <div class="columns is-centered">
-                    <div class="column" :class="{'is-three-fifths' : showWelcome || showAdmin, 'is-full' : showProduct}">
+                    <div class="column is-three-fifths">
                         <div class="box">
                             <welcome v-if="showWelcome"></welcome>
                             <admin
@@ -13,7 +13,7 @@
                                 :registration-data="registrationData"
                                 :errors="errors">
                             </admin>
-                            <product v-if="showProduct" :errors="errors" :product-owner-data="productOwnerData"></product>
+                            <region v-if="showRegion" :errors="errors" v-on:country-selected="countrySelected"></region>
                             <hr/>
 
                             <label class="label has-text-centered" v-if="showWelcome">
@@ -37,7 +37,7 @@
                                     <progress class="progress is-primary is-small" :value="adminProgress"></progress>
                                 </div>
                                 <div class="column is-1 is-1-mobile">
-                                    <progress class="progress is-primary is-small" :value="productProgress"></progress>
+                                    <progress class="progress is-primary is-small" :value="regionProgress"></progress>
                                 </div>
                             </div>
                         </div>
@@ -51,8 +51,9 @@
 <script>
     import welcome from './Welcome'
     import admin from './Admin'
-    import product from './Product'
+    import region from './Region'
     import axios from "axios";
+    import store from '@/store'
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
 
     export default {
@@ -61,19 +62,27 @@
             ProgressBarIndeterminate,
             welcome,
             admin,
-            product
+            region
+        },
+        computed: {
+            isLoggedIn: {
+                get() {
+                    return store.getters.getCurrentUser.id != null
+                }
+            }
         },
         data () {
             return {
                 isLoading: true,
                 showWelcome: true,
                 showAdmin: false,
-                showProduct: false,
+                showRegion: false,
                 isTermsAgreed: false,
                 agreementText: "",
                 errors: [],
                 adminProgress: 0,
-                productProgress: 0,
+                regionProgress: 0,
+                country: '',
                 isAdminCreated: false,
                 registrationData: {
                     name: '',
@@ -84,22 +93,6 @@
                 loginData: {
                     email: '',
                     password: ''
-                },
-                productOwnerData: {
-                    name: '',
-                    idTypeId: '',
-                    identification: '',
-                    addressLine1: '',
-                    addressLine2: '',
-                    city: '',
-                    state: '',
-                    country: '',
-                    pin: '',
-                    contactName: '',
-                    contactPhone: '',
-                    contactEmail: '',
-                    website: '',
-                    logo: null
                 }
             }
         },
@@ -121,8 +114,13 @@
                         return;
                     }
                     this.showWelcome = false;
-                    this.showProduct = false;
-                    this.showAdmin = true;
+                    if(this.isLoggedIn) {
+                        this.showRegion = true
+                        this.showAdmin = false
+                    } else {
+                        this.showRegion = false;
+                        this.showAdmin = true;
+                    }
                     this.adminProgress = 100;
 
                     this.isLoading = false;
@@ -140,8 +138,8 @@
                     return;
                 }
 
-                if(this.showProduct) {
-                    this.createProductOwner();
+                if(this.showRegion) {
+                    this.updateRegionData();
                 }
             },
             register() {
@@ -171,7 +169,7 @@
                         this.isLoading = false;
                         this.showAdmin = false;
                         this.showWelcome = false;
-                        this.showProduct = true;
+                        this.showRegion = true;
 
                         this.productProgress = 100;
                     }).catch(error => {
@@ -180,39 +178,32 @@
                     })
                 });
             },
-            createProductOwner() {
-                this.isLoading = true;
-                const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-                let formData = new FormData()
-                formData.append('name', this.productOwnerData.name)
-                formData.append('identification', this.productOwnerData.identification)
-                formData.append('address_line_1', this.productOwnerData.addressLine1)
-                formData.append('address_line_2', this.productOwnerData.addressLine2)
-                formData.append('city', this.productOwnerData.city)
-                formData.append('state', this.productOwnerData.state)
-                formData.append('country', this.productOwnerData.country)
-                formData.append('pin', this.productOwnerData.pin)
-                formData.append('contact_name', this.productOwnerData.contactName)
-                formData.append('contact_email', this.productOwnerData.contactEmail)
-                formData.append('contact_phone', this.productOwnerData.contactPhone)
-                formData.append('website', this.productOwnerData.website)
-                formData.append('id_type_id', this.productOwnerData.idTypeId)
-                if(this.productOwnerData.logo != null) {
-                    formData.append('logo', this.productOwnerData.logo)
+            countrySelected(val) {
+                this.country = val
+            },
+            updateRegionData() {
+                if(this.country === '') {
+                    this.showToast('Please chose your country!', 'is-warning')
+                    return
                 }
-                axios.post('/api/v1/product-owner', formData, config).then(response => {
-                    this.isLoading = false;
+
+                this.isLoading = true
+                axios.post('/api/v1/region', {country: this.country}).then(response => {
                     window.location.href = '/'
-                }).catch(error => {
-                    this.isLoading = false;
-                    this.errors = error.response.data.errors;
-                });
+                })
             },
             getProductState() {
                 this.isLoading = true;
                 axios.get('/api/v1/status').then(response => {
                     this.isAdminCreated = response.data.data.admin_created;
                     this.isLoading = false;
+                })
+            },
+            showToast(message, type = 'is-success') {
+                this.$buefy.toast.open({
+                    message: message,
+                    type: type,
+                    position: 'is-top-right'
                 })
             }
         },

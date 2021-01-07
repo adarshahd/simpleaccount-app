@@ -19,8 +19,17 @@ Route::group(['prefix' => 'v1'], function() {
      * */
     Route::get('/status', [\App\Http\Controllers\OnboardController::class, 'getProductStatus']);
     Route::post('/users/admin', [\App\Http\Controllers\OnboardController::class, 'createAdminUser']);
-    Route::post('/product-owner', [\App\Http\Controllers\OnboardController::class, 'updateProductOwnerData']);
 
+    /*
+     * Countries Routes
+     */
+    Route::get('countries', [\App\Http\Controllers\Api\CountryController::class, 'getCountries']);
+    Route::get('states', [\App\Http\Controllers\Api\CountryController::class, 'getStates']);
+    Route::get('cities', [\App\Http\Controllers\Api\CountryController::class, 'getCities']);
+
+    /*
+     * Protected Routes
+     */
     Route::group(['middleware' => 'auth:sanctum'], function() {
 
         /*
@@ -55,6 +64,7 @@ Route::group(['prefix' => 'v1'], function() {
          * Extra routes
          * */
 
+        Route::post('/region', [\App\Http\Controllers\Api\AppSettingController::class, 'updateRegionData']);
         Route::get('/dashboard', [\App\Http\Controllers\Api\DashboardController::class, 'index']);
         Route::get('/customers/{customer}/details', [\App\Http\Controllers\Api\CustomerController::class, 'details']);
         Route::get('/vendors/{vendor}/details', [\App\Http\Controllers\Api\VendorController::class, 'details']);

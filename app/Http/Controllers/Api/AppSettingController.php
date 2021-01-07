@@ -5,10 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\AppSettingStoreRequest;
 use App\Http\Requests\AppSettingUpdateRequest;
+use App\Http\Requests\ProductOwnerRequest;
+use App\Http\Requests\RegionRequest;
 use App\Http\Resources\AppSettingCollection;
 use App\Http\Resources\AppSettingResource;
 use App\Models\AppSetting;
 use Illuminate\Http\Request;
+use PragmaRX\Countries\Package\Countries;
+use Symfony\Component\HttpFoundation\Response;
 
 class AppSettingController extends Controller
 {
@@ -102,6 +106,17 @@ class AppSettingController extends Controller
         return response()->noContent();
     }
 
+    public function find(Request $request) {
+        $setting = AppSetting::query()->where('key', $request->input('key'))->first();
+        if($setting) {
+            return new AppSettingResource($setting);
+        } else {
+            return response()->json([
+                'data' => []
+            ]);
+        }
+    }
+
     public static function isApplicationInitialized() {
         $appInitializedSetting = AppSetting::query()->where('key', self::$appInitialized)->first();
         return $appInitializedSetting ? $appInitializedSetting->value : false;
@@ -116,28 +131,40 @@ class AppSettingController extends Controller
 
     public static function isProductOwnerUpdated() {
         $productOwnerSetting = AppSetting::query()->where('key', self::$poData)->first();
-        return $productOwnerSetting != null;
+        if(!$productOwnerSetting) {
+            return false;
+        }
+        $productOwnerData = json_decode($productOwnerSetting);
+        if(!$productOwnerData) {
+            return false;
+        }
+        if($productOwnerData->name == 'SimpleAccount' || $productOwnerData->contact_name == '') {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public static function isRegionUpdated() {
+        $regionSettings = AppSetting::query()->where('key', self::$regionData)->first();
+        if(!$regionSettings) {
+            return false;
+        }
+
+        $regionData = json_decode($regionSettings);
+        if(!$regionData) {
+            return false;
+        }
+        if($regionData->country == '' || $regionData->currency == '') {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     public static function getProductOwnerData() {
         $productOwnerSetting = AppSetting::query()->where('key', self::$poData)->first();
         return json_decode($productOwnerSetting->value);
-    }
-
-    public static function updateProductOwnerData($data) {
-        $productOwnerData = AppSetting::query()->where('key', self::$poData)->first();
-        if($productOwnerData) {
-            $productOwnerData->update([
-                'value' => $data
-            ]);
-        } else {
-            $productOwnerData = AppSetting::query()->create([
-                'key' => self::$poData,
-                'value' => $data
-            ]);
-        }
-
-        return $productOwnerData != null;
     }
 
     public static function isRolesAndPermissionsSeeded()
@@ -244,7 +271,7 @@ class AppSettingController extends Controller
         if(!$productOwnerData) {
             $productOwnerData = AppSetting::query()->create([
                 'key' => self::$poData,
-                'value' => '{"name" : "SimpleAccount","identification" : "","address_line_1" : "","address_line_2" : "","city" : "","state" : "","country" : "India","pin" : "","contact_name" : "","contact_email" : "","contact_phone" : "","website" : "","id_type_id" : null,"logo" : ""}'
+                'value' => '{"name" : "SimpleAccount","identification" : "","address_line_1" : "","address_line_2" : "","city" : "","state" : "","country" : "","pin" : "","contact_name" : "","contact_email" : "","contact_phone" : "","website" : "","id_type_id" : null,"logo" : ""}'
             ]);
         }
 
@@ -260,6 +287,62 @@ class AppSettingController extends Controller
             'data' => [
                 'product_owner_data' => json_decode($productOwnerData->value),
                 'regional_settings_data' => json_decode($regionSettings->value)
+            ]
+        ]);
+    }
+
+    public function updateProductOwnerData(ProductOwnerRequest $request) {
+        $productOwnerData = $request->validated();
+        if($request->hasFile('logo')) {
+            $request->file('logo')->storeAs('public/logos', 'logo.png');
+        }
+        $productOwnerData['logo'] = asset('storage/logos/logo.png');
+
+        $setting = AppSetting::query()->where('key', self::$poData)->first();
+        if($setting) {
+            $setting->update([
+                'value' => json_encode($productOwnerData)
+            ]);
+        } else {
+            $setting = AppSetting::query()->create([
+                'key' => self::$poData,
+                'value' => json_encode($productOwnerData)
+            ]);
+        }
+
+        return response()->json([
+            'data' => [
+                'status' => true
+            ]
+        ]);
+    }
+
+    public function updateRegionData(RegionRequest $request) {
+        $currency = Countries::where('name.common', $request->input('country'))->first()->hydrate('currencies')->currencies->first();
+        $currencyName = $currency->name;
+        $currencySymbol = $currency->units->major->symbol;
+        $regionData = new \stdClass();
+        $regionData->country = $request->input('country');
+        $regionData->currency_name = $currencyName;
+        $regionData->currency_symbol = $currencySymbol;
+
+        $setting = AppSetting::query()->where('key', self::$regionData)->first();
+        if($setting) {
+            $setting->update([
+                'value' => json_encode($regionData)
+            ]);
+        } else {
+            $setting = AppSetting::query()->create([
+                'key' => self::$regionData,
+                'value' => json_encode($regionData)
+            ]);
+        }
+
+        self::setApplicationInitialized();
+
+        return response()->json([
+            'data' => [
+                'status' => true
             ]
         ]);
     }

@@ -39,12 +39,12 @@ class OnboardController extends Controller
 
     public function getProductStatus(Request $request) {
         $adminCreated = User::role('admin')->count() > 0;
-        $poUpdated = AppSettingController::isProductOwnerUpdated();
+        $regionUpdated = AppSettingController::isRegionUpdated();
 
         return response()->json([
             'data' => [
                 'admin_created' => $adminCreated,
-                'product_owner_updated' => $poUpdated
+                'region_updated' => $regionUpdated
             ]
         ]);
     }
@@ -72,28 +72,5 @@ class OnboardController extends Controller
                 'status' => true,
             ]
         ]);
-    }
-
-    public function updateProductOwnerData(ProductOwnerRequest $request) {
-        if(AppSettingController::isApplicationInitialized() && !$request->user()->hasRole('admin')) {
-            return response()->json([
-                'message' => 'Product Already initialized. Login to modify data!'
-            ], Response::HTTP_BAD_REQUEST);
-        }
-
-        $productOwnerData = $request->validated();
-        if($request->hasFile('logo')) {
-            $request->file('logo')->storeAs('public/logos', 'logo.png');
-        }
-        $productOwnerData['logo'] = asset('storage/logos/logo.png');
-
-        $result = AppSettingController::updateProductOwnerData(json_encode($productOwnerData));
-
-        if($result) {
-            AppSettingController::setApplicationInitialized();
-            return response()->json([]);
-        } else {
-            return response()->json([], Response::HTTP_CONFLICT);
-        }
     }
 }
