@@ -138,7 +138,7 @@ class AppSettingController extends Controller
         if(!$productOwnerData) {
             return false;
         }
-        if($productOwnerData->name == 'SimpleAccount' || $productOwnerData->contact_name == '') {
+        if($productOwnerData->name == '' || $productOwnerData->contact_name == '') {
             return false;
         } else {
             return true;
@@ -164,6 +164,12 @@ class AppSettingController extends Controller
 
     public static function getProductOwnerData() {
         $productOwnerSetting = AppSetting::query()->where('key', self::$poData)->first();
+        if(!$productOwnerSetting) {
+            $productOwnerSetting = AppSetting::query()->create([
+                'key' => self::$poData,
+                'value' => '{"name" : "","identification" : "","address_line_1" : "","address_line_2" : "","city" : "","state" : "","country" : "","pin" : "","contact_name" : "","contact_email" : "","contact_phone" : "","website" : "","id_type_id" : "","logo" : ""}'
+            ]);
+        }
         return json_decode($productOwnerSetting->value);
     }
 

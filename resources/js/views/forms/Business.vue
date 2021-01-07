@@ -295,7 +295,7 @@
                     if(this.productOwnerData.state !== '') {
                         this.getCities()
                     }
-                    this.logoFile = this.productOwnerData.logo
+                    this.logoFile = this.productOwnerData.logo === '' ? null : this.productOwnerData.logo
                     let idType = this.getIdType(parseInt(this.productOwnerData.id_type_id))
                     if(idType != null) {
                         this.productOwnerData.id_type_name = idType.name
