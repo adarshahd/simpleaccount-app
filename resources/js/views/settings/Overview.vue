@@ -1,6 +1,7 @@
 <template>
     <progress-bar-indeterminate v-if="isSettingsLoading"></progress-bar-indeterminate>
     <section class="main-content" v-else>
+        <region-modal ref="regionModal" v-on:country-selected="onRegionDataUpdated"></region-modal>
         <div class="columns mt-4 is-centered">
             <div class="column is-5">
                 <div class="box">
@@ -42,7 +43,7 @@
                             <h4 class="subtitle is-4">Regional Settings</h4>
                         </div>
                         <div class="column is-2">
-                            <button class="button is-primary is-small has-icons-right">
+                            <button class="button is-primary is-small has-icons-right" @click="showRegionUpdateModal">
                                 <span class="mdi mdi-pencil"></span>
                             </button>
                         </div>
@@ -52,10 +53,10 @@
                         <span class="mdi mdi-earth"></span>
                         {{ regionalData.country }}
                     </h5>
-                    <h6 class="title is-6">
-                        {{ regionalData.currency }} ({{ regionalData.symbol }})
-                    </h6>
                     <h6 class="subtitle is-6">
+                        {{ regionalData.currencyName }} ({{ regionalData.currencySymbol }})
+                    </h6>
+                    <h6 class="is-6">
                         <span class="mdi mdi-translate"></span>
                         English
                     </h6>
@@ -138,15 +139,19 @@
 <script>
 import axios from 'axios'
 import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+import RegionModal from "../modals/Region";
 
 export default {
     name: "Overview",
-    components: {ProgressBarIndeterminate},
+    components: {RegionModal, ProgressBarIndeterminate},
     data() {
         return {
             isSettingsLoading: true,
             productOwnerData: null,
-            regionalData: null,
+            regionalData: {
+                currencyName: '',
+                currencySymbol: ''
+            },
         }
     },
     methods: {
@@ -154,7 +159,8 @@ export default {
             this.isSettingsLoading = true;
             axios.get('/api/v1/settings/overview').then(response => {
                 this.productOwnerData = response.data.data.product_owner_data
-                this.regionalData = response.data.data.regional_settings_data
+                this.regionalData.currencyName = response.data.data.regional_settings_data.currency_name
+                this.regionalData.currencySymbol = response.data.data.regional_settings_data.currency_symbol
                 this.isSettingsLoading = false
             }).catch(error => {
                 this.handleError(error)
@@ -164,6 +170,12 @@ export default {
             this.$router.push({
                 name: 'business',
             })
+        },
+        showRegionUpdateModal() {
+            this.$refs.regionModal.toggleModal()
+        },
+        onRegionDataUpdated() {
+            this.regionalData = this.$store.state.regionData
         },
 
         handleError(error) {
