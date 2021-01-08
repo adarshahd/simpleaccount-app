@@ -44,6 +44,13 @@ Not in a particular order though!
 - [ ] Product QR code scanning support (For automatic entry into purchase/sale)
 - [ ] Many more!!!
 
+## Demo
+A demo application is set up for testing. Please note the database will be refreshed regularly so your changes would not be saved. Details below
+
+* Link: [SimpleAccount Demo](https://demo.simpleaccount.app)
+* Username: admin@simpleaccount.app
+* Password: password
+
 ## Requirements
 - PHP 7.3
 - MySql/Postgress
