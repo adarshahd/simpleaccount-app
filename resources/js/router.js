@@ -388,6 +388,7 @@ const routes =  [
 const router = new Router({
     routes,
     mode: 'history',
+    base: '/admin',
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {
             return savedPosition

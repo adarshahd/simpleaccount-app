@@ -359,4 +359,11 @@ class AppSettingController extends Controller
             ]
         ]);
     }
+
+    public function getRegionData(Request $request) {
+        $setting = AppSetting::query()->where('key', self::$regionData)->first();
+        return response()->json([
+            'data' => json_decode($setting->value)
+        ]);
+    }
 }
