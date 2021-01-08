@@ -44,12 +44,12 @@
                 </div>
                 <div class="column is-3 has-text-right">
                     <h5>
-                        Subtotal: ₹ {{ purchaseSubTotal.toFixed(2) }}
+                        Subtotal: {{ currencySymbol }} {{ purchaseSubTotal.toFixed(2) }}
                     </h5>
                     <h5>
-                        Tax: ₹ {{ purchaseTax.toFixed(2) }}
+                        Tax: {{ currencySymbol }} {{ purchaseTax.toFixed(2) }}
                     </h5>
-                    <h4 class="title is-5">Total: ₹ {{ purchaseTotal.toFixed(2) }}</h4>
+                    <h4 class="title is-5">Total: {{ currencySymbol }} {{ purchaseTotal.toFixed(2) }}</h4>
                 </div>
                 <div class="column is-2 has-text-right-desktop has-text-centered-mobile">
                     <button class="button is-link" @click="addPurchaseItem">
@@ -110,7 +110,8 @@ export default {
             purchaseEdit: null,
             vendors: [],
             itemId: 0,
-            purchaseDate: dayjs().toDate()
+            purchaseDate: dayjs().toDate(),
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {

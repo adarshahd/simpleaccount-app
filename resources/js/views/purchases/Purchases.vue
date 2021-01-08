@@ -38,16 +38,16 @@
                                 {{ dayjs(props.row.bill_date).format("DD MMM, YYYY") }}
                             </b-table-column>
                             <b-table-column field="subtotal" label="Subtotal" v-slot="props">
-                                ₹{{ props.row.sub_total }}
+                                {{ currencySymbol }}{{ props.row.sub_total }}
                             </b-table-column>
                             <b-table-column field="discount" label="Discount" v-slot="props">
-                                ₹{{ props.row.discount }}
+                                {{ currencySymbol }}{{ props.row.discount }}
                             </b-table-column>
                             <b-table-column field="tax" label="Tax" v-slot="props">
-                                ₹{{ props.row.tax }}
+                                {{ currencySymbol }}{{ props.row.tax }}
                             </b-table-column>
                             <b-table-column field="total" label="Total" v-slot="props">
-                                ₹{{ props.row.total }}
+                                {{ currencySymbol }}{{ props.row.total }}
                             </b-table-column>
                             <b-table-column label="Actions" v-slot="props" numeric>
                                 <span>
@@ -99,6 +99,7 @@
                 purchaseItemsPerPage: 1,
                 totalPurchaseItems: 1,
                 currentPurchasePage: 1,
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {

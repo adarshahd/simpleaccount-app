@@ -58,7 +58,7 @@
                         <div class="card">
                             <div class="card-content">
                                 <h5 class="title is-5">Total transaction</h5>
-                                <h5 class="subtitle is-5">₹ {{ vendorDetails.total_purchase_amount }}</h5>
+                                <h5 class="subtitle is-5">{{ currencySymbol }} {{ vendorDetails.total_purchase_amount }}</h5>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                         <div class="card">
                             <div class="card-content">
                                 <h5 class="title is-5">Amount paid</h5>
-                                <h5 class="subtitle is-5">₹ {{ vendorDetails.amount_paid }}</h5>
+                                <h5 class="subtitle is-5">{{ currencySymbol }} {{ vendorDetails.amount_paid }}</h5>
                             </div>
                         </div>
                     </div>
@@ -76,7 +76,7 @@
                         <div class="card">
                             <div class="card-content">
                                 <h5 class="title is-5">Balance</h5>
-                                <h5 class="subtitle is-5"  :class="{'has-text-danger' : vendorDetails.balance > 0, 'has-text-success' : vendorDetails.balance < 1}">₹ {{ vendorDetails.balance }}</h5>
+                                <h5 class="subtitle is-5"  :class="{'has-text-danger' : vendorDetails.balance > 0, 'has-text-success' : vendorDetails.balance < 1}">{{ currencySymbol }} {{ vendorDetails.balance }}</h5>
                             </div>
                         </div>
                     </div>
@@ -96,7 +96,7 @@
                         {{ props.row.items }}
                     </b-table-column>
                     <b-table-column field="total" label="Purchase Total" v-slot="props" numeric>
-                        ₹{{ props.row.total.toFixed(2) }}
+                        {{ currencySymbol }}{{ props.row.total.toFixed(2) }}
                     </b-table-column>
                     <b-table-column field="actions" label="Actions" v-slot="props" centered>
                         <button class="button is-link is-small has-icons-left" @click="viewPurchase(props.row)">
@@ -134,6 +134,7 @@
                 vendorId: null,
                 vendorDetails: {},
                 errors: [],
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {

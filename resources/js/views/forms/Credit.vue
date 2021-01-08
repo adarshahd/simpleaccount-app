@@ -29,12 +29,12 @@
                 </div>
                 <div class="column is-4 has-text-right">
                     <h5>
-                        Subtotal: ₹ {{ creditSubTotal.toFixed(2) }}
+                        Subtotal: {{ currencySymbol }} {{ creditSubTotal.toFixed(2) }}
                     </h5>
                     <h5>
-                        Tax: ₹ {{ creditTax.toFixed(2) }}
+                        Tax: {{ currencySymbol }} {{ creditTax.toFixed(2) }}
                     </h5>
-                    <h4 class="title is-5">Total: ₹ {{ creditTotal.toFixed(2) }}</h4>
+                    <h4 class="title is-5">Total: {{ currencySymbol }} {{ creditTotal.toFixed(2) }}</h4>
                 </div>
                 <div class="column is-2 has-text-right-desktop has-text-centered-mobile">
                     <button class="button is-link" @click="addCreditItem">
@@ -94,7 +94,8 @@ export default {
             creditEdit: null,
             customers: [],
             itemId: 0,
-            creditDate: dayjs().toDate()
+            creditDate: dayjs().toDate(),
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {

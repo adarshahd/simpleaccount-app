@@ -59,7 +59,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Total transaction</h5>
-                                    <h5 class="subtitle is-5">₹ {{ customerDetails.total_sale_amount }}</h5>
+                                    <h5 class="subtitle is-5">{{ currencySymbol }} {{ customerDetails.total_sale_amount }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +69,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Amount paid</h5>
-                                    <h5 class="subtitle is-5">₹ {{ customerDetails.amount_paid }}</h5>
+                                    <h5 class="subtitle is-5">{{ currencySymbol }} {{ customerDetails.amount_paid }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
                             <div class="card">
                                 <div class="card-content">
                                     <h5 class="title is-5">Balance</h5>
-                                    <h5 class="subtitle is-5"  :class="{'has-text-danger' : customerDetails.balance > 0, 'has-text-success' : customerDetails.balance < 1}">₹ {{ customerDetails.balance }}</h5>
+                                    <h5 class="subtitle is-5"  :class="{'has-text-danger' : customerDetails.balance > 0, 'has-text-success' : customerDetails.balance < 1}">{{ currencySymbol }} {{ customerDetails.balance }}</h5>
                                 </div>
                             </div>
                         </div>
@@ -97,7 +97,7 @@
                             {{ props.row.items }}
                         </b-table-column>
                         <b-table-column field="total" label="Sale Total" v-slot="props" numeric>
-                            ₹{{ props.row.total.toFixed(2) }}
+                            {{ currencySymbol }}{{ props.row.total.toFixed(2) }}
                         </b-table-column>
                         <b-table-column field="actions" label="Actions" v-slot="props" centered>
                             <button class="button is-link is-small has-icons-left" @click="viewSale(props.row)">
@@ -137,6 +137,7 @@
                 customerId: null,
                 customerDetails: {},
                 errors: [],
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {

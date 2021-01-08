@@ -29,12 +29,12 @@
                 </div>
                 <div class="column is-4 has-text-right">
                     <h5>
-                        Subtotal: ₹ {{ debitSubTotal.toFixed(2) }}
+                        Subtotal: {{ currencySymbol }} {{ debitSubTotal.toFixed(2) }}
                     </h5>
                     <h5>
-                        Tax: ₹ {{ debitTax.toFixed(2) }}
+                        Tax: {{ currencySymbol }} {{ debitTax.toFixed(2) }}
                     </h5>
-                    <h4 class="title is-5">Total: ₹ {{ debitTotal.toFixed(2) }}</h4>
+                    <h4 class="title is-5">Total: {{ currencySymbol }} {{ debitTotal.toFixed(2) }}</h4>
                 </div>
                 <div class="column is-2 has-text-right-desktop has-text-centered-mobile">
                     <button class="button is-link" @click="addDebitItem">
@@ -94,7 +94,8 @@ export default {
             debitEdit: null,
             vendors: [],
             itemId: 0,
-            debitDate: dayjs().toDate()
+            debitDate: dayjs().toDate(),
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {

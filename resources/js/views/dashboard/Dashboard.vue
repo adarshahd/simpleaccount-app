@@ -36,25 +36,25 @@
         <div class="columns is-gapless">
             <div class="column is-3">
                 <div class="box p-5 m-1 has-text-centered">
-                    <h4 class="title is-4">₹{{ dashboardData.revenue.toFixed(2) }}</h4>
+                    <h4 class="title is-4">{{ currencySymbol }}{{ dashboardData.revenue.toFixed(2) }}</h4>
                     <h6 class="subtitle is-6">Revenue</h6>
                 </div>
             </div>
             <div class="column is-2">
                 <div class="box p-5 m-1 has-text-centered">
-                    <h4 class="title is-4">{{ dashboardData.sales }} (₹{{ dashboardData.salesTotal.toFixed(2) }})</h4>
+                    <h4 class="title is-4">{{ dashboardData.sales }} ({{ currencySymbol }}{{ dashboardData.salesTotal.toFixed(2) }})</h4>
                     <h6 class="subtitle is-6">Sales</h6>
                 </div>
             </div>
             <div class="column is-2">
                 <div class="box p-5 m-1 has-text-centered">
-                    <h4 class="title is-4">{{ dashboardData.purchases }} (₹{{ dashboardData.purchasesTotal.toFixed(2) }})</h4>
+                    <h4 class="title is-4">{{ dashboardData.purchases }} ({{ currencySymbol }}{{ dashboardData.purchasesTotal.toFixed(2) }})</h4>
                     <h6 class="subtitle is-6">Purchases</h6>
                 </div>
             </div>
             <div class="column is-2">
                 <div class="box p-5 m-1 has-text-centered">
-                    <h4 class="title is-4">₹{{ dashboardData.expenseTotal.toFixed(2) }}</h4>
+                    <h4 class="title is-4">{{ currencySymbol }}{{ dashboardData.expenseTotal.toFixed(2) }}</h4>
                     <h6 class="subtitle is-6">Expenses</h6>
                 </div>
             </div>
@@ -89,7 +89,8 @@
                 currentUser: this.$store.state.currentUser,
                 currentFilter: 0,
                 dateRange: [dayjs().subtract(7, 'day').toDate(), dayjs().toDate()],
-                dashboardData: {}
+                dashboardData: {},
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {

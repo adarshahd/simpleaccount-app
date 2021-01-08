@@ -33,12 +33,12 @@
                 </div>
                 <div class="column is-4 has-text-right">
                     <h5>
-                        Subtotal: ₹ {{ saleSubTotal.toFixed(2) }}
+                        Subtotal: {{ currencySymbol }} {{ saleSubTotal.toFixed(2) }}
                     </h5>
                     <h5>
-                        Tax: ₹ {{ saleTax.toFixed(2) }}
+                        Tax: {{ currencySymbol }} {{ saleTax.toFixed(2) }}
                     </h5>
-                    <h4 class="title is-5">Total: ₹ {{ saleTotal.toFixed(2) }}</h4>
+                    <h4 class="title is-5">Total: {{ currencySymbol }} {{ saleTotal.toFixed(2) }}</h4>
                 </div>
                 <div class="column is-2 has-text-right-desktop has-text-centered-mobile">
                     <button class="button is-link" @click="addSaleItem">
@@ -78,13 +78,13 @@
                     {{ dayjs(props.row.product_stock.expiry).format("MMM, YYYY") }}
                 </b-table-column>
                 <b-table-column field="price" label="Price" v-slot="props">
-                    ₹{{ parseFloat(props.row.price).toFixed(2) }}
+                    {{ currencySymbol }}{{ parseFloat(props.row.price).toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="tax" label="Tax" v-slot="props">
-                    ₹{{ (props.row.price * props.row.quantity * props.row.tax_percent / 100).toFixed(2) }}
+                    {{ currencySymbol }}{{ (props.row.price * props.row.quantity * props.row.tax_percent / 100).toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="total" label="Item Total" v-slot="props">
-                    ₹{{ ((props.row.price * props.row.quantity) + (props.row.price * props.row.quantity * props.row.tax_percent / 100)).toFixed(2) }}
+                    {{ currencySymbol }}{{ ((props.row.price * props.row.quantity) + (props.row.price * props.row.quantity * props.row.tax_percent / 100)).toFixed(2) }}
                 </b-table-column>
 
                 <b-table-column field="actions" label="Actions" v-slot="props">
@@ -140,6 +140,7 @@ export default {
             itemId: 0,
             draggingRow: null,
             droppedOnRow: null,
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {

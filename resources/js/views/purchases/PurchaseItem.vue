@@ -128,7 +128,7 @@
                     </div>
                     <div class="column is-3">
                         <h6 class="title is-6 has-text-right">
-                            Item Total: ₹{{ getItemTotal }}
+                            Item Total: {{ currencySymbol }}{{ getItemTotal }}
                         </h6>
                     </div>
                 </div>
@@ -157,6 +157,7 @@
                 products: [],
                 errors: [],
                 currentProduct: null,
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         props: {

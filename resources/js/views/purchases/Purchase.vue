@@ -57,25 +57,25 @@
                     {{ dayjs(props.row.product_stock.expiry).format("MMM YYYY") }}
                 </b-table-column>
                 <b-table-column field="mrp" label="MRP" v-slot="props" numeric>
-                    ₹{{ props.row.product_stock.mrp }}
+                    {{ currencySymbol }}{{ props.row.product_stock.mrp }}
                 </b-table-column>
                 <b-table-column field="price" label="Price" v-slot="props" numeric>
-                    ₹{{ props.row.product_stock.price }}
+                    {{ currencySymbol }}{{ props.row.product_stock.price }}
                 </b-table-column>
                 <b-table-column field="taxable" label="Taxable" v-slot="props" numeric>
-                    ₹{{ (props.row.product_stock.price * props.row.quantity).toFixed(2) }}
+                    {{ currencySymbol }}{{ (props.row.product_stock.price * props.row.quantity).toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="tax" label="Tax" v-slot="props" numeric>
-                    ₹{{ (props.row.product_stock.tax * props.row.quantity).toFixed(2) }}
+                    {{ currencySymbol }}{{ (props.row.product_stock.tax * props.row.quantity).toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="discount" label="Discount" v-slot="props" numeric>
-                    ₹{{ props.row.discount.toFixed(2) }}
+                    {{ currencySymbol }}{{ props.row.discount.toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="subtotal" label="Subtotal" v-slot="props" numeric>
-                    ₹{{ (props.row.product_stock.price.toFixed(2) * props.row.quantity).toFixed(2) }}
+                    {{ currencySymbol }}{{ (props.row.product_stock.price.toFixed(2) * props.row.quantity).toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="total" label="Item Total" v-slot="props" numeric>
-                    ₹{{ (props.row.product_stock.price * props.row.quantity + props.row.product_stock.tax * props.row.quantity).toFixed(2) }}
+                    {{ currencySymbol }}{{ (props.row.product_stock.price * props.row.quantity + props.row.product_stock.tax * props.row.quantity).toFixed(2) }}
                 </b-table-column>
             </b-table>
             <div class="columns">
@@ -111,6 +111,7 @@
                     }
                 ],
                 isLoading: true,
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {
@@ -126,23 +127,23 @@
                     this.purchaseData = [
                         {
                             name: "SubTotal",
-                            value: '₹' + this.purchase.sub_total.toFixed(2)
+                            value: '{{ currencySymbol }}' + this.purchase.sub_total.toFixed(2)
                         },
                         {
                             name: "Discount",
-                            value: '₹' + this.purchase.discount.toFixed(2)
+                            value: '{{ currencySymbol }}' + this.purchase.discount.toFixed(2)
                         },
                         {
                             name: "Tax",
-                            value: '₹' + this.purchase.tax.toFixed(2)
+                            value: '{{ currencySymbol }}' + this.purchase.tax.toFixed(2)
                         },
                         {
                             name: "Round Off",
-                            value: '₹' + (this.purchase.total - Math.floor(this.purchase.total)).toFixed(2)
+                            value: '{{ currencySymbol }}' + (this.purchase.total - Math.floor(this.purchase.total)).toFixed(2)
                         },
                         {
                             name: "Total",
-                            value: '₹' + Math.round(this.purchase.total).toFixed(2)
+                            value: '{{ currencySymbol }}' + Math.round(this.purchase.total).toFixed(2)
                         }
                     ]
                     this.isLoading = false

@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="column is-2 has-text-right-desktop has-text-centered-mobile" v-if="stockSelected">
-                        MRP: ₹{{ currentStock.mrp }}
+                        MRP: {{ currencySymbol }}{{ currentStock.mrp }}
                     </div>
                 </div>
                 <div class="columns is-vcentered" v-if="stockSelected">
@@ -106,10 +106,10 @@
                         </span>
                     </div>
                     <div class="column is-1">
-                        <h6>Tax: ₹{{ getTax }}</h6>
+                        <h6>Tax: {{ currencySymbol }}{{ getTax }}</h6>
                     </div>
                     <div class="column is-2">
-                        <h6 class="title is-6 has-text-right-desktop has-text-centered-mobile">Item Total: ₹{{getItemTotal}}</h6>
+                        <h6 class="title is-6 has-text-right-desktop has-text-centered-mobile">Item Total: {{ currencySymbol }}{{getItemTotal}}</h6>
                     </div>
                 </div>
             </div>
@@ -142,6 +142,7 @@
                 product_id: null,
                 manufacturer_id: "",
                 currentStock: null,
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         props: {

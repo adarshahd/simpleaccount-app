@@ -49,10 +49,10 @@
                             {{ dayjs(props.row.expiry).format("MMM YYYY") }}
                         </b-table-column>
                         <b-table-column field="mrp" label="MRP" v-slot="props" numeric>
-                            ₹{{ props.row.mrp }}
+                            {{ currencySymbol }}{{ props.row.mrp }}
                         </b-table-column>
                         <b-table-column field="price" label="Price" v-slot="props" numeric>
-                            ₹{{ props.row.price + props.row.tax }}
+                            {{ currencySymbol }}{{ props.row.price + props.row.tax }}
                         </b-table-column>
                         <b-table-column field="stock" label="Stock" v-slot="props" centered>
                             {{ props.row.stock }}
@@ -92,7 +92,8 @@
                     id: null,
                 },
                 stock: [],
-                errors: []
+                errors: [],
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {

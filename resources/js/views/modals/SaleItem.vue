@@ -86,9 +86,9 @@
                 </div>
                 <div class="columns is-vcentered" v-if="stockSelected">
                     <div class="column is-4 is-offset-8">
-                        <h6 class="is-6 has-text-right-desktop has-text-centered-mobile">MRP: ₹{{ currentStock.mrp }}</h6>
-                        <h6 class="subtitle is-6 has-text-right-desktop has-text-centered-mobile">Tax: ₹{{ getTax }}</h6>
-                        <h6 class="title is-6 has-text-right-desktop has-text-centered-mobile">Item Total: ₹{{getItemTotal}}</h6>
+                        <h6 class="is-6 has-text-right-desktop has-text-centered-mobile">MRP: {{ currencySymbol }}{{ currentStock.mrp }}</h6>
+                        <h6 class="subtitle is-6 has-text-right-desktop has-text-centered-mobile">Tax: {{ currencySymbol }}{{ getTax }}</h6>
+                        <h6 class="title is-6 has-text-right-desktop has-text-centered-mobile">Item Total: {{ currencySymbol }}{{getItemTotal}}</h6>
                     </div>
                 </div>
 
@@ -135,6 +135,7 @@ export default {
             manufacturer_id: "",
             currentStock: null,
             saleItem: null,
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {

@@ -36,10 +36,10 @@
                                     {{ props.row.product_type.name }}
                                 </b-table-column>
                                 <b-table-column field="mrp" label="MRP" v-slot="props">
-                                    ₹{{ props.row.mrp == null ? '-' : props.row.mrp.toFixed(2) }}
+                                    {{ currencySymbol }}{{ props.row.mrp == null ? '-' : props.row.mrp.toFixed(2) }}
                                 </b-table-column>
                                 <b-table-column field="price" label="Retail Price" v-slot="props">
-                                    ₹{{ props.row.price == null ? '-' : props.row.price.toFixed(2) }}
+                                    {{ currencySymbol }}{{ props.row.price == null ? '-' : props.row.price.toFixed(2) }}
                                 </b-table-column>
                                 <b-table-column field="tax" label="Tax" v-slot="props">
                                     {{ props.row.tax.tax }}%
@@ -112,6 +112,7 @@
                 productItemsPerPage: 1,
                 totalProductItems: 1,
                 currentProductPage: 1,
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         methods: {

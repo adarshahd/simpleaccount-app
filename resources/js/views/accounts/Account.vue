@@ -13,7 +13,7 @@
                                 <h5 class="title is-5">{{ account.account_number }}</h5>
                                 <h6 class="subtitle is-6">{{ account.account_name }}</h6><br/>
 
-                                <h5 class="title is-5">Balance: ₹{{ account.balance }}</h5>
+                                <h5 class="title is-5">Balance: {{ currencySymbol }}{{ account.balance }}</h5>
                             </div>
                         </div>
                     </div>
@@ -53,10 +53,10 @@
                                     </b-table-column>
                                     <b-table-column field="amount" label="Amount" v-slot="props">
                                         <h6 class="has-text-success" v-if="props.row.type === 'credit'">
-                                            + ₹{{ props.row.total }}
+                                            + {{ currencySymbol }}{{ props.row.total }}
                                         </h6>
                                         <h6 class="has-text-danger" v-else>
-                                            - ₹{{ props.row.total }}
+                                            - {{ currencySymbol }}{{ props.row.total }}
                                         </h6>
                                     </b-table-column>
                                     <b-table-column label="Actions" v-slot="props" centered>
@@ -121,7 +121,8 @@ export default {
             transactionItemsPerPage: 1,
             totalTransactionItems: 1,
             currentTransactionPage: 1,
-            account: {}
+            account: {},
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {

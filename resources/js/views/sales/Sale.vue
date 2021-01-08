@@ -57,22 +57,22 @@
                     {{ dayjs(props.row.product_stock.expiry).format("MMM YYYY") }}
                 </b-table-column>
                 <b-table-column field="mrp" label="MRP" v-slot="props" numeric>
-                    ₹{{ props.row.product_stock.mrp }}
+                    {{ currencySymbol }}{{ props.row.product_stock.mrp }}
                 </b-table-column>
                 <b-table-column field="price" label="Price" v-slot="props" numeric>
-                    ₹{{ props.row.price }}
+                    {{ currencySymbol }}{{ props.row.price }}
                 </b-table-column>
                 <b-table-column field="tax" label="Tax" v-slot="props" numeric>
-                    ₹{{ props.row.tax }}
+                    {{ currencySymbol }}{{ props.row.tax }}
                 </b-table-column>
                 <b-table-column field="discount" label="Discount" v-slot="props" numeric>
-                    ₹{{ props.row.discount }}
+                    {{ currencySymbol }}{{ props.row.discount }}
                 </b-table-column>
                 <b-table-column field="subtotal" label="Subtotal" v-slot="props" numeric>
-                    ₹{{ props.row.sub_total }}
+                    {{ currencySymbol }}{{ props.row.sub_total }}
                 </b-table-column>
                 <b-table-column field="total" label="Item Total" v-slot="props" numeric>
-                    ₹{{ props.row.total }}
+                    {{ currencySymbol }}{{ props.row.total }}
                 </b-table-column>
             </b-table>
             <div class="columns">
@@ -108,6 +108,7 @@
                     }
                 ],
                 isLoading: true,
+                currencySymbol: this.$store.state.regionData.currencySymbol
             }
         },
         computed: {
@@ -123,23 +124,23 @@
                     this.saleData = [
                         {
                             name: "SubTotal",
-                            value: '₹' + this.sale.sub_total
+                            value: '{{ currencySymbol }}' + this.sale.sub_total
                         },
                         {
                             name: "Discount",
-                            value: '₹' + this.sale.discount
+                            value: '{{ currencySymbol }}' + this.sale.discount
                         },
                         {
                             name: "Tax",
-                            value: '₹' + this.sale.tax
+                            value: '{{ currencySymbol }}' + this.sale.tax
                         },
                         {
                             name: "Round Off",
-                            value: '₹' + (this.sale.total - Math.floor(this.sale.total)).toFixed(2)
+                            value: '{{ currencySymbol }}' + (this.sale.total - Math.floor(this.sale.total)).toFixed(2)
                         },
                         {
                             name: "Total",
-                            value: '₹' + Math.round(this.sale.total)
+                            value: '{{ currencySymbol }}' + Math.round(this.sale.total)
                         }
                     ]
                     this.isLoading = false

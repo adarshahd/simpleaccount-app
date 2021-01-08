@@ -89,7 +89,7 @@
                             </b-table-column>
                             <b-table-column field="amount" label="Amount" v-slot="props" numeric>
                                 <h6 class="has-text-success">
-                                    ₹{{ props.row.total }}
+                                    {{ currencySymbol }}{{ props.row.total }}
                                 </h6>
                             </b-table-column>
                             <b-table-column label="Actions" v-slot="props" numeric>
@@ -160,6 +160,7 @@ export default {
             categoryItemsPerPage: 1,
             totalCategoryItems: 1,
             currentCategoryPage: 1,
+            currencySymbol: this.$store.state.regionData.currencySymbol
         }
     },
     computed: {
