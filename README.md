@@ -4,7 +4,9 @@
 
 ## Accounting and inventory management software
 
-SimpleAccount is an account and inventory management software. Current features include inventory, accounting and invoicing functionalities. Many features are planned and currently in conceptualization.
+SimpleAccount is an account and inventory management software. Current features include inventory, accounting and invoicing functionalities.
+
+This application is under active development with many more features under development.
 
 ## SimpleAccount is a free software
 
