@@ -137,6 +137,11 @@ class PurchaseController extends Controller
                     'total_stock' => $currentStock->total_stock - $oldQuantity
                 ]);
 
+                $currentStock->refresh();
+                if($currentStock->stock == 0 && $currentStock->total_stock == 0) {
+                    $currentStock->delete();
+                }
+
                 $purchasedItem->delete();
             }
 
