@@ -54,8 +54,11 @@
                         <b-table-column field="price" label="Price" v-slot="props" numeric>
                             {{ currencySymbol }}{{ props.row.price + props.row.tax }}
                         </b-table-column>
-                        <b-table-column field="stock" label="Stock" v-slot="props" centered>
+                        <b-table-column field="stock" label="Current Stock" v-slot="props" centered>
                             {{ props.row.stock }}
+                        </b-table-column>
+                        <b-table-column field="total_stock" label="Total Stock" v-slot="props" centered>
+                            {{ props.row.total_stock }}
                         </b-table-column>
 
                         <template slot="empty">
