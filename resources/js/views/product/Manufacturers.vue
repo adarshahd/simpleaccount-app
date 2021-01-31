@@ -1,5 +1,6 @@
 <template>
     <section class="main-content">
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -49,7 +50,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteManufacturerInProgress }"
-                                        @click="deleteManufacturer(props.row)">
+                                        @click="showDeleteModal(props.row)">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -72,9 +73,10 @@
 <script>
     import axios from 'axios'
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+    import DeleteModal from "../modals/Delete";
     export default {
         name: "Manufacturers",
-        components: {ProgressBarIndeterminate},
+        components: {DeleteModal, ProgressBarIndeterminate},
         data() {
             return {
                 isLoading : false,
@@ -85,6 +87,7 @@
                 manufacturerItemsPerPage: 1,
                 totalManufacturerItems: 1,
                 currentManufacturerPage: 1,
+                deleteItem: null
             }
         },
         methods: {
@@ -123,6 +126,13 @@
                         id: null
                     }
                 })
+            },
+            showDeleteModal(manufacturer) {
+                this.deleteItem = manufacturer;
+                this.$refs.modalDelete.toggleModal()
+            },
+            onDelete() {
+                this.deleteManufacturer(this.deleteItem)
             },
             deleteManufacturer(manufacturer){
                 this.isDeleteManufacturerInProgress = true

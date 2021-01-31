@@ -1,6 +1,7 @@
 <template>
     <section class="main-content">
         <account-transaction-modal ref="transactionModal" :transaction="transactionItem" v-on:loadTransaction="loadAccounts"></account-transaction-modal>
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -58,7 +59,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteAccountInProgress }"
-                                        @click="deleteAccount(props.row)">
+                                        @click="showDeleteModal(props.row)">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -83,10 +84,11 @@ import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate"
 import axios from 'axios'
 import dayjs from 'dayjs'
 import AccountTransactionModal from "../modals/AccountTransaction";
+import DeleteModal from "../modals/Delete";
 
 export default {
     name: "Accounts",
-    components: {AccountTransactionModal, ProgressBarIndeterminate},
+    components: {DeleteModal, AccountTransactionModal, ProgressBarIndeterminate},
     data() {
         return {
             isLoading: false,
@@ -106,6 +108,7 @@ export default {
             accountItemsPerPage: 1,
             totalAccountItems: 1,
             currentAccountPage: 1,
+            deleteItem: null
         }
     },
     methods: {
@@ -148,6 +151,13 @@ export default {
                     id: account.id
                 }
             })
+        },
+        showDeleteModal(account) {
+            this.deleteItem = account;
+            this.$refs.modalDelete.toggleModal()
+        },
+        onDelete() {
+            this.deleteAccount(this.deleteItem)
         },
         deleteAccount(account) {
             this.isDeleteAccountInProgress = true

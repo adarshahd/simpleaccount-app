@@ -2,6 +2,7 @@
     <section class="main-content">
         <income-modal ref="incomeModal" :income="incomeItem" v-on:loadIncome="loadIncomeList"></income-modal>
         <income-category ref="categoryModal" :category="categoryItem" v-on:loadCategory="loadCategoryList"></income-category>
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
             <div class="column is-4">
                 <div class="card">
@@ -41,7 +42,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteCategoryInProgress }"
-                                        @click="deleteCategory(props.row)">
+                                        @click="showDeleteModal(props.row, 'category')">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -102,7 +103,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteIncomeInProgress }"
-                                        @click="deleteIncome(props.row)">
+                                        @click="showDeleteModal(props.row, 'income')">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -128,9 +129,10 @@ import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
 import dayjs from "dayjs";
 import IncomeModal from "@/views/modals/Income";
 import IncomeCategory from "@/views/modals/IncomeCategory";
+import DeleteModal from "../modals/Delete";
 export default {
     name: "Incomes",
-    components: {IncomeCategory, IncomeModal, ProgressBarIndeterminate},
+    components: {DeleteModal, IncomeCategory, IncomeModal, ProgressBarIndeterminate},
     data() {
         return {
             isIncomeLoading: false,
@@ -160,7 +162,9 @@ export default {
             categoryItemsPerPage: 1,
             totalCategoryItems: 1,
             currentCategoryPage: 1,
-            currencySymbol: this.$store.state.regionData.currencySymbol
+            currencySymbol: this.$store.state.regionData.currencySymbol,
+            deleteItem: null,
+            deleteItemType: '',
         }
     },
     computed: {
@@ -201,6 +205,18 @@ export default {
             this.incomeItem.income_category_id = income.category.id
             this.$refs.incomeModal.categoryList = this.categoryList
             this.$refs.incomeModal.toggleModal();
+        },
+        showDeleteModal(item, type) {
+            this.deleteItem = item
+            this.deleteItemType = type
+            this.$refs.modalDelete.toggleModal()
+        },
+        onDelete() {
+            if(this.deleteItemType === 'income') {
+                this.deleteIncome(this.deleteItem)
+            } else {
+                this.deleteCategory(this.deleteItem)
+            }
         },
         deleteIncome(income) {
             this.isDeleteIncomeInProgress = true

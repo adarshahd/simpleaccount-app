@@ -1,6 +1,7 @@
 <template>
     <section class="main-content">
         <tax ref="taxModal" :tax="taxItem" v-on:loadTax="loadTaxes"></tax>
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -44,7 +45,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteTaxInProgress }"
-                                        @click="deleteTax(props.row)">
+                                        @click="showDeleteModal(props.row)">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -68,10 +69,11 @@
     import axios from 'axios';
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
     import Tax from "../modals/Tax";
+    import DeleteModal from "../modals/Delete";
 
     export default {
         name: "Taxes",
-        components: {ProgressBarIndeterminate, Tax},
+        components: {DeleteModal, ProgressBarIndeterminate, Tax},
         data() {
             return {
                 isLoading: true,
@@ -86,6 +88,7 @@
                 taxItemsPerPage: 1,
                 totalTaxItems: 1,
                 currentTaxPage: 1,
+                deleteItem: null
             }
         },
         mounted() {
@@ -117,6 +120,13 @@
                 this.taxItem.tax = tax.tax;
 
                 this.$refs.taxModal.toggleModal();
+            },
+            showDeleteModal(tax) {
+                this.deleteItem = tax;
+                this.$refs.modalDelete.toggleModal()
+            },
+            onDelete() {
+                this.deleteTax(this.deleteItem)
             },
             deleteTax(tax) {
                 this.isDeleteTaxInProgress = true;

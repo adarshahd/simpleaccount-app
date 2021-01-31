@@ -2,6 +2,7 @@
     <section class="main-content">
         <expense-modal ref="expenseModal" :expense="expenseItem" v-on:loadExpense="loadExpenseList"></expense-modal>
         <expense-category ref="categoryModal" :categoryList="categoryList" :category="categoryItem" v-on:loadCategory="loadCategoryList"></expense-category>
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
             <div class="column is-4">
                 <div class="card">
@@ -41,7 +42,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteCategoryInProgress }"
-                                        @click="deleteCategory(props.row)">
+                                        @click="showDeleteModal(props.row, 'category')">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -102,7 +103,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteExpenseInProgress }"
-                                        @click="deleteExpense(props.row)">
+                                        @click="showDeleteModal(props.row, 'expense')">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -128,9 +129,10 @@ import ProgressBarIndeterminate from "@/components/ProgressBarIndeterminate";
 import dayjs from "dayjs";
 import ExpenseModal from "@/views/modals/Expense";
 import ExpenseCategory from "@/views/modals/ExpenseCategory";
+import DeleteModal from "../modals/Delete";
 export default {
     name: "Expenses",
-    components: {ExpenseCategory, ExpenseModal, ProgressBarIndeterminate},
+    components: {DeleteModal, ExpenseCategory, ExpenseModal, ProgressBarIndeterminate},
     data() {
         return {
             isExpenseLoading: false,
@@ -160,7 +162,9 @@ export default {
             categoryItemsPerPage: 1,
             totalCategoryItems: 1,
             currentCategoryPage: 1,
-            currencySymbol: this.$store.state.regionData.currencySymbol
+            currencySymbol: this.$store.state.regionData.currencySymbol,
+            deleteItem: null,
+            deleteItemType: '',
         }
     },
     computed: {
@@ -201,6 +205,18 @@ export default {
             this.expenseItem.expense_category_id = expense.category.id
             this.$refs.expenseModal.categoryList = this.categoryList
             this.$refs.expenseModal.toggleModal();
+        },
+        showDeleteModal(item, type) {
+            this.deleteItem = item
+            this.deleteItemType = type
+            this.$refs.modalDelete.toggleModal()
+        },
+        onDelete() {
+            if(this.deleteItemType === 'expense') {
+                this.deleteExpense(this.deleteItem)
+            } else {
+                this.deleteCategory(this.deleteItem)
+            }
         },
         deleteExpense(expense) {
             this.isDeleteExpenseInProgress = true

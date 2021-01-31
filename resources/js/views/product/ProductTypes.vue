@@ -1,6 +1,7 @@
 <template>
     <section class="main-content">
         <product-type ref="productTypeModal" :product-type="productTypeItem" v-on:loadProductType="loadProductTypes"></product-type>
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
             <div class="column is-10">
                 <div class="card">
@@ -45,7 +46,7 @@
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteProductTypeInProgress }"
-                                        @click="deleteProductType(props.row)">
+                                        @click="showDeleteModal(props.row)">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
@@ -69,10 +70,11 @@
     import axios from 'axios';
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
     import ProductType from "../modals/ProductType";
+    import DeleteModal from "../modals/Delete";
 
     export default {
         name: "ProductTypes",
-        components: {ProgressBarIndeterminate, ProductType},
+        components: {DeleteModal, ProgressBarIndeterminate, ProductType},
         data() {
             return {
                 isLoading: true,
@@ -87,6 +89,7 @@
                 productTypeItemsPerPage: 1,
                 totalProductTypeItems: 1,
                 currentProductTypePage: 1,
+                deleteItem: null
             }
         },
         mounted() {
@@ -118,6 +121,13 @@
                 this.productTypeItem.description = productType.description;
 
                 this.$refs.productTypeModal.toggleModal();
+            },
+            showDeleteModal(productType) {
+                this.deleteItem = productType;
+                this.$refs.modalDelete.toggleModal()
+            },
+            onDelete() {
+                this.deleteProductType(this.deleteItem)
             },
             deleteProductType(productType) {
                 this.isDeleteProductTypeInProgress = true;

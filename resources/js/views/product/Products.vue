@@ -1,56 +1,56 @@
 <template>
-    <div>
-        <section class="main-content">
-            <div class="columns is-centered">
-                <div class="column is-10">
-                    <div class="card">
-                        <div class="card-content">
-                            <div class="columns is-centered">
-                                <div class="column is-9">
-                                    <p class="title">Products</p>
-                                </div>
-                                <div class="column is-3 has-text-right">
-                                    <button class="button is-primary has-icons-left" @click="showAddProduct">
-                                        <span class="mdi mdi-plus-circle"></span>
-                                        <span>&nbsp;Add Product</span>
-                                    </button>
-                                </div>
+    <section class="main-content">
+        <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
+        <div class="columns is-centered">
+            <div class="column is-10">
+                <div class="card">
+                    <div class="card-content">
+                        <div class="columns is-centered">
+                            <div class="column is-9">
+                                <p class="title">Products</p>
                             </div>
+                            <div class="column is-3 has-text-right">
+                                <button class="button is-primary has-icons-left" @click="showAddProduct">
+                                    <span class="mdi mdi-plus-circle"></span>
+                                    <span>&nbsp;Add Product</span>
+                                </button>
+                            </div>
+                        </div>
 
-                            <hr/>
-                            <b-table
-                                narrowed
-                                striped
-                                :paginated="totalProductPages > 1"
-                                backend-pagination
-                                :total="totalProductItems"
-                                :per-page="productItemsPerPage"
-                                @page-change="onProductPageChange"
-                                :mobile-cards="false"
-                                :loading="isLoading"
-                                :data="products">
-                                <b-table-column field="name" label="Name" v-slot="props">
-                                    {{ props.row.name }}
-                                </b-table-column>
-                                <b-table-column field="type" label="Type" v-slot="props">
-                                    {{ props.row.product_type.name }}
-                                </b-table-column>
-                                <b-table-column field="mrp" label="MRP" v-slot="props">
-                                    {{ currencySymbol }}{{ props.row.mrp == null ? '-' : props.row.mrp.toFixed(2) }}
-                                </b-table-column>
-                                <b-table-column field="price" label="Retail Price" v-slot="props">
-                                    {{ currencySymbol }}{{ props.row.price == null ? '-' : props.row.price.toFixed(2) }}
-                                </b-table-column>
-                                <b-table-column field="tax" label="Tax" v-slot="props">
-                                    {{ props.row.tax.tax }}%
-                                </b-table-column>
-                                <b-table-column field="hsn" label="HSN" v-slot="props">
-                                    {{ props.row.hsn }}
-                                </b-table-column>
-                                <b-table-column field="stock" label="Stock" v-slot="props">
-                                    {{ props.row.product_stock }}
-                                </b-table-column>
-                                <b-table-column label="Actions" v-slot="props" numeric>
+                        <hr/>
+                        <b-table
+                            narrowed
+                            striped
+                            :paginated="totalProductPages > 1"
+                            backend-pagination
+                            :total="totalProductItems"
+                            :per-page="productItemsPerPage"
+                            @page-change="onProductPageChange"
+                            :mobile-cards="false"
+                            :loading="isLoading"
+                            :data="products">
+                            <b-table-column field="name" label="Name" v-slot="props">
+                                {{ props.row.name }}
+                            </b-table-column>
+                            <b-table-column field="type" label="Type" v-slot="props">
+                                {{ props.row.product_type.name }}
+                            </b-table-column>
+                            <b-table-column field="mrp" label="MRP" v-slot="props">
+                                {{ currencySymbol }}{{ props.row.mrp == null ? '-' : props.row.mrp.toFixed(2) }}
+                            </b-table-column>
+                            <b-table-column field="price" label="Retail Price" v-slot="props">
+                                {{ currencySymbol }}{{ props.row.price == null ? '-' : props.row.price.toFixed(2) }}
+                            </b-table-column>
+                            <b-table-column field="tax" label="Tax" v-slot="props">
+                                {{ props.row.tax.tax }}%
+                            </b-table-column>
+                            <b-table-column field="hsn" label="HSN" v-slot="props">
+                                {{ props.row.hsn }}
+                            </b-table-column>
+                            <b-table-column field="stock" label="Stock" v-slot="props">
+                                {{ props.row.product_stock }}
+                            </b-table-column>
+                            <b-table-column label="Actions" v-slot="props" numeric>
                                 <span>
                                     <button class="button is-info is-small" @click="showProductDetails(props.row)">
                                         <span class="mdi mdi-eye mdi-18px"></span>
@@ -61,38 +61,38 @@
                                         <span class="mdi mdi-pencil mdi-18px"></span>
                                     </button>
                                 </span>
-                                    <span>
+                                <span>
                                     <button
                                         class="button is-danger is-small"
                                         :class="{ 'is-loading' : isDeleteProductTypeInProgress }"
-                                        @click="deleteProduct(props.row)">
+                                        @click="showDeleteModal(props.row)">
                                         <span class="mdi mdi-delete mdi-18px"></span>
                                     </button>
                                 </span>
-                                </b-table-column>
-                                <template slot="empty">
-                                    <div class="columns is-centered">
-                                        <div class="column has-text-centered is-spaced">
-                                            <h4 class="title m-6">No Products Found</h4>
-                                        </div>
+                            </b-table-column>
+                            <template slot="empty">
+                                <div class="columns is-centered">
+                                    <div class="column has-text-centered is-spaced">
+                                        <h4 class="title m-6">No Products Found</h4>
                                     </div>
-                                </template>
-                            </b-table>
-                        </div>
+                                </div>
+                            </template>
+                        </b-table>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
 </template>
 
 <script>
     import axios from 'axios'
     import ProgressBarIndeterminate from "../../components/ProgressBarIndeterminate";
+    import DeleteModal from "../modals/Delete";
 
     export default {
         name: "Products",
-        components: {ProgressBarIndeterminate},
+        components: {DeleteModal, ProgressBarIndeterminate},
         data() {
             return {
                 isLoading: false,
@@ -112,7 +112,8 @@
                 productItemsPerPage: 1,
                 totalProductItems: 1,
                 currentProductPage: 1,
-                currencySymbol: this.$store.state.regionData.currencySymbol
+                currencySymbol: this.$store.state.regionData.currencySymbol,
+                deleteItem: null
             }
         },
         methods: {
@@ -151,6 +152,13 @@
                         id: product.id,
                     }
                 })
+            },
+            showDeleteModal(product) {
+                this.deleteItem = product;
+                this.$refs.modalDelete.toggleModal()
+            },
+            onDelete() {
+                this.deleteProduct(this.deleteItem)
             },
             deleteProduct(product) {
                 this.isDeleteProductTypeInProgress = true;
