@@ -73,7 +73,7 @@ $total = 0;
                     @if($sale->customer->contact_email != null || $sale->customer->contact_email != '')
                         Email : {{ $sale->customer->contact_email }}<br>
                     @endif
-                    @if($idType = $sale->customer->idType != null)
+                    @if(($idType = $sale->customer->idType) != null)
                     <h6><strong>{{ $idType->name }}# </strong>{{ $sale->customer->identification }}</h6>
                     @endif
                 </address>
