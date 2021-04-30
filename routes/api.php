@@ -20,6 +20,11 @@ Route::group(['prefix' => 'v1'], function() {
     Route::get('/status', [\App\Http\Controllers\OnboardController::class, 'getProductStatus']);
     Route::post('/users/admin', [\App\Http\Controllers\OnboardController::class, 'createAdminUser']);
 
+    /**
+     * Auth Route
+     */
+    Route::post('/login', [\App\Http\Controllers\Api\AuthController::class, 'login']);
+
     /*
      * Countries Routes
      */
