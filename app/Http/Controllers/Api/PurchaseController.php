@@ -12,6 +12,8 @@ use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\Purchase;
 use App\Models\PurchaseItem;
+use App\Models\Sale;
+use App\Models\SaleItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -108,12 +110,15 @@ class PurchaseController extends Controller
             DB::beginTransaction();
 
             $purchasedItems = $purchase->purchaseItems()->get();
+            $purchaseItemCollection = collect($purchaseItems);
+
+            $saleItemCollection = collect();
+            $stockItemCollection = collect();
             foreach($purchasedItems as $purchasedItem) {
                 $oldQuantity = $purchasedItem->quantity;
                 $currentStock = $purchasedItem->productStock;
                 $quantityTobeAdded = 0;
 
-                $purchaseItemCollection = collect($purchaseItems);
                 $purchaseItem = $purchaseItemCollection
                     ->where('batch', $currentStock->batch)
                     ->where('expiry', $currentStock->expiry->format('Y-m-d'))
@@ -126,6 +131,19 @@ class PurchaseController extends Controller
                     $quantityTobeAdded += $purchaseItem['quantity'];
                 }
 
+                $soldItemQuantity = SaleItem::query()->where('product_stock_id', $currentStock->id)->sum('quantity');
+                if($purchaseItem == null && $soldItemQuantity > 0) {
+                    //This stock is already consumed and no new purchase item corresponding to this stock is being added.
+                    $productName = Product::query()->find($purchasedItem->productStock->product->id)->name;
+                    throw new PurchaseException("One of $productName stock is already consumed in a sale. This modification is not possible!");
+                }
+
+                if($soldItemQuantity > 0) {
+                    // Remapping of sale item and product stock is required.
+                    $saleItemCollection->push(SaleItem::query()->where('product_stock_id', $currentStock->id)->pluck('id'));
+                    $stockItemCollection->push($currentStock);
+                }
+
                 if($oldQuantity > ($currentStock->stock + $quantityTobeAdded)) {
                     //There is not enough stock to update this item.
                     $productName = Product::query()->find($purchasedItem->productStock->product->id)->name;
@@ -133,7 +151,7 @@ class PurchaseController extends Controller
                 }
 
                 $currentStock->update([
-                    'stock' => $currentStock->stock - $oldQuantity,
+                    'stock' => ($currentStock->stock + $soldItemQuantity) - $oldQuantity,
                     'total_stock' => $currentStock->total_stock - $oldQuantity
                 ]);
 
@@ -162,10 +180,38 @@ class PurchaseController extends Controller
                 'total' => $total,
             ]);
 
+            $purchase->refresh();
+
+            //Now remap the sale items to the new stock if any
+            for($i = 0; $i < $saleItemCollection->count(); $i++) {
+                $stock = $stockItemCollection[$i];
+                //dd($stock);
+                $newStock = ProductStock::query()->where([
+                    'batch' => $stock->batch,
+                    'price' => $stock->price,
+                    'mrp' => $stock->mrp,
+                    'manufacturer_id' => $stock->manufacturer_id
+                ])->whereDate('expiry', Carbon::parse($stock->expiry)->format('Y-m-d'))->first();
+
+                $saleItemIds = $saleItemCollection[$i];
+
+                // Update the stock to consider sale items
+                $saleItemQuantity = SaleItem::query()->whereIn('id', $saleItemIds)->sum('quantity');
+                $newStock->update([
+                    'stock' => $newStock->stock - $saleItemQuantity
+                ]);
+
+                foreach($saleItemIds as $saleItemId) {
+                    SaleItem::query()->where('id', $saleItemId)->first()->update([
+                        'product_stock_id' => $newStock->id
+                    ]);
+                }
+            }
+
             //commit transaction
             DB::commit();
 
-            return new PurchaseResource($purchase->refresh());
+            return new PurchaseResource($purchase);
         } catch (PurchaseException $e) {
             DB::rollBack();
 
@@ -173,13 +219,13 @@ class PurchaseController extends Controller
                 'message' => $e->getMessage(),
                 'description' => $e->getMessage()
             ], 422);
-        } catch (\PDOException $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
 
             return response()->json([
                 'message' => "There were some error processing your request. Please check and try again.",
                 'description' => $e->getMessage()
-            ], 422);
+            ], 500);
         }
     }
 

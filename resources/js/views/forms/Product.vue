@@ -135,7 +135,7 @@
                                     <div class="field">
                                         <label class="label" for="hsn">HSN</label>
                                         <div class="control">
-                                            <input class="input" id="hsn" type="text" placeholder="HSN"
+                                            <input class="input" id="hsn" type="text" placeholder="HSN *"
                                                    v-model="product.hsn">
                                             <span class="has-text-danger" v-if="errors.hsn">
                                                 {{ errors.hsn[0] }}
@@ -249,8 +249,10 @@
                     this.product.mrp = productResponse.mrp
                     this.product.price = productResponse.price
                     this.product.tax_id = productResponse.tax.id
+                    this.product.tax_name = productResponse.tax.name
                     this.product.hsn = productResponse.hsn
                     this.product.product_type_id = productResponse.product_type.id
+                    this.product.product_type_name = productResponse.product_type.name
                     this.productImages = productResponse.images
 
                     this.isLoading = false

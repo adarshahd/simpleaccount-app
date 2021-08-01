@@ -5,13 +5,13 @@
             <div class="column is-4">
                 <div class="box">
                     <div class="columns">
-                        <div class="column is-4">
-                            <figure class="image is-128x128">
+                        <div class="column is-2">
+                            <figure class="image is-48x48">
                                 <img src="/images/business-shop.png" alt="" v-if="product.images.length < 1">
                                 <img v-else :src="product.images[0]" alt="product-image">
                             </figure>
                         </div>
-                        <div class="column is-8">
+                        <div class="column is-10">
                             <h4 class="title is-4">{{ product.name }}</h4>
                             <h5 class="subtitle is-5">{{ product.product_type.name }}</h5>
                             <h6 class="subtitle is-6">{{product.tax.name}}</h6>
@@ -40,7 +40,7 @@
                         :data="stock"
                         :loading="isStockLoading">
                         <b-table-column field="hsn" label="HSN" v-slot="props">
-                            {{ props.row.hsn }}
+                            {{ props.row.product.hsn }}
                         </b-table-column>
                         <b-table-column field="batch" label="Batch" v-slot="props">
                             {{ props.row.batch }}
