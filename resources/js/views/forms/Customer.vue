@@ -443,7 +443,7 @@
                     formData.append('image', this.customer.image)
                 }
 
-                axios.post('/api/v1/customers/' + this.customer.id + '/?_method=PATCH', formData, config).then(response => {
+                axios.post('/api/v1/customers/' + this.customer.id + '?_method=PATCH', formData, config).then(response => {
                     this.isUpdating = false;
                     this.customer = {}
                     this.showToast("Customer updated successfully!")

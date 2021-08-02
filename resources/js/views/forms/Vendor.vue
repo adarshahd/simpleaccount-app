@@ -451,7 +451,7 @@
                     formData.append('image', this.vendor.image)
                 }
 
-                axios.post('/api/v1/vendors/' + this.vendor.id + '/?_method=PATCH', formData, config).then(response => {
+                axios.post('/api/v1/vendors/' + this.vendor.id + '?_method=PATCH', formData, config).then(response => {
                     this.isUpdating = false;
                     this.vendor = {}
                     this.showToast("Vendor updated successfully!")
