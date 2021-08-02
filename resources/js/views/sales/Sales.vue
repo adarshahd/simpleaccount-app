@@ -38,16 +38,16 @@
                                 {{ dayjs(props.row.bill_date).format("DD MMM, YYYY") }}
                             </b-table-column>
                             <b-table-column field="subtotal" label="Subtotal" v-slot="props">
-                                {{ currencySymbol }}{{ props.row.sub_total }}
+                                {{ currencySymbol }}{{ props.row.sub_total.toFixed(2) }}
                             </b-table-column>
                             <b-table-column field="discount" label="Discount" v-slot="props">
-                                {{ currencySymbol }}{{ props.row.discount }}
+                                {{ currencySymbol }}{{ props.row.discount.toFixed(2) }}
                             </b-table-column>
                             <b-table-column field="tax" label="Tax" v-slot="props">
-                                {{ currencySymbol }}{{ props.row.tax }}
+                                {{ currencySymbol }}{{ props.row.tax.toFixed(2) }}
                             </b-table-column>
-                            <b-table-column field="total" label="Total" v-slot="props">
-                                {{ currencySymbol }}{{ props.row.total }}
+                            <b-table-column field="total" label="Total (Rounded)" v-slot="props">
+                                {{ currencySymbol }}{{ props.row.total.toFixed(2) }}
                             </b-table-column>
                             <b-table-column label="Actions" v-slot="props" numeric>
                                 <span>

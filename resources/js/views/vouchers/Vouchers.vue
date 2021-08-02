@@ -38,7 +38,7 @@
                                 {{ props.row.vendor.name }}
                             </b-table-column>
                             <b-table-column field="total" label="Total" v-slot="props">
-                                {{ props.row.total }}
+                                ₹{{ props.row.total.toFixed() }}
                             </b-table-column>
                             <b-table-column field="mode" label="Payment Mode" v-slot="props">
                                 {{ props.row.payment_method }}

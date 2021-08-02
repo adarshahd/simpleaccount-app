@@ -18,10 +18,10 @@ class PurchaseResource extends JsonResource
             'id' => $this->id,
             'bill_number' => $this->bill_number,
             'bill_date' => $this->bill_date,
-            'sub_total' => $this->sub_total,
-            'discount' => $this->discount,
-            'tax' => $this->tax,
-            'total' => $this->total,
+            'sub_total' => round($this->sub_total, 2),
+            'discount' => round($this->discount, 2),
+            'tax' => round($this->tax, 2),
+            'total' => round($this->total),
             'vendor' => new VendorResource($this->vendor),
             'items' => new PurchaseItemCollection($this->purchaseItems()->get())
         ];

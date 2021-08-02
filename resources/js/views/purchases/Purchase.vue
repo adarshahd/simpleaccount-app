@@ -57,10 +57,10 @@
                     {{ dayjs(props.row.product_stock.expiry).format("MMM YYYY") }}
                 </b-table-column>
                 <b-table-column field="mrp" label="MRP" v-slot="props" numeric>
-                    {{ currencySymbol }}{{ props.row.product_stock.mrp }}
+                    {{ currencySymbol }}{{ props.row.product_stock.mrp.toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="price" label="Price" v-slot="props" numeric>
-                    {{ currencySymbol }}{{ props.row.product_stock.price }}
+                    {{ currencySymbol }}{{ props.row.product_stock.price.toFixed(2) }}
                 </b-table-column>
                 <b-table-column field="taxable" label="Taxable" v-slot="props" numeric>
                     {{ currencySymbol }}{{ (props.row.product_stock.price * props.row.quantity).toFixed(2) }}
