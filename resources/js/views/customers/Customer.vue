@@ -82,21 +82,27 @@
                             </div>
                         </div>
                     </div>
-                    <h5 class="title is-5 has-text-centered no-margin">Recent Sales</h5>
+                    <h5 class="title is-5 has-text-centered no-margin">Customer Activities</h5>
                     <b-table
                         striped
                         narrowed
-                        :data="customerDetails.recent_sales">
+                        :data="customerDetails.recent_activities">
                         <b-table-column field="bill_number" label="Bill Number" v-slot="props">
-                            {{ props.row.bill_number }}
+                            <div v-if="props.row.type === 'sale'">
+                                {{ props.row.bill_number }} ({{ props.row.items }} items)
+                            </div>
+                            <div v-else>
+                                {{ props.row.bill_number }}
+                            </div>
+                        </b-table-column>
+                        <b-table-column field="type" label="Type" v-slot="props">
+                            <p v-if="props.row.type === 'sale'">Sale</p>
+                            <p v-else>Receipt</p>
                         </b-table-column>
                         <b-table-column field="date" label="Date" v-slot="props">
                             {{ dayjs(props.row.bill_date).format("DD MMM, YYYY") }}
                         </b-table-column>
-                        <b-table-column field="items" label="Items Total" v-slot="props">
-                            {{ props.row.items }}
-                        </b-table-column>
-                        <b-table-column field="total" label="Sale Total" v-slot="props" numeric>
+                        <b-table-column field="total" label="Total" v-slot="props" numeric>
                             {{ currencySymbol }}{{ props.row.total.toFixed(2) }}
                         </b-table-column>
                         <b-table-column field="actions" label="Actions" v-slot="props" centered>
@@ -111,7 +117,7 @@
                         <template slot="empty">
                             <div class="columns is-centered">
                                 <div class="column has-text-centered is-spaced">
-                                    <h4 class="title m-6">No Sales Found</h4>
+                                    <h4 class="title m-6">No Recent Activities Found</h4>
                                 </div>
                             </div>
                         </template>
