@@ -17,12 +17,12 @@ class SaleItemResource extends JsonResource
         return [
             'id' => $this->id,
             'quantity' => $this->quantity,
-            'price' => $this->price,
-            'discount' => $this->discount,
+            'price' => round($this->price, 2),
+            'discount' => round($this->discount, 2),
             'tax_percent' => $this->tax_percent,
-            'tax' => $this->tax,
-            'sub_total' => $this->sub_total,
-            'total' => $this->total,
+            'tax' => round($this->tax, 2),
+            'sub_total' => round($this->sub_total, 2),
+            'total' => round($this->total),
             'sale_id' => $this->sale_id,
             'product_stock' => new ProductStockResource($this->productStock),
         ];
