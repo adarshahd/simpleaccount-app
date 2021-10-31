@@ -88,7 +88,7 @@ const menuItems = [
         label: "Account",
         children: [
             {
-                label: "Bank Accounts",
+                label: "Accounts",
                 icon: "mdi mdi-cash-100",
                 to: "accounts"
             },

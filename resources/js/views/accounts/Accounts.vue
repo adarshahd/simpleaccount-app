@@ -8,7 +8,7 @@
                     <div class="card-content">
                         <div class="columns is-centered">
                             <div class="column is-9">
-                                <p class="title">Bank Accounts</p>
+                                <p class="title">Accounts</p>
                             </div>
                             <div class="column is-3 has-text-right">
                                 <button class="button is-primary has-icons-left" @click="addAccount">
