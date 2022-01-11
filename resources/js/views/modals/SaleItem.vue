@@ -261,6 +261,7 @@ export default {
             this.saleItem.mrp = 0
             this.saleItem.tax = 0
             this.stockSelected = false
+            this.product_id = "";
         },
         buildSaleItem() {
             this.fetchProduct()
@@ -281,6 +282,8 @@ export default {
                 this.$emit('sale-item-added', this.saleItem)
             }
             this.saleItem = {}
+            this.products = [];
+            this.onProductCleared()
             this.isEditing = false
             this.toggleModal()
         },

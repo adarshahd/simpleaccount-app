@@ -201,7 +201,11 @@ export default {
             loading(true)
             axios.get('/api/v1/customers/search?name=' + search).then(response => {
                 loading(false)
-                this.customers = response.data.data
+                let customersTemp = response.data.data
+                for(let i=0; i < customersTemp.length; ++i) {
+                    customersTemp[i].name = customersTemp[i].name + ', ' + customersTemp[i].city + ', ' + customersTemp[i].state;
+                }
+                this.customers = customersTemp
             }).catch(error => {
                 loading(false)
                 this.handleError(error)
