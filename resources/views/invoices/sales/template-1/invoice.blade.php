@@ -87,13 +87,13 @@ $total = 0;
                 <thead>
                 <tr>
                     <th class="text-center">#</th>
-                    <th class="text-center">Products</th>
+                    <th class="text-center">Product</th>
+                    <th class="text-center">Qty</th>
                     <th class="text-center">HSN</th>
                     <th class="text-center">Batch</th>
                     <th class="text-center">Expiry</th>
                     <th class="text-center">MRP</th>
                     <th class="text-center">Price</th>
-                    <th class="text-center">Quantity</th>
                     <th class="text-center">Taxable</th>
                     <th class="text-center">Tax</th>
                     <th class="text-center">Item Total</th>
@@ -104,14 +104,14 @@ $total = 0;
                     <tr>
                         <td>{{ $i++ }}</td>
                         <td>{{ $item->productStock->product->name }}</td>
+                        <td class="text-center">{{ $item->quantity }}</td>
                         <td class="text-center">{{ $item->productStock->product->hsn }}</td>
                         <td class="text-center">{{ $item->productStock->batch }}</td>
                         <td class="text-center">{{ $item->productStock->expiry->format('M - Y') }}</td>
                         <td class="text-right">₹{{ number_format($item->productStock->mrp, 2, '.', ',') }}</td>
                         <td class="text-right">₹{{ number_format($item->price, 2, '.', ',') }}</td>
-                        <td class="text-center">{{ $item->quantity }}</td>
                         <td class="text-right">₹{{ number_format($item->price * $item->quantity, 2, '.', ',') }}</td>
-                        <td class="text-right">₹{{ number_format($item->tax, 2, '.', ',') }}</td>
+                        <td class="text-right">₹{{ number_format($item->tax, 2, '.', ',') }} ({{ '@' . $item->tax_percent }}%)</td>
                         <td class="text-right">₹{{ number_format($item->total, 2, '.', ',') }}</td>
                     </tr>
                 @endforeach
