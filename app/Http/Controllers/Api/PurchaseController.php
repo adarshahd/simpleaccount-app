@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\PurchaseStoreRequest;
 use App\Http\Requests\PurchaseUpdateRequest;
 use App\Http\Resources\PurchaseCollection;
+use App\Http\Resources\PurchaseDetailsResource;
 use App\Http\Resources\PurchaseResource;
 use App\Models\Product;
 use App\Models\ProductStock;
@@ -38,7 +39,7 @@ class PurchaseController extends Controller
 
     /**
      * @param \App\Http\Requests\PurchaseStoreRequest $request
-     * @return PurchaseResource|\Illuminate\Http\JsonResponse
+     * @return PurchaseDetailsResource|\Illuminate\Http\JsonResponse
      */
     public function store(PurchaseStoreRequest $request)
     {
@@ -83,23 +84,23 @@ class PurchaseController extends Controller
             ], 422);
         }
 
-        return new PurchaseResource($purchase->refresh());
+        return new PurchaseDetailsResource($purchase->refresh());
     }
 
     /**
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Purchase $purchase
-     * @return \App\Http\Resources\PurchaseResource
+     * @return PurchaseDetailsResource
      */
     public function show(Request $request, Purchase $purchase)
     {
-        return new PurchaseResource($purchase);
+        return new PurchaseDetailsResource($purchase);
     }
 
     /**
      * @param \App\Http\Requests\PurchaseUpdateRequest $request
      * @param \App\Models\Purchase $purchase
-     * @return PurchaseResource|\Illuminate\Http\JsonResponse
+     * @return PurchaseDetailsResource|\Illuminate\Http\JsonResponse
      */
     public function update(PurchaseUpdateRequest $request, Purchase $purchase)
     {
@@ -211,7 +212,7 @@ class PurchaseController extends Controller
             //commit transaction
             DB::commit();
 
-            return new PurchaseResource($purchase);
+            return new PurchaseDetailsResource($purchase);
         } catch (PurchaseException $e) {
             DB::rollBack();
 
