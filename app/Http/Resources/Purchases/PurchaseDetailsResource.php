@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Purchases;
 
+use App\Http\Resources\VendorResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PurchaseResource extends JsonResource
+class PurchaseDetailsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -22,7 +23,8 @@ class PurchaseResource extends JsonResource
             'discount' => round($this->discount, 2),
             'tax' => round($this->tax, 2),
             'total' => round($this->total),
-            'vendor' => $this->vendor
+            'vendor' => new VendorResource($this->vendor),
+            'items' => new PurchaseItemCollection($this->purchaseItems()->get())
         ];
     }
 }

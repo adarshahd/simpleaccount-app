@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Purchases;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class SaleCollection extends ResourceCollection
+class PurchaseCollection extends ResourceCollection
 {
-    public $collects = SaleResource::class;
-
+    public $collects = PurchaseResource::class;
     /**
      * Transform the resource collection into an array.
      *

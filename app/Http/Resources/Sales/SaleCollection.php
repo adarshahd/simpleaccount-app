@@ -1,21 +1,23 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Sales;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-class SaleItemCollection extends ResourceCollection
+class SaleCollection extends ResourceCollection
 {
-    public $collects = SaleItemResource::class;
+    public $collects = SaleResource::class;
 
     /**
      * Transform the resource collection into an array.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Support\Collection
+     * @return array
      */
     public function toArray($request)
     {
-        return $this->collection;
+        return [
+            'data' => $this->collection,
+        ];
     }
 }

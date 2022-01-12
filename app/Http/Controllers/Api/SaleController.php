@@ -6,9 +6,9 @@ use App\Exceptions\SaleException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\SaleStoreRequest;
 use App\Http\Requests\SaleUpdateRequest;
-use App\Http\Resources\SaleCollection;
-use App\Http\Resources\SaleDetailsResource;
-use App\Http\Resources\SaleResource;
+use App\Http\Resources\Sales\SaleCollection;
+use App\Http\Resources\Sales\SaleDetailsResource;
+use App\Http\Resources\Sales\SaleResource;
 use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\Sale;
@@ -24,7 +24,7 @@ class SaleController extends Controller
 
     /**
      * @param \Illuminate\Http\Request $request
-     * @return \App\Http\Resources\SaleCollection
+     * @return SaleCollection
      */
     public function index(Request $request)
     {

@@ -6,9 +6,9 @@ use App\Exceptions\PurchaseException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PurchaseStoreRequest;
 use App\Http\Requests\PurchaseUpdateRequest;
-use App\Http\Resources\PurchaseCollection;
-use App\Http\Resources\PurchaseDetailsResource;
-use App\Http\Resources\PurchaseResource;
+use App\Http\Resources\Purchases\PurchaseCollection;
+use App\Http\Resources\Purchases\PurchaseDetailsResource;
+use App\Http\Resources\Purchases\PurchaseResource;
 use App\Models\Product;
 use App\Models\ProductStock;
 use App\Models\Purchase;
@@ -23,7 +23,7 @@ class PurchaseController extends Controller
 {
     /**
      * @param \Illuminate\Http\Request $request
-     * @return \App\Http\Resources\PurchaseCollection
+     * @return \App\Http\Resources\Purchases\PurchaseCollection
      */
     public function index(Request $request)
     {

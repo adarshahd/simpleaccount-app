@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Purchases;
 
+use App\Http\Resources\ProductStockResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class PurchaseItemResource extends JsonResource

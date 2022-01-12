@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Sales;
 
+use App\Http\Resources\CustomerResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SaleItemResource extends JsonResource
+class SaleDetailsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +17,15 @@ class SaleItemResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'quantity' => $this->quantity,
-            'price' => round($this->price, 2),
-            'discount' => round($this->discount, 2),
-            'tax_percent' => $this->tax_percent,
-            'tax' => round($this->tax, 2),
+            'bill_id' => $this->bill_id,
+            'bill_number' => $this->bill_number,
+            'bill_date' => $this->bill_date,
             'sub_total' => round($this->sub_total, 2),
+            'discount' => round($this->discount, 2),
+            'tax' => round($this->tax, 2),
             'total' => round($this->total),
-            'sale_id' => $this->sale_id,
-            'product_stock' => new ProductStockResource($this->productStock),
+            'customer' => new CustomerResource($this->customer),
+            'items' => new SaleItemCollection($this->saleItems)
         ];
     }
 }
