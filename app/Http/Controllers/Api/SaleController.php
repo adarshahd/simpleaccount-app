@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\SaleStoreRequest;
 use App\Http\Requests\SaleUpdateRequest;
 use App\Http\Resources\SaleCollection;
+use App\Http\Resources\SaleDetailsResource;
 use App\Http\Resources\SaleResource;
 use App\Models\Product;
 use App\Models\ProductStock;
@@ -32,14 +33,14 @@ class SaleController extends Controller
             $saleQuery = $saleQuery->where('customer_id', $request->input('customer_id'));
         }
 
-        $sales = $saleQuery->latest()->paginate();
+        $sales = $saleQuery->latest()->with('customer')->paginate();
 
         return new SaleCollection($sales);
     }
 
     /**
      * @param \App\Http\Requests\SaleStoreRequest $request
-     * @return SaleResource|\Illuminate\Http\JsonResponse
+     * @return SaleDetailsResource|\Illuminate\Http\JsonResponse
      */
     public function store(SaleStoreRequest $request)
     {
@@ -90,7 +91,7 @@ class SaleController extends Controller
 
             DB::commit();
 
-            return new SaleResource($sale->refresh());
+            return new SaleDetailsResource($sale->refresh());
         } catch (SaleException $e) {
             DB::rollBack();
 
@@ -111,17 +112,17 @@ class SaleController extends Controller
     /**
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\Sale $sale
-     * @return \App\Http\Resources\SaleResource
+     * @return SaleDetailsResource
      */
     public function show(Request $request, Sale $sale)
     {
-        return new SaleResource($sale);
+        return new SaleDetailsResource($sale);
     }
 
     /**
      * @param \App\Http\Requests\SaleUpdateRequest $request
      * @param \App\Models\Sale $sale
-     * @return SaleResource|\Illuminate\Http\JsonResponse
+     * @return SaleDetailsResource|\Illuminate\Http\JsonResponse
      */
     public function update(SaleUpdateRequest $request, Sale $sale)
     {
@@ -158,7 +159,7 @@ class SaleController extends Controller
 
             DB::commit();
 
-            return new SaleResource($sale->refresh());
+            return new SaleDetailsResource($sale->refresh());
         } catch (SaleException $e) {
             DB::rollBack();
 

@@ -21,7 +21,8 @@ class PurchaseResource extends JsonResource
             'sub_total' => round($this->sub_total, 2),
             'discount' => round($this->discount, 2),
             'tax' => round($this->tax, 2),
-            'total' => round($this->total)
+            'total' => round($this->total),
+            'vendor' => $this->vendor
         ];
     }
 }

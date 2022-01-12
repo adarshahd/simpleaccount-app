@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SaleResource extends JsonResource
+class SaleDetailsResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -23,8 +23,8 @@ class SaleResource extends JsonResource
             'discount' => round($this->discount, 2),
             'tax' => round($this->tax, 2),
             'total' => round($this->total),
-            'customer' => $this->customer,
-            //'items' => new SaleItemCollection($this->saleItems)
+            'customer' => new CustomerResource($this->customer),
+            'items' => new SaleItemCollection($this->saleItems)
         ];
     }
 }

@@ -32,7 +32,7 @@ class PurchaseController extends Controller
             $purchaseQuery = $purchaseQuery->where('vendor_id', $request->input('vendor_id'));
         }
 
-        $purchases = $purchaseQuery->latest()->paginate();
+        $purchases = $purchaseQuery->latest()->with('vendor')->paginate();
 
         return new PurchaseCollection($purchases);
     }
