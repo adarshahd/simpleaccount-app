@@ -80,9 +80,14 @@
                                     </div>
                                     <div class="field-body">
                                         <div class="field">
-                                            <p class="control">
-                                                <input class="input" placeholder="Payment Method *" type="text" v-model="voucher.payment_method">
-                                            </p>
+                                            <div class="select is-fullwidth">
+                                                <select v-model="voucher.payment_method" id="method">
+                                                    <option selected disabled value="">Select Payment Method *</option>
+                                                    <option value="cash">Cash</option>
+                                                    <option value="cheque">Cheque</option>
+                                                    <option value="online">Online Transfer</option>
+                                                </select>
+                                            </div>
                                             <span class="has-text-danger" v-if="errors.payment_method">
                                                 {{ errors.payment_method[0] }}
                                             </span>
@@ -171,7 +176,7 @@ export default {
                 bill_number: '',
                 bill_date: dayjs().toDate(),
                 total: null,
-                payment_method: null,
+                payment_method: "",
                 payment_reference: null,
                 notes: ''
             },
