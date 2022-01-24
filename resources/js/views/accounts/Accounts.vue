@@ -3,7 +3,7 @@
         <account-transaction-modal ref="transactionModal" :transaction="transactionItem" v-on:loadTransaction="loadAccounts"></account-transaction-modal>
         <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
-            <div class="column is-10">
+            <div class="column is-12">
                 <div class="card">
                     <div class="card-content">
                         <div class="columns is-centered">

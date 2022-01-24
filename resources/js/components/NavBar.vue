@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar is-primary has-shadow is-fixed-top" role="navigation" aria-label="main navigation">
+    <nav class="navbar is-primary is-fixed-top" role="navigation" aria-label="main navigation">
         <div class="navbar-brand">
             <div class="navbar-item is-expanded">
                 <div class="columns is-vcentered is-gapless is-hidden-mobile" style="margin-bottom: 0 !important">

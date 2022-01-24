@@ -2,7 +2,7 @@
     <section class="main-content">
         <delete-modal ref="modalDelete" v-on:delete="onDelete"></delete-modal>
         <div class="columns is-centered">
-            <div class="column is-10">
+            <div class="column is-12">
                 <div class="card">
                     <div class="card-content">
                         <div class="columns is-centered">
