@@ -223,6 +223,7 @@ export default {
                 this.showToast('Please select a customer first', 'is-warning')
                 return
             }
+            console.log('Customer ID: ' + this.sale.customer_id)
             this.$refs.saleItemModal.saleItem = {
                 id: this.itemId++,
                 price: '0',
@@ -233,6 +234,7 @@ export default {
                 product_stock_id: null,
                 stockAvailable: 0,
                 saleId: null,
+                customer_id: this.sale.customer_id,
                 errors: []
             }
 
@@ -251,7 +253,8 @@ export default {
                 product_stock_id: item.product_stock_id,
                 stockAvailable: item.stockAvailable,
                 saleId: item.saleId,
-                errors: []
+                customer_id: this.sale.customer_id,
+                errors: [],
             }
             this.$refs.saleItemModal.isEditing = true
             this.$refs.saleItemModal.toggleModal()

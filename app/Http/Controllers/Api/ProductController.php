@@ -8,8 +8,10 @@ use App\Http\Requests\ProductUpdateRequest;
 use App\Http\Resources\ProductCollection;
 use App\Http\Resources\ProductResource;
 use App\Http\Resources\ProductStockCollection;
+use App\Models\Customer;
 use App\Models\Product;
 use App\Models\ProductStock;
+use App\Models\Sale;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -109,7 +111,30 @@ class ProductController extends Controller
             $stockQuery = $stockQuery->where('manufacturer_id', $request->input('manufacturer_id'));
         }
 
-        $stocks = $stockQuery->paginate();
+        $stocks = $stockQuery->orderBy('expiry')->get();
+        if($request->has('customer_id')) {
+            $customer = Customer::query()->where('id', $request->input('customer_id'))->first();
+            if($customer) {
+                $stocks->transform(function($stock) use($customer) {
+                    $sale = Sale::query()
+                        ->where('customer_id', $customer->id)
+                        ->whereHas('saleItems', function($query) use($stock) {
+                            $query->where('product_stock_id', $stock->id);
+                        })
+                        ->latest()
+                        ->first();
+
+                    if($sale) {
+                        $saleItem = $sale->saleItems()->where('product_stock_id', $stock->id)->first();
+                        if($saleItem) {
+                            $stock->price = $saleItem->price;
+                        }
+                    }
+
+                    return $stock;
+                });
+            }
+        }
 
         return new ProductStockCollection($stocks);
     }

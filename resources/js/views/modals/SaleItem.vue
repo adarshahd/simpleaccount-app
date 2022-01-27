@@ -214,7 +214,7 @@ export default {
             axios.get(
                 '/api/v1/products/' +
                 this.product_id +
-                '/stock/search?manufacturer_id=' + this.manufacturer_id).then(response => {
+                '/stock/search?manufacturer_id=' + this.manufacturer_id + '&customer_id=' + this.saleItem.customer_id).then(response => {
                 this.isStockLoading = false;
                 this.stockList = response.data.data;
             }).catch(error => {
@@ -224,7 +224,8 @@ export default {
         onStockSelected() {
             this.stockSelected = true;
             this.currentStock = this.getProductStock(this.saleItem.product_stock_id)
-            this.saleItem.price = this.currentStock.product.price;
+            console.log(this.currentStock);
+            this.saleItem.price = this.currentStock.price;
             this.saleItem.quantity = 1;
             this.saleItem.stockAvailable = this.currentStock.stock;
             this.saleItem.product_stock = this.currentStock
