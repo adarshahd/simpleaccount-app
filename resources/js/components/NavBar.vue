@@ -108,6 +108,7 @@
                 this.$emit('search', val)
             },
             searchItemSelected(option) {
+                this.isSearching = false
                 this.$emit('searchItemSelected', option)
             }
         },

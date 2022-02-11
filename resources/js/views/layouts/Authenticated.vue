@@ -85,7 +85,6 @@ export default {
         },
         search(query) {
             this.searchQuery = query
-            this.isSearching = true
 
             debounce(this.doSearch, 500)(query)
         },
@@ -99,6 +98,8 @@ export default {
                 return
             }
 
+            this.isSearching = true
+
             axios.get('/api/v1/search?query=' + query).then(response => {
                 this.searchData = response.data.data
                 this.isSearching = false
@@ -110,6 +111,7 @@ export default {
         searchItemSelected(option) {
             this.searchQuery = ''
             this.searchData = []
+            this.isSearching = false
 
             switch (option.target) {
                 case 'customer':
